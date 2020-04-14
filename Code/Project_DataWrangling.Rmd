@@ -74,10 +74,12 @@ Ellerbe.Processed$ActivityEndDate <- as.Date(Ellerbe.Processed$ActivityEndDate, 
 
 #Pull out just nutrient data 
 ```{r}
-Ellerbe.Nutrients <- subset(Ellerbe.Processed, CharacteristicName == "Flow" | CharacteristicName == "Gage height" | CharacteristicName == "Total dissolved solids" | CharacteristicName == "Dissolved oxygen (DO)" | CharacteristicName == "Height, gage" | CharacteristicName == "Temperature" | CharacteristicName == "Total suspended solids" | CharacteristicName == "pH")
+Ellerbe.Nutrients <- subset(Ellerbe.Processed, CharacteristicName == "Flow" | CharacteristicName == "Gage height" | CharacteristicName == "Total dissolved solids" | CharacteristicName == "Height, gage" | CharacteristicName == "Temperature" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Phosphorus")
 
 Ellerbe.Nutrients <- drop_na(Ellerbe.Nutrients, ResultMeasureValue)
 
+
+class(Ellerbe.Nutrients$ResultMeasureValue)
 ```
 
 
