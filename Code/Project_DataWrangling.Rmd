@@ -44,7 +44,7 @@ library(tidyverse)
 
 # Load your datasets
 
-Ellerbe.Raw <- read.csv (../Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv)
+Ellerbe_Raw <- read.csv("./Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv")
 
 Ellerbe.Raw <- Ellerbe_WaterQuality_Raw_Data
 
