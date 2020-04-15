@@ -1,6 +1,8 @@
 ---
 title: "Project_DataExploration"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -26,3 +28,39 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+# Set Working Directory and Load Data 
+```{r setup, include=FALSE}
+# Set your working directory
+
+setwd("/Users/rmlandman/Desktop/Data Analytics/Environmental_Data_Analytics_2020/Project/EDA_2020_Project")
+getwd()
+
+# Load your packages
+
+
+library(plyr)
+library(tidyverse)
+
+# Set your ggplot theme
+
+# Load your datasets
+
+EC_Nutrients_Wide_Processed <- read.csv("../Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
+
+head(EC_Nutrients_Wide_Processed)
+colnames(EC_Nutrients_Wide_Processed)
+summary(EC_Nutrients_Wide_Processed$HydrologicEvent)
+
+```
+
+
+
+# Format Dates
+```{r}
+EC_Nutrients_Wide_Processed$ActivityStartDate <- as.Date(EC_Nutrients_Wide_Processed$ActivityStartDate, format = "%Y-%m-%d")
+
+Ellerbe_Processed$ResultMeasureValue <-as.numeric(Ellerbe_Processed$ResultMeasureValue)
+class(Ellerbe_Processed$ResultMeasureValue)
+```
