@@ -54,7 +54,15 @@ theme_set(mytheme)
 
 # Load your datasets
 
-EC_Nutrients_Wide_Processed <- read.csv("../Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
+EC_Nutrients_Wide_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
+
+EC_Nutrients_USGS_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
+
+USGS_Discharge <- read.csv("./Data/Processed/Ellerbe_CombinedDischarge.csv")
+
+EllerbeDischarge_Club <- read.csv("./Data/Processed/EllerbeDischarge_Club.csv")
+
+EllerbeDischarge_Gorman <- read.csv("./Data/Processed/EllerbeDischarge_Gorman.csv")
 
 head(EC_Nutrients_Wide_Processed)
 colnames(EC_Nutrients_Wide_Processed)
@@ -67,13 +75,39 @@ summary(EC_Nutrients_Wide_Processed$HydrologicEvent)
 # Format Dates
 ```{r}
 EC_Nutrients_Wide_Processed$ActivityStartDate <- as.Date(EC_Nutrients_Wide_Processed$ActivityStartDate, format = "%Y-%m-%d")
-
-Ellerbe_Processed$ResultMeasureValue <-as.numeric(Ellerbe_Processed$ResultMeasureValue)
-class(Ellerbe_Processed$ResultMeasureValue)
-
-class(EC_Nutrients_Wide_Processed$Flow)
 class(EC_Nutrients_Wide_Processed$ActivityStartDate)
+
+EC_Nutrients_USGS_Processed$ActivityStartDate <- as.Date(EC_Nutrients_USGS_Processed$ActivityStartDate, format = "%Y-%m-%d")
+class(EC_Nutrients_USGS_Processed$ActivityStartDate)
+
+names(EC_Nutrients_USGS_Processed)[2] <- "Date"
+
+USGS_Discharge$Date <- as.Date(USGS_Discharge$Date, format = "%Y-%m-%d")
+class(USGS_Discharge$Date)
 ```
+
+# Join Discharge and Nutrients 
+```{r}
+EC_Nutrients_USGS_Processed2 <- separate(EC_Nutrients_USGS_Processed, MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-")
+
+EC_USGS_Combined <- full_join(EC_Nutrients_USGS_Processed2, USGS_Discharge, by = "Date")
+
+EC_Nutrients_USGS_Processed2$site_no <- as.character(EC_Nutrients_USGS_Processed2$site_no)
+EllerbeDischarge_Club$site_no <- as.character(EllerbeDischarge_Club$site_no)
+
+EC_Nutrients_Club <- full_join(EC_Nutrients_USGS_Processed2, EllerbeDischarge_Club, by = "site_no")
+
+
+### need one column for site and one column for date 
+
+EC_Discharge_bind <- rbind(EllerbeDischarge_Club, EllerbeDischarge_Gorman)
+EC_Discharge_bind$Date <- as.Date(EC_Discharge_bind$Date, format = "%Y-%m-%d")
+
+EC_Nutrients_Join <- full_join(EC_Discharge_bind, EC_Nutrients_USGS_Processed2, by = c("site_no", "Date"))
+
+```
+
+
 
 # Explore with ggplot 
 ```{r}

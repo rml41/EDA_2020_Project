@@ -41,13 +41,14 @@ getwd()
 
 library(plyr)
 library(tidyverse)
+library(dataRetrieval)
 
 # Set your ggplot theme
 
 # Load your datasets
 
 Ellerbe_Raw <- read.csv("./Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv")
-<<<<<<< HEAD
+
 
 head(Ellerbe_Raw)
 colnames(Ellerbe_Raw)
@@ -56,7 +57,7 @@ summary(Ellerbe_Raw$CharacteristicName)
 Ellerbe_Processed <- Ellerbe_Raw %>%
   select(OrganizationIdentifier, ActivityStartDate:`ActivityEndTime.Time`, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
 
-=======
+
 
 head(Ellerbe_Raw)
 colnames(Ellerbe_Raw)
@@ -64,21 +65,47 @@ summary(Ellerbe_Raw$ActivityTypeCode, maxsum = 5)
 head(Ellerbe_Raw$ActivityTypeCode)
 
 Ellerbe_Processed <- Ellerbe_Raw %>%
-  select(OrganizationIdentifier, ActivityStartDate:`ActivityEndTime.Time`, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
+  select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
 
->>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 write.csv(Ellerbe_Processed, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Processed.csv")
 
 getwd()
 ```
 
+# Load USGS Data 
+
+```{r}
+ClubSummary <- whatNWISdata(siteNumbers = "0208675010")
+EllerbeDischarge_Club <- readNWISdv(siteNumbers = "0208675010",
+                           parameterCd ="00060", # discharge (ft3/s)
+                           startDate = "2008-01-01",
+                           endDate = "2020-4-17")
+
+Gorman <- whatNWISdata(siteNumbers = "02086849")
+EllerbeDischarge_Gorman <- readNWISdv(siteNumbers = "02086849",
+                                      parameterCd = "00060", # discharge (ft3/s)
+                                      startDate = "2008-01-01",
+                                      endDate = "2020-4-17")
+
+Ellerbe_CombinedDischarge <- full_join(EllerbeDischarge_Gorman, EllerbeDischarge_Club, by = "Date")
+
+write.csv(Ellerbe_CombinedDischarge, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_CombinedDischarge.csv")
+
+write.csv(EllerbeDischarge_Gorman, row.names = FALSE, 
+          file = "./Data/Processed/EllerbeDischarge_Gorman.csv")
+
+write.csv(EllerbeDischarge_Club, row.names = FALSE, 
+          file = "./Data/Processed/EllerbeDischarge_Club.csv")
+
+```
 
 
 # Format Dates and Numeric
 ```{r}
 Ellerbe_Processed$ActivityStartDate <- as.Date(Ellerbe_Processed$ActivityStartDate, format = "%m/%d/%y")
-Ellerbe_Processed$ActivityEndDate <- as.Date(Ellerbe_Processed$ActivityEndDate, format = "%m/%d/%y")
+
 
 Ellerbe_Processed$ResultMeasureValue <-as.numeric(Ellerbe_Processed$ResultMeasureValue)
 class(Ellerbe_Processed$ResultMeasureValue)
@@ -86,20 +113,15 @@ class(Ellerbe_Processed$ResultMeasureValue)
 
 #Pull out just nutrient data 
 ```{r}
-Ellerbe_Nutrients <- subset(Ellerbe_Processed, CharacteristicName == "Flow" | CharacteristicName == "Gage height" | CharacteristicName == "Total dissolved solids" | CharacteristicName == "Height, gage" | CharacteristicName == "Temperature" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Phosphorus")
-<<<<<<< HEAD
+Ellerbe_Nutrients <- subset(Ellerbe_Processed, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Inorganic nitrogen (nitrate and nitrite)" | CharacteristicName == "Phosphorus")
+
 
 Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
 
-=======
-
-Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
-
->>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 ```
 
 
-#Convert to Wide
+#Convert to Wide - All Locations
 
 ```{r}
 Ellerbe_Nutrients_Summarise <- Ellerbe_Nutrients %>%
@@ -107,13 +129,11 @@ Ellerbe_Nutrients_Summarise <- Ellerbe_Nutrients %>%
 summarise (meanresult = mean(ResultMeasureValue))
 
 
-<<<<<<< HEAD
 Ellerbe_Nutrients_Spread <- spread(Ellerbe_Nutrients_Summarise, CharacteristicName, meanresult)
 
 write.csv(Ellerbe_Nutrients_Spread, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
-=======
-spread(Ellerbe_Nutrients, CharacteristicName, ResultMeasureValue)
+
 
 write.csv(Ellerbe_Nutrients, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients.csv")
@@ -121,11 +141,27 @@ write.csv(Ellerbe_Nutrients, row.names = FALSE,
 write.csv(Ellerbe_Nutrients_Summarise, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients_Summarise.csv")
 
->>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 
-Ellerbe_Wide <- pivot_wider(Ellerbe_Nutrients, id_cols = c(MonitoringLocationIdentifier,ActivityStartDate, `ActivityStartTime.Time`), names_from = CharacteristicName, values_from = ResultMeasureValue)
+#### Ellerbe_Wide <- pivot_wider(Ellerbe_Nutrients, id_cols = c(MonitoringLocationIdentifier,ActivityStartDate, `ActivityStartTime.Time`), names_from = CharacteristicName, values_from = ResultMeasureValue)
 
 ```
 
+# Convert to Wide at Gages 
+
+```{r}
+#Convert to Wide - All Locations
+
+Ellerbe_Nutrients_USGS <- subset(Ellerbe_Nutrients, MonitoringLocationIdentifier == "USGS-0208675010" | MonitoringLocationIdentifier == "USGS-02086849")
+
+Ellerbe_Nutrients_Summarise_USGS <- Ellerbe_Nutrients_USGS %>%
+  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName) %>% 
+summarise (meanresult = mean(ResultMeasureValue))
+
+
+Ellerbe_Nutrients_USGS_Spread <- spread(Ellerbe_Nutrients_Summarise_USGS, CharacteristicName, meanresult)
+
+write.csv(Ellerbe_Nutrients_USGS_Spread, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
+```
 
 
