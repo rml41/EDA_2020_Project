@@ -42,8 +42,15 @@ getwd()
 
 library(plyr)
 library(tidyverse)
+library(ggplot2)
 
 # Set your ggplot theme
+
+mytheme <- theme_bw(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+
+theme_set(mytheme)
 
 # Load your datasets
 
@@ -63,4 +70,41 @@ EC_Nutrients_Wide_Processed$ActivityStartDate <- as.Date(EC_Nutrients_Wide_Proce
 
 Ellerbe_Processed$ResultMeasureValue <-as.numeric(Ellerbe_Processed$ResultMeasureValue)
 class(Ellerbe_Processed$ResultMeasureValue)
+
+class(EC_Nutrients_Wide_Processed$Flow)
+class(EC_Nutrients_Wide_Processed$ActivityStartDate)
 ```
+
+# Explore with ggplot 
+```{r}
+GageHeightplot <-
+  ggplot(EC_Nutrients_Wide_Processed, aes(y = Gage.height)) +
+  geom_boxplot()
+print(GageHeightplot)
+
+GageHeight_Time <-
+  ggplot(EC_Nutrients_Wide_Processed, 
+         aes(x = ActivityStartDate, y = Gage.height, color = HydrologicEvent))+
+  geom_point() 
+print(GageHeight_Time)
+
+GageHeight_TP <-
+  ggplot(EC_Nutrients_Wide_Processed, 
+         aes(x = Gage.height, y = Phosphorus, color = HydrologicEvent))+
+  geom_point() 
+print(GageHeight_TP)
+
+GageHeight_TN <-
+  ggplot(EC_Nutrients_Wide_Processed, 
+         aes(x = Gage.height, y = Nitrogen..mixed.forms..NH3....NH4...organic...NO2..and..NO3., color = HydrologicEvent))+
+  geom_point() 
+print(GageHeight_TN)
+
+GageHeight_TDS <-
+  ggplot(EC_Nutrients_Wide_Processed, 
+         aes(x = Gage.height, y = Total.dissolved.solids, color = HydrologicEvent))+
+  geom_point() 
+print(GageHeight_TDS)
+
+```
+
