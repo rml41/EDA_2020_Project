@@ -47,6 +47,7 @@ library(tidyverse)
 # Load your datasets
 
 Ellerbe_Raw <- read.csv("./Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv")
+<<<<<<< HEAD
 
 head(Ellerbe_Raw)
 colnames(Ellerbe_Raw)
@@ -55,6 +56,17 @@ summary(Ellerbe_Raw$CharacteristicName)
 Ellerbe_Processed <- Ellerbe_Raw %>%
   select(OrganizationIdentifier, ActivityStartDate:`ActivityEndTime.Time`, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
 
+=======
+
+head(Ellerbe_Raw)
+colnames(Ellerbe_Raw)
+summary(Ellerbe_Raw$ActivityTypeCode, maxsum = 5)
+head(Ellerbe_Raw$ActivityTypeCode)
+
+Ellerbe_Processed <- Ellerbe_Raw %>%
+  select(OrganizationIdentifier, ActivityStartDate:`ActivityEndTime.Time`, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
+
+>>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 write.csv(Ellerbe_Processed, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Processed.csv")
 
@@ -75,9 +87,15 @@ class(Ellerbe_Processed$ResultMeasureValue)
 #Pull out just nutrient data 
 ```{r}
 Ellerbe_Nutrients <- subset(Ellerbe_Processed, CharacteristicName == "Flow" | CharacteristicName == "Gage height" | CharacteristicName == "Total dissolved solids" | CharacteristicName == "Height, gage" | CharacteristicName == "Temperature" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Phosphorus")
+<<<<<<< HEAD
 
 Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
 
+=======
+
+Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
+
+>>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 ```
 
 
@@ -89,10 +107,21 @@ Ellerbe_Nutrients_Summarise <- Ellerbe_Nutrients %>%
 summarise (meanresult = mean(ResultMeasureValue))
 
 
+<<<<<<< HEAD
 Ellerbe_Nutrients_Spread <- spread(Ellerbe_Nutrients_Summarise, CharacteristicName, meanresult)
 
 write.csv(Ellerbe_Nutrients_Spread, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
+=======
+spread(Ellerbe_Nutrients, CharacteristicName, ResultMeasureValue)
+
+write.csv(Ellerbe_Nutrients, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Nutrients.csv")
+
+write.csv(Ellerbe_Nutrients_Summarise, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Nutrients_Summarise.csv")
+
+>>>>>>> e4245536769585e5c2ed1eca07f5232df328c680
 
 Ellerbe_Wide <- pivot_wider(Ellerbe_Nutrients, id_cols = c(MonitoringLocationIdentifier,ActivityStartDate, `ActivityStartTime.Time`), names_from = CharacteristicName, values_from = ResultMeasureValue)
 
