@@ -38,86 +38,121 @@ getwd()
 
 # Load your packages
 
-
 library(plyr)
 library(tidyverse)
 library(dataRetrieval)
 
 # Set your ggplot theme
+mytheme <- theme_bw(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
 
-# Load your datasets
+theme_set(mytheme)
+
+
+# Load Ellerbe Creek Raw 
 
 Ellerbe_Raw <- read.csv("./Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv")
 
 
-head(Ellerbe_Raw)
-colnames(Ellerbe_Raw)
-summary(Ellerbe_Raw$CharacteristicName)
+# Data Retrieval for USGS Flow Data 
+### USGS flow data from 2 different gages (Club Blvd and Gorman)
 
-Ellerbe_Processed <- Ellerbe_Raw %>%
-  select(OrganizationIdentifier, ActivityStartDate:`ActivityEndTime.Time`, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
-
-
-
-head(Ellerbe_Raw)
-colnames(Ellerbe_Raw)
-summary(Ellerbe_Raw$ActivityTypeCode, maxsum = 5)
-head(Ellerbe_Raw$ActivityTypeCode)
-
-Ellerbe_Processed <- Ellerbe_Raw %>%
-  select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName, -`ActivityStartTime.TimeZoneCode`)
-
-write.csv(Ellerbe_Processed, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_Processed.csv")
-
-getwd()
-```
-
-# Load USGS Data 
-
-```{r}
-ClubSummary <- whatNWISdata(siteNumbers = "0208675010")
+ClubSummary <- whatNWISdata(siteNumbers = "0208675010") # What data is available? What parameters? 
 EllerbeDischarge_Club <- readNWISdv(siteNumbers = "0208675010",
                            parameterCd ="00060", # discharge (ft3/s)
                            startDate = "2008-01-01",
                            endDate = "2020-4-17")
 
-Gorman <- whatNWISdata(siteNumbers = "02086849")
+GormanSummary  <- whatNWISdata(siteNumbers = "02086849")
 EllerbeDischarge_Gorman <- readNWISdv(siteNumbers = "02086849",
                                       parameterCd = "00060", # discharge (ft3/s)
                                       startDate = "2008-01-01",
                                       endDate = "2020-4-17")
 
+# Save USGS Data to Raw Data Folder 
+write.csv(EllerbeDischarge_Club, row.names = FALSE, 
+          file = "./Data/Raw/Club_Discharge_Raw.csv")
+
+write.csv(EllerbeDischarge_Gorman, row.names = FALSE, 
+          file = "./Data/Raw/Gorman_Discharge_Raw.csv")
+
+```
+
+# Explore Data 
+```{r}
+head(Ellerbe_Raw)
+colnames(Ellerbe_Raw) ### See column names to determine which to select
+summary(Ellerbe_Raw$CharacteristicName) 
+  ### See available characteristics to examines and number of measurments for each
+
+
+```
+
+#Clean Ellerbe Creek Data (WQ Portal)
+```{r}
+# Select Columns of Interest 
+Ellerbe_Clean <- Ellerbe_Raw %>%
+  select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName) %>%
+  mutate_all(na_if,"") %>% 
+  drop_na(ResultMeasureValue)
+
+write.csv(Ellerbe_Clean, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Clean.csv")
+
+# Explore cleaned data
+
+head(Ellerbe_Raw)
+colnames(Ellerbe_Raw)
+summary(Ellerbe_Raw$ActivityTypeCode)
+head(Ellerbe_Raw$ActivityTypeCode)
+
+```
+
+# Join USGS flow data 
+```{r}
+
 Ellerbe_CombinedDischarge <- full_join(EllerbeDischarge_Gorman, EllerbeDischarge_Club, by = "Date")
 
 write.csv(Ellerbe_CombinedDischarge, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_CombinedDischarge.csv")
-
-write.csv(EllerbeDischarge_Gorman, row.names = FALSE, 
-          file = "./Data/Processed/EllerbeDischarge_Gorman.csv")
-
-write.csv(EllerbeDischarge_Club, row.names = FALSE, 
-          file = "./Data/Processed/EllerbeDischarge_Club.csv")
-
 ```
 
-
-# Format Dates and Numeric
-```{r}
-Ellerbe_Processed$ActivityStartDate <- as.Date(Ellerbe_Processed$ActivityStartDate, format = "%m/%d/%y")
-
-
-Ellerbe_Processed$ResultMeasureValue <-as.numeric(Ellerbe_Processed$ResultMeasureValue)
-class(Ellerbe_Processed$ResultMeasureValue)
-```
 
 #Pull out just nutrient data 
 ```{r}
-Ellerbe_Nutrients <- subset(Ellerbe_Processed, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Inorganic nitrogen (nitrate and nitrite)" | CharacteristicName == "Phosphorus")
+Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Inorganic nitrogen (nitrate and nitrite)" | CharacteristicName == "Phosphorus")
 
 
-Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
+```
 
+
+# Format Dates and Numeric Columns 
+```{r}
+Ellerbe_Nutrients$ActivityStartDate <- as.Date(Ellerbe_Nutrients$ActivityStartDate, format = "%m/%d/%y")
+
+Ellerbe_Nutrients$ActivityStartDate <- format(Ellerbe_Nutrients$ActivityStartDate, "%y%m%d")
+
+create.early.dates <- (function(d) {
+       paste0(ifelse(d > 181217,"19", "20"),d)
+       })
+#
+Ellerbe_Nutrients$ActivityStartDate <- create.early.dates(Ellerbe_Nutrients$ActivityStartDate)
+
+#
+Ellerbe_Nutrients$ActivityStartDate <- as.Date(Ellerbe_Nutrients$ActivityStartDate, format = "%Y%m%d")
+class(Ellerbe_Nutrients$ActivityStartDate)
+
+Ellerbe_Nutrients$ResultMeasureValue <-as.numeric(Ellerbe_Nutrients$ResultMeasureValue)
+class(Ellerbe_Nutrients$ResultMeasureValue)
+
+```
+
+#Save Processed Long Dat a
+```{r}
+
+write.csv(Ellerbe_Nutrients, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Nutrients_Processed.csv")
 ```
 
 
@@ -125,21 +160,15 @@ Ellerbe_Nutrients <- drop_na(Ellerbe_Nutrients, ResultMeasureValue)
 
 ```{r}
 Ellerbe_Nutrients_Summarise <- Ellerbe_Nutrients %>%
-  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName) %>% 
+  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText) %>% 
 summarise (meanresult = mean(ResultMeasureValue))
 
 
-Ellerbe_Nutrients_Spread <- spread(Ellerbe_Nutrients_Summarise, CharacteristicName, meanresult)
+Ellerbe_Nutrients_Wide <- spread(Ellerbe_Nutrients_Summarise, CharacteristicName, meanresult)
 
-write.csv(Ellerbe_Nutrients_Spread, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
-
-
-write.csv(Ellerbe_Nutrients, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_Nutrients.csv")
-
-write.csv(Ellerbe_Nutrients_Summarise, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_Nutrients_Summarise.csv")
+# Save processed dataset 
+write.csv(Ellerbe_Nutrients_Wide, row.names = FALSE, 
+          file = "./Data/Processed/Ellerbe_Nutrients_Wide_Processed.csv")
 
 
 #### Ellerbe_Wide <- pivot_wider(Ellerbe_Nutrients, id_cols = c(MonitoringLocationIdentifier,ActivityStartDate, `ActivityStartTime.Time`), names_from = CharacteristicName, values_from = ResultMeasureValue)
@@ -164,4 +193,9 @@ write.csv(Ellerbe_Nutrients_USGS_Spread, row.names = FALSE,
           file = "./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
 ```
 
+# Add Month Column
+
+```{r}
+NTL.phys.data.PeterPaul1 <- mutate(NTL.phys.data.PeterPaul1, month = month(sampledate)) 
+```
 
