@@ -54,62 +54,83 @@ theme_set(mytheme)
 
 # Load your datasets
 
-EC_Nutrients_Wide_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_Wide_Processed.csv")
+EC_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/EC_Flow.Nutrients_Wide_Processed.csv")
 
-EC_Nutrients_USGS_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
+Club.Gorman_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
 
-USGS_Discharge <- read.csv("./Data/Processed/Ellerbe_CombinedDischarge.csv")
+Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
 
-EllerbeDischarge_Club <- read.csv("./Data/Processed/EllerbeDischarge_Club.csv")
+Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
 
-EllerbeDischarge_Gorman <- read.csv("./Data/Processed/EllerbeDischarge_Gorman.csv")
-
-head(EC_Nutrients_Wide_Processed)
-colnames(EC_Nutrients_Wide_Processed)
-summary(EC_Nutrients_Wide_Processed$HydrologicEvent)
 
 ```
-
-
 
 # Format Dates
 ```{r}
-EC_Nutrients_Wide_Processed$ActivityStartDate <- as.Date(EC_Nutrients_Wide_Processed$ActivityStartDate, format = "%Y-%m-%d")
-class(EC_Nutrients_Wide_Processed$ActivityStartDate)
+Club.Gorman_Flow.Nutrients_Wide$Date <- 
+  as.Date(Club.Gorman_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Wide$Date)
 
-EC_Nutrients_USGS_Processed$ActivityStartDate <- as.Date(EC_Nutrients_USGS_Processed$ActivityStartDate, format = "%Y-%m-%d")
-class(EC_Nutrients_USGS_Processed$ActivityStartDate)
+Club.Gorman_Flow_Wide$Date <- 
+  as.Date(Club.Gorman_Flow_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Wide$Date)
 
-names(EC_Nutrients_USGS_Processed)[2] <- "Date"
+Club.Gorman_Flow_Long$Date <- 
+  as.Date(Club.Gorman_Flow_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Long$Date)
 
-USGS_Discharge$Date <- as.Date(USGS_Discharge$Date, format = "%Y-%m-%d")
-class(USGS_Discharge$Date)
+EC_Flow.Nutrients_Wide$Date <- 
+  as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(EC_Flow.Nutrients_Wide$Date)
+
 ```
 
-# Join Discharge and Nutrients 
+#Format Site Number to Character
 ```{r}
-EC_Nutrients_USGS_Processed2 <- separate(EC_Nutrients_USGS_Processed, MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-")
 
-EC_USGS_Combined <- full_join(EC_Nutrients_USGS_Processed2, USGS_Discharge, by = "Date")
+Club.Gorman_Flow.Nutrients_Wide$site_no <- 
+  as.character(Club.Gorman_Flow.Nutrients_Wide$site_no)
+class(Club.Gorman_Flow.Nutrients_Wide$site_no)
 
-EC_Nutrients_USGS_Processed2$site_no <- as.character(EC_Nutrients_USGS_Processed2$site_no)
-EllerbeDischarge_Club$site_no <- as.character(EllerbeDischarge_Club$site_no)
+Club.Gorman_Flow_Wide$site_no.x <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.x)
+class(Club.Gorman_Flow_Wide$site_no.x)
 
-EC_Nutrients_Club <- full_join(EC_Nutrients_USGS_Processed2, EllerbeDischarge_Club, by = "site_no")
+Club.Gorman_Flow_Wide$site_no.y <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.y)
+class(Club.Gorman_Flow_Wide$site_no.y)
 
+Club.Gorman_Flow_Long$site_no <- 
+  as.character(Club.Gorman_Flow_Long$site_no, format)
+class(Club.Gorman_Flow_Long$site_no)
 
-### need one column for site and one column for date 
+EC_Flow.Nutrients_Wide$site_no <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no)
+class(EC_Flow.Nutrients_Wide$site_no)
 
-EC_Discharge_bind <- rbind(EllerbeDischarge_Club, EllerbeDischarge_Gorman)
-EC_Discharge_bind$Date <- as.Date(EC_Discharge_bind$Date, format = "%Y-%m-%d")
+EC_Flow.Nutrients_Wide$site_no.x <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.x)
+class(EC_Flow.Nutrients_Wide$site_no.x)
 
-EC_Nutrients_Join <- full_join(EC_Discharge_bind, EC_Nutrients_USGS_Processed2, by = c("site_no", "Date"))
+EC_Flow.Nutrients_Wide$site_no.y <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.y)
+class(EC_Flow.Nutrients_Wide$site_no.y)
 
 ```
 
 
 # Find Start and End dates 
 # find out the start and end dates of the dataset
+```{r}
+#Date range for flow 
+interval(first(Club.Gorman_Flow_Long$Date), last(Club.Gorman_Flow_Long$Date))
+
+```
+
+interval(first(Club.Gorman_Flow_Long$Date), last(Club.Gorman_Flow_Long$Date))
+
 interval(NTL.phys.data.PeterPaul1$sampledate[1], NTL.phys.data.PeterPaul1$sampledate[21613])
 interval(first(NTL.phys.data.PeterPaul1$sampledate), last(NTL.phys.data.PeterPaul1$sampledate))
 
@@ -126,36 +147,71 @@ NTL.PeterPaul.summaries <-
             sdTN = sd(tn_ug), 
             meanTP = mean(tp_ug), 
             sdTP = sd(tp_ug))
-# Explore with ggplot 
+# Flow 
 ```{r}
 GageHeightplot <-
-  ggplot(EC_Nutrients_Wide_Processed, aes(y = Gage.height)) +
+  ggplot(Club.Gorman_Flow_Long, aes(y = X_00060_00003)) +
   geom_boxplot()
 print(GageHeightplot)
 
-GageHeight_Time <-
-  ggplot(EC_Nutrients_Wide_Processed, 
-         aes(x = ActivityStartDate, y = Gage.height, color = HydrologicEvent))+
-  geom_point() 
-print(GageHeight_Time)
+mean(Club.Gorman_Flow_Long$X_00060_00003)
+min(Club.Gorman_Flow_Long$X_00060_00003)
+max(Club.Gorman_Flow_Long$X_00060_00003)
+sd(Club.Gorman_Flow_Long$X_00060_00003)
+IQR(Club.Gorman_Flow_Long$X_00060_00003)
 
-GageHeight_TP <-
-  ggplot(EC_Nutrients_Wide_Processed, 
-         aes(x = Gage.height, y = Phosphorus, color = HydrologicEvent))+
-  geom_point() 
-print(GageHeight_TP)
 
-GageHeight_TN <-
-  ggplot(EC_Nutrients_Wide_Processed, 
-         aes(x = Gage.height, y = Nitrogen..mixed.forms..NH3....NH4...organic...NO2..and..NO3., color = HydrologicEvent))+
+DischargeTimeplot <-
+  ggplot(Club.Gorman_Flow_Long, 
+         aes(x = Date, y = X_00060_00003, color = site_no))+
   geom_point() 
-print(GageHeight_TN)
+print(DischargeTimeplot)
 
-GageHeight_TDS <-
-  ggplot(EC_Nutrients_Wide_Processed, 
-         aes(x = Gage.height, y = Total.dissolved.solids, color = HydrologicEvent))+
+```
+
+
+
+# Explore Nutrients with ggplot 
+```{r}
+
+Discharge_TP <-
+  ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = TP, y = X_00060_00003.y, color = HydrologicEvent))+
+  xlim(0,400)+
+  ylim(0,400)+
   geom_point() 
-print(GageHeight_TDS)
+print(Discharge_TP)
+
+ClubGorman_Discharge_TP <-
+  ggplot(Club.Gorman_Flow.Nutrients_Wide, 
+         aes(x = TP, y = X_00060_00003, color = HydrologicEvent))+
+   xlim(0,400)+
+  geom_point() 
+print(ClubGorman_Discharge_TP)
+
+Discharge_TN <-
+  ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = Inorganic_N, y = X_00060_00003.x, color = HydrologicEvent))+
+  geom_point() 
+print(Discharge_TN)
+
+Discharge_Turbidity <-
+  ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = Turbidity, y = X_00060_00003.x, color = HydrologicEvent))+
+  geom_point() 
+print(Discharge_Turbidity)
+
+Discharge_XY <-
+  ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = X_00060_00003.x, y = X_00060_00003.y, color = HydrologicEvent))+
+  geom_point() 
+print(Discharge_XY)
+
+TP_TN <- 
+   ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = Mixed_N, y = TP, color = site_no))+
+  geom_point()+
+print(TP_TN)
 
 ```
 
