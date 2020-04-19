@@ -54,7 +54,7 @@ theme_set(mytheme)
 
 # Load your datasets
 
-EC_Nutrients_Wide_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_Spread_Processed.csv")
+EC_Nutrients_Wide_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_Wide_Processed.csv")
 
 EC_Nutrients_USGS_Processed <- read.csv("./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
 
@@ -108,7 +108,24 @@ EC_Nutrients_Join <- full_join(EC_Discharge_bind, EC_Nutrients_USGS_Processed2, 
 ```
 
 
+# Find Start and End dates 
+# find out the start and end dates of the dataset
+interval(NTL.phys.data.PeterPaul1$sampledate[1], NTL.phys.data.PeterPaul1$sampledate[21613])
+interval(first(NTL.phys.data.PeterPaul1$sampledate), last(NTL.phys.data.PeterPaul1$sampledate))
 
+
+# Get summaries 
+NTL.PeterPaul.summaries <- 
+  NTL.phys.nutrient.data.PeterPaul %>%
+  filter(depth == 0) %>%
+  group_by(lakename, month) %>%
+  filter(!is.na(temperature_C) & !is.na(tn_ug) & !is.na(tp_ug)) %>%
+  summarise(meantemp = mean(temperature_C), 
+            sdtemp = sd(temperature_C), 
+            meanTN = mean(tn_ug), 
+            sdTN = sd(tn_ug), 
+            meanTP = mean(tp_ug), 
+            sdTP = sd(tp_ug))
 # Explore with ggplot 
 ```{r}
 GageHeightplot <-

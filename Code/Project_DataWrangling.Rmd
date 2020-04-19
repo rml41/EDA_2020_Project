@@ -41,6 +41,7 @@ getwd()
 library(plyr)
 library(tidyverse)
 library(dataRetrieval)
+library(lubridate)
 
 # Set your ggplot theme
 mytheme <- theme_bw(base_size = 14) +
@@ -112,10 +113,20 @@ head(Ellerbe_Raw$ActivityTypeCode)
 # Join USGS flow data 
 ```{r}
 
+### Full Join
+### Wide dataset with 2 site columns 
 Ellerbe_CombinedDischarge <- full_join(EllerbeDischarge_Gorman, EllerbeDischarge_Club, by = "Date")
 
 write.csv(Ellerbe_CombinedDischarge, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_CombinedDischarge.csv")
+          file = "./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
+
+### rbind 
+### Long dataset with 2 rows for each date and 1 site column 
+Ellerbe_USGSDischarge_Long <- rbind(EllerbeDischarge_Club, EllerbeDischarge_Gorman)
+Ellerbe_USGSDischarge_Long$Date <- as.Date(Ellerbe_USGSDischarge_Long$Date, format = "%Y-%m-%d")
+
+write.csv(Ellerbe_USGSDischarge_Long, row.names = FALSE, 
+          file = "./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
 ```
 
 
@@ -125,7 +136,6 @@ Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Turbidity" | C
 
 
 ```
-
 
 # Format Dates and Numeric Columns 
 ```{r}
@@ -159,12 +169,15 @@ write.csv(Ellerbe_Nutrients, row.names = FALSE,
 #Convert to Wide - All Locations
 
 ```{r}
-Ellerbe_Nutrients_Summarise <- Ellerbe_Nutrients %>%
+Ellerbe_Nutrients_Wide <- Ellerbe_Nutrients %>%
   group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText) %>% 
-summarise (meanresult = mean(ResultMeasureValue))
+summarise (meanresult = mean(ResultMeasureValue)) %>% 
+  spread(CharacteristicName, meanresult) %>% 
+  mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
+  select(MonitoringLocationIdentifier, ActivityStartDate, month, HydrologicEvent:Turbidity) %>% 
+  separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
+  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText, "Inorganic_N" = `Inorganic nitrogen (nitrate and nitrite)`, "Mixed_N" = `Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`, "TP" = Phosphorus, "TSS" =  `Total suspended solids`, "Temperature" =`Temperature, water`)
 
-
-Ellerbe_Nutrients_Wide <- spread(Ellerbe_Nutrients_Summarise, CharacteristicName, meanresult)
 
 # Save processed dataset 
 write.csv(Ellerbe_Nutrients_Wide, row.names = FALSE, 
@@ -175,27 +188,39 @@ write.csv(Ellerbe_Nutrients_Wide, row.names = FALSE,
 
 ```
 
-# Convert to Wide at Gages 
+# Subset Wide Nutrient Data to include just measurements at Gages 
 
 ```{r}
-#Convert to Wide - All Locations
 
-Ellerbe_Nutrients_USGS <- subset(Ellerbe_Nutrients, MonitoringLocationIdentifier == "USGS-0208675010" | MonitoringLocationIdentifier == "USGS-02086849")
+ClubGorman_Nutrients_Wide <- subset(Ellerbe_Nutrients_Wide, site_no == "0208675010" | site_no == "02086849")
 
-Ellerbe_Nutrients_Summarise_USGS <- Ellerbe_Nutrients_USGS %>%
-  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName) %>% 
-summarise (meanresult = mean(ResultMeasureValue))
+write.csv(ClubGorman_Nutrients_Wide, row.names = FALSE, 
+          file = "./Data/Processed/ClubGorman_Nutrients_Wide_Processed.csv")
 
-
-Ellerbe_Nutrients_USGS_Spread <- spread(Ellerbe_Nutrients_Summarise_USGS, CharacteristicName, meanresult)
-
-write.csv(Ellerbe_Nutrients_USGS_Spread, row.names = FALSE, 
-          file = "./Data/Processed/Ellerbe_Nutrients_USGS_Spread.csv")
 ```
 
-# Add Month Column
-
+# Join Discharge and Nutrients 
 ```{r}
-NTL.phys.data.PeterPaul1 <- mutate(NTL.phys.data.PeterPaul1, month = month(sampledate)) 
+
+### Just USGS Gage Sies
+class(ClubGorman_Nutrients_Wide$Date)
+class(Ellerbe_USGSDischarge_Long$Date)
+
+EC_USGS_Combined <- full_join(ClubGorman_Nutrients_Wide, Ellerbe_USGSDischarge_Long, by = c("site_no","Date"))
+
+
+write.csv(EC_USGS_Combined, row.names = FALSE, 
+          file = "./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
+
+### Join Flow data with all Nutrient data 
+
+EC_Flow.Nutrients_Wide <- full_join(Ellerbe_Nutrients_Wide, Ellerbe_CombinedDischarge, by = "Date")
+
+write.csv(EC_Flow.Nutrients_Wide, row.names = FALSE, 
+          file = "./Data/Processed/EC_Flow.Nutrients_Wide_Processed.csv")
+
+
 ```
+
+
 

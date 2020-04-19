@@ -26,3 +26,20 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Notes from Wrangling
+```{r}
+EC_Nutrients_USGS_Processed2$site_no <- as.character(EC_Nutrients_USGS_Processed2$site_no)
+EllerbeDischarge_Club$site_no <- as.character(EllerbeDischarge_Club$site_no)
+
+EC_Nutrients_Club <- full_join(EC_Nutrients_USGS_Processed2, EllerbeDischarge_Club, by = "site_no")
+
+
+### need one column for site and one column for date 
+
+EC_Discharge_bind <- rbind(EllerbeDischarge_Club, EllerbeDischarge_Gorman)
+EC_Discharge_bind$Date <- as.Date(EC_Discharge_bind$Date, format = "%Y-%m-%d")
+
+EC_Nutrients_Join <- full_join(EC_Discharge_bind, EC_Nutrients_USGS_Processed2, by = c("site_no", "Date"))
+```
+
