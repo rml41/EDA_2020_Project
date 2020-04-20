@@ -61,13 +61,13 @@ Ellerbe_Raw <- read.csv("./Data/Raw/Ellerbe_WaterQuality_Raw_Data.csv")
 
 ClubSummary <- whatNWISdata(siteNumbers = "0208675010") # What data is available? What parameters? 
 EllerbeDischarge_Club <- readNWISdv(siteNumbers = "0208675010",
-                           parameterCd ="00060", # discharge (ft3/s)
+                           parameterCd =c("00060", "00065"), # discharge (ft3/s), gage height (ft)
                            startDate = "2008-01-01",
                            endDate = "2020-4-17")
 
 GormanSummary  <- whatNWISdata(siteNumbers = "02086849")
 EllerbeDischarge_Gorman <- readNWISdv(siteNumbers = "02086849",
-                                      parameterCd = "00060", # discharge (ft3/s)
+                                      parameterCd = c("00060", "00065"), # discharge (ft3/s), gage height
                                       startDate = "2008-01-01",
                                       endDate = "2020-4-17")
 
@@ -103,10 +103,10 @@ write.csv(Ellerbe_Clean, row.names = FALSE,
 
 # Explore cleaned data
 
-head(Ellerbe_Raw)
-colnames(Ellerbe_Raw)
-summary(Ellerbe_Raw$ActivityTypeCode)
-head(Ellerbe_Raw$ActivityTypeCode)
+head(Ellerbe_Clean)
+colnames(Ellerbe_Clean)
+summary(Ellerbe_Clean$ActivityTypeCode)
+head(Ellerbe_Clean$ActivityTypeCode)
 
 ```
 
@@ -116,14 +116,21 @@ head(Ellerbe_Raw$ActivityTypeCode)
 ### Full Join
 ### Wide dataset with 2 site columns 
 Ellerbe_CombinedDischarge <- full_join(EllerbeDischarge_Gorman, EllerbeDischarge_Club, by = "Date")
+names(Ellerbe_CombinedDischarge)[4:7]<- c("Discharge.G","D.Approval.Code.G",
+                                          "Gage.Height.G", "GH.Approval.Code.G" )
+names(Ellerbe_CombinedDischarge)[10:13]<- c("Discharge.C","D.Approval.Code.C",
+                                            "Gage.Height.C", "GH.Approval.Code.C")
 
 write.csv(Ellerbe_CombinedDischarge, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
+
 
 ### rbind 
 ### Long dataset with 2 rows for each date and 1 site column 
 Ellerbe_USGSDischarge_Long <- rbind(EllerbeDischarge_Club, EllerbeDischarge_Gorman)
 Ellerbe_USGSDischarge_Long$Date <- as.Date(Ellerbe_USGSDischarge_Long$Date, format = "%Y-%m-%d")
+names(Ellerbe_USGSDischarge_Long)[4:7]<- c("Discharge", "D.Approval.Code",
+                                          "Gage.Height", "GH.Approval.Code")
 
 write.csv(Ellerbe_USGSDischarge_Long, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_USGSDischarge_Long.csv")

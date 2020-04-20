@@ -62,6 +62,8 @@ Club.Gorman_Flow.Nutrients_Wide <-
 
 Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
 
+class(Club.Gorman_Flow_Long$X_00060_00003)
+
 Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
 
 
