@@ -91,6 +91,28 @@ csv file was saved as Ellerbe_12DigitHUC_Stream_Stations
 
 For more information on the Water Quality Portal visit https://www.waterqualitydata.us/portal_userguide/
 
+**USGS Discharge Data** 
+
+Downloaded from USGS using dataRetrieval package in R
+
+* siteNumbers: 
+
+  - 0208675010 (Club)
+  
+  - 02086849 (Gorman)
+  
+* parameterCd: 00060 (discharge (ft3/s))
+
+* startDate: 2008-01-01
+
+* endDate: 2020-4-17
+
+csv files were saved as Club_Discharge_Raw.csv and Gorman_Discharge_Raw.csv
+
+For more informations on the dataRetrieval package and USGS parameters codes
+visit https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html
+
+
 ## Folder structure, file formats, and naming conventions 
 
 The repository contains the following folders:
@@ -108,11 +130,12 @@ Outputs are stored as PDF files
 Files are named according to the following convention: 
 datalocation_datatype_details_stage.format
 
-**datalocation** refers to Ellerbe Creek
+**datalocation** refers to Ellerbe Creek as (All monitoring sites along the creek) 
+or ClubGorman (just USGS gage sites at Club and Gorman)
 
-**datatype** is a description of data 
+**datatype** is a description of data (e.g. Nutrient or Flow) 
 
-**details** are additional descriptive details, particularly important for processed data 
+**details** are additional descriptive details, particularly important for processed data (e.g. Wide vs. Long)
 
 **stage** refers to the stage in data management pipelines (e.g., raw, cleaned, or processed)
 
@@ -127,14 +150,12 @@ Column Name | Description | Class
 OrganizationIdentifier | Provides source for data, includes USGS and NC DENR | Character
 ActivityStartDate | Start date for sample collection | Date
 ActivityStartTime/Time | Start time for sample collection (ET) | Difftime
-ActivityEndDate | End date for sample collection | Date
-ActivityEndTime/Time | End time for sample collection (ET) | Difftime
 MonitoringLocationIdentifier | Identification code for monitoring location, used to spatially map data along Ellerbe Creek | Character 
 HydrologicEvent | Hydrologic event that led to sampling, including routine sample, storm, or flood | Character 
 HydrologicCondition | Hydrologic conditions at time of sampling, including peak stage, falling stage, stable, Rising stage | Character 
 CharacteristicName | Characteristic measured including, Total Nitrogen and Phosphorus, Gage height, Temperature, TDS, TSS, and Flow. When data is wide, it will be spread using this column to create new columns for each characteristic | Character 
 ResultSampleFractionText | Specifies type of measurement, e.g. total phospohorus or dissolved phosphorus | Character 
-ResultMeasureValue | Number value for each characteristic measured. Units vary and can be found in Ellerbe_WaterQuality_Raw_Data.csv in the raw data folder | Character
+ResultMeasureValue | Number value for each characteristic measured. Units vary and can be found in Ellerbe_WaterQuality_Raw_Data.csv in the raw data folder | Numeric
 ResultStatusIdentifier | Specifies whether measurements is Accepted, Historical, or Preliminary | Character 
 ResultValueTypeName | Specifies is the measurment value is actual or estimated | Character
 
@@ -150,6 +171,18 @@ MonitoringLocationName | Common name for monitoring location | Character
 HUCEightDigitCode | 8 Digit hydrologic unit code for Ellerbe Creek | Character
 LatitudeMeasure | Latitude coordinate of sampling location | Character
 LongitudeMeasure | Longitude coordinate of sampling location | Character
+
+**USGS Flow Data **
+
+Daily data of discharge (ft/s) at two stream gages (Gorman and Club Blvd) along Ellerbe Creek
+
+Column Name | Description | Class
+-----------------|----------------------------------|-----------------
+agency_cd | Source of data (all USGS) | Character
+site_no | Specifies site of data collection (either Club or Gorman) | Character
+Date | Date of data collection | Date
+X_00060_00003 | Discharge (ft/s) | Numeric
+X_00060_00003_cd | Data is actual or provisional | Character
 
 ## Scripts and code
 
