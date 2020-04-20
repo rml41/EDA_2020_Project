@@ -43,10 +43,21 @@ getwd()
 library(plyr)
 library(tidyverse)
 library(ggplot2)
+library(viridis)
+library(RColorBrewer)
+library(cowplot)
+library(LAGOSNE)
+library(sf)
+library(maps)
+library(gganimate)
+library(sf)
+library(ggmap)
+library(here)
+library(maps)
 
 # Set your ggplot theme
 
-mytheme <- theme_bw(base_size = 14) +
+mytheme <- theme_classic(base_size = 14) +
   theme(axis.text = element_text(color = "black"), 
         legend.position = "top")
 
@@ -149,25 +160,79 @@ NTL.PeterPaul.summaries <-
             sdTN = sd(tn_ug), 
             meanTP = mean(tp_ug), 
             sdTP = sd(tp_ug))
+            
+```{r}
+Club.Gorman_Flow_MonthSummary <- Club.Gorman_Flow_Long %>% 
+  mutate(month = month(Date, label = TRUE)) %>% 
+  group_by(site_no, month) %>% 
+  filter(!is.na(Discharge)) %>% 
+  summarise(meanDischarge = mean(Discharge),
+            sdDischarge = sd(Discharge),
+            minDischarge = min(Discharge),
+            maxDischarge = max(Discharge))
+
+
+Club.Gorman_Flow_YearSummary <- Club.Gorman_Flow_Long %>% 
+  mutate(year = year(Date)) %>% 
+  group_by(site_no, year) %>% 
+  filter(!is.na(Discharge)) %>% 
+  summarise(meanDischarge = mean(Discharge),
+            sdDischarge = sd(Discharge),
+            minDischarge = min(Discharge),
+            maxDischarge = max(Discharge))
+```
+
 # Flow 
 ```{r}
-GageHeightplot <-
-  ggplot(Club.Gorman_Flow_Long, aes(y = X_00060_00003)) +
+Dischargeplot <-
+  ggplot(Club.Gorman_Flow_Long, aes(y = Discharge)) +
   geom_boxplot()
-print(GageHeightplot)
+print(Dischargeplot)
 
-mean(Club.Gorman_Flow_Long$X_00060_00003)
-min(Club.Gorman_Flow_Long$X_00060_00003)
-max(Club.Gorman_Flow_Long$X_00060_00003)
-sd(Club.Gorman_Flow_Long$X_00060_00003)
-IQR(Club.Gorman_Flow_Long$X_00060_00003)
+mean(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
+min(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
+max(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
+sd(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
+IQR(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
 
+# Mean Annual Discharge 
+MeanDischargeplot <-
+  ggplot(Club.Gorman_Flow_YearSummary, aes(x = year, y = meanDischarge)) +
+  geom_point()
+print(MeanDischargeplot)
 
 DischargeTimeplot <-
   ggplot(Club.Gorman_Flow_Long, 
-         aes(x = Date, y = X_00060_00003, color = site_no))+
+         aes(x = Date, y = Discharge, color = site_no))+
   geom_point() 
 print(DischargeTimeplot)
+
+DischargePlot <- 
+  ggplot(Club.Gorman_Flow_Long, aes(x = Date, y = Discharge, color = site_no)) +
+  geom_line() +
+  ggtitle("Ellerbe Creek") +
+  labs(x = "Time", y = expression("Discharge (ft"^3*"/s)")) + 
+  theme(plot.title = element_text(margin = margin(b = -10), size = 12), 
+        axis.text.x = element_blank(), axis.title.x = element_blank())
+print(DischargePlot)
+
+ClubDischargePlot <- 
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.C)) +
+  geom_line() +
+  ggtitle("Club") +
+  labs(x = "Time", y = expression("Discharge (ft"^3*"/s)")) + 
+  theme(plot.title = element_text(margin = margin(b = -10), size = 12), 
+        axis.text.x = element_blank(), axis.title.x = element_blank())
+print(ClubDischargePlot)
+
+ClubDischargePlot <- 
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.G)) +
+  geom_line() +
+  ggtitle("Gorman") +
+  labs(x = "Time", y = expression("Discharge (ft"^3*"/s)")) + 
+  theme(plot.title = element_text(margin = margin(b = -10), size = 12), 
+        axis.text.x = element_blank(), axis.title.x = element_blank())
+print(ClubDischargePlot)
 
 ```
 
@@ -175,27 +240,58 @@ print(DischargeTimeplot)
 
 # Explore Nutrients with ggplot 
 ```{r}
+### Phosphorus 
+
+Pboxplot <-
+  ggplot(EC_Flow.Nutrients_Wide, aes(x = HydrologicEvent, y = TP)) +
+  geom_boxplot()
+print(Pboxplot)
+
 
 Discharge_TP <-
   ggplot(EC_Flow.Nutrients_Wide, 
-         aes(x = TP, y = X_00060_00003.y, color = HydrologicEvent))+
+         aes(x = TP, y = Discharge.C, color = HydrologicEvent))+
   xlim(0,400)+
   ylim(0,400)+
   geom_point() 
 print(Discharge_TP)
 
+# Log 
+
+logDischarge_logTP <-
+  ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = log(TP), y = log(Discharge.C), color = HydrologicEvent))+
+  geom_point()
+print(logDischarge_logTP)
+      
+
 ClubGorman_Discharge_TP <-
   ggplot(Club.Gorman_Flow.Nutrients_Wide, 
-         aes(x = TP, y = X_00060_00003, color = HydrologicEvent))+
+         aes(x = TP, y = Discharge, color = HydrologicEvent))+
    xlim(0,400)+
   geom_point() 
 print(ClubGorman_Discharge_TP)
 
-Discharge_TN <-
-  ggplot(EC_Flow.Nutrients_Wide, 
-         aes(x = Inorganic_N, y = X_00060_00003.x, color = HydrologicEvent))+
-  geom_point() 
+Discharge_TN <-ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = Inorganic_N, y =Discharge.G, color = HydrologicEvent))+
+  geom_point()+
+  geom_smooth()
 print(Discharge_TN)
+
+Discharge_TN <-ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = Inorganic_N, y =Discharge.G))+
+  geom_point()+
+  geom_smooth()
+print(Discharge_TN)
+
+#Log Nitrogen
+
+logDischarge_logTN <-ggplot(EC_Flow.Nutrients_Wide, 
+         aes(x = log(Inorganic_N), y =log(Discharge.G)))+
+  geom_point()+
+  geom_smooth()
+print(logDischarge_logTN)
+
 
 Discharge_Turbidity <-
   ggplot(EC_Flow.Nutrients_Wide, 
@@ -212,8 +308,78 @@ print(Discharge_XY)
 TP_TN <- 
    ggplot(EC_Flow.Nutrients_Wide, 
          aes(x = Mixed_N, y = TP, color = site_no))+
-  geom_point()+
+  geom_point()
 print(TP_TN)
 
 ```
 
+#Discharge vs Gage
+```{r}
+DvsGHplot <-
+  ggplot(Club.Gorman_Flow_Long, aes(x = Discharge, y = Gage.Height, color=site_no)) +
+  scale_color_brewer(palette="YlGnBu")+
+  geom_point(alpha = 0.75) 
+print(DvsGHplot)
+```
+
+# Seasonal Trend 
+
+```{r}
+Ellerbe.Historical <- mutate(Club.Gorman_Flow_Long, 
+                                         DOY = yday(Date))
+
+EllerbeDischarge.Pattern <- Ellerbe.Historical %>%
+  group_by(DOY) %>%
+  summarise(Median.Discharge = median(Discharge), 
+            Max.Discharge = max(Discharge),
+            Min.Discharge = min(Discharge))
+
+EllerbePatternPlot <- 
+  ggplot(EllerbeDischarge.Pattern, aes(x = DOY)) +
+  geom_line(aes(y = Median.Discharge)) +
+  geom_line(aes(y = Max.Discharge), color = "gray") +
+  geom_line(aes(y = Min.Discharge), color = "gray") +  
+  labs(x = "Day of Year", y = expression("Discharge (ft"^3*"/s)")) 
+print(EllerbePatternPlot)
+
+### Just Gorman 
+Gorman.Historical <- mutate(Club.Gorman_Flow_Wide, 
+                                         DOY = yday(Date))
+
+GormanDischarge.Pattern <- Gorman.Historical %>%
+  group_by(DOY) %>%
+  summarise(Median.Discharge = median(Discharge.G), 
+            Max.Discharge = max(Discharge.G),
+            Min.Discharge = min(Discharge.G))
+
+GormanPatternPlot <- 
+  ggplot(GormanDischarge.Pattern, aes(x = DOY)) +
+  geom_line(aes(y = Median.Discharge)) +
+  geom_line(aes(y = Max.Discharge), color = "gray") +
+  geom_line(aes(y = Min.Discharge), color = "gray") +  
+  labs(x = "Day of Year", y = expression("Discharge (ft"^3*"/s)")) 
+print(GormanPatternPlot)
+
+# Just Club 
+Club.Historical <- mutate(Club.Gorman_Flow_Wide, 
+                                         DOY = yday(Date))
+
+class(Club.Historical$Discharge.C)
+median(Club.Historical$Discharge.C, na.rm=TRUE)
+
+ClubDischarge.Pattern <- Club.Historical %>%
+  group_by(DOY) %>%
+  summarise(Median.Discharge = median(Discharge.C,na.rm=TRUE), 
+            Max.Discharge = max(Discharge.C, na.rm=TRUE),
+            Min.Discharge = min(Discharge.C), na.rm=TRUE)
+
+ClubPatternPlot <- 
+  ggplot(ClubDischarge.Pattern, aes(x = DOY)) +
+  geom_line(aes(y = Median.Discharge)) +
+  geom_line(aes(y = Max.Discharge), color = "gray") +
+  geom_line(aes(y = Min.Discharge), color = "gray") +  
+  labs(x = "Day of Year", y = expression("Discharge (ft"^3*"/s)")) 
+print(ClubPatternPlot)
+```
+
+# Summaries 

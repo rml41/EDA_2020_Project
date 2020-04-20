@@ -1,0 +1,355 @@
+---
+title: "Project_DataVisualization"
+author: "Rachel Landman"
+date: "4/20/2020"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Install Packages
+
+```{r}
+# some tidyverse packages
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(purrr)
+library(sf)
+library(ggmap)
+library(here)
+library(maps)
+```
+
+# Map Data
+
+# Load Data
+```{r}
+
+basins_nf_seplains_raw <- st_read(here("Data","Raw", "data", "spatial_data", "bas_nonref_SEPlains.shp"))
+
+southeast_state_bounds_raw <- st_read(here("Data","Raw","data", "spatial_data", "southeast_state_bounds.shp"))
+
+nc_rivers <- st_read(here("Data","Raw", "MajorHydro.shp"))
+
+nc_12HUC <- st_read(here("Data","Raw","12Digit_HUC_Subwatersheds", "12Digit_HUC_Subwatersheds.shp"))
+```
+
+Check CRS and define proj and EPSG
+```{r}
+st_crs(basins_nf_seplains_raw)
+st_crs(southeast_state_bounds_raw)
+
+## define 
+my_proj4 <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+my_epsg <- 5070
+
+## set 
+
+st_crs(basins_nf_seplains_raw) <- my_proj4
+st_crs(basins_nf_seplains_raw) <- my_epsg
+
+st_crs(southeast_state_bounds_raw) <- my_proj4
+st_crs(southeast_state_bounds_raw) <- my_epsg
+
+st_crs(waterfeatures) <- my_proj4
+st_crs(waterfeatures) <- my_epsg
+
+st_crs(waterfeatures)
+```
+
+Convert Ellerbe Tabular to Spatial 
+
+```{r}
+ellerbe_gages_raw <- read_csv(here("Data","Raw", "Ellerbe_12DigitHUC_Stream_Stations.csv")) %>% as.data.frame()
+
+class(ellerbe_gages_raw)
+names(ellerbe_gages_raw)
+
+# convert to sf object
+ellerbe_gages_as_sf <- st_as_sf(ellerbe_gages_raw, 
+                                coords = c("LongitudeMeasure",
+                                           "LatitudeMeasure"), 
+                                crs = 4326, dim = "XY") 
+# lat long so set CRS = WGS84
+
+# check class and CRS
+class(ellerbe_gages_as_sf)
+head(ellerbe_gages_as_sf)
+st_crs(ellerbe_gages_as_sf)
+
+pdf(here("Output", "test.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = ellerbe_gages_as_sf) +
+  theme_bw()
+dev.off()
+
+```
+
+Select NC from State Bounds
+
+```{r}
+nc_state_bounds_geom <- southeast_state_bounds_raw %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
+
+head (nc_state_bounds_geom)
+
+nc_basins_nf_seplains <- basins_nf_seplains_raw %>%
+  st_intersection(nc_state_bounds_geom)
+
+head(nc_basins_nf_seplains)
+
+nc_area <- st_area(nc_state_bounds_geom)
+nc_centroid <- st_centroid(nc_state_bounds_geom)
+nc_gages_buffer_100m <- st_buffer (ellerbe_gages_as_sf, dist = 100)
+
+```
+
+Select Ellerbe HUC
+
+```{r}
+ellerbe_watershed8 <- nc_12HUC %>%
+  filter(HUC_8 == "03020201") %>%
+  st_geometry()
+
+ellerbe_watershed12 <- nc_12HUC %>%
+filter(HUC_12 == "030202010403")%>%
+  st_geometry()
+
+class(ellerbe_watershed12)
+head(ellerbe_watershed8)
+```
+
+Intersect Rivers with Ellerbe HUC
+```{r}
+nc_rivers_ellerbe <- nc_rivers %>% 
+  st_intersection(ellerbe_watershed12)
+
+nc_rivers_HUC8 <- nc_rivers %>% 
+  st_intersection(ellerbe_watershed8)
+
+waterfeatures_HUC8 <- waterfeatures  %>% 
+  st_intersection(ellerbe_watershed8)
+
+st_crs(ellerbe_watershed8)
+st_crs(waterfeatures_wsg84)
+
+# Convert waterfeatures to 4326
+waterfeatures_wsg84 <- waterfeatures %>%
+  st_transform(4326)
+
+```
+
+#Plot 
+
+Plot
+
+```{r}
+## add basemap 
+
+nc_state_bounds_geom <- southeast_state_bounds_raw %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
+
+nc_bbox <- nc_state_bounds_geom %>%
+  st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
+  st_transform(4326) %>% # WGS84 (for lat and long)
+  st_bbox()
+nc_bbox # check
+
+# fix bounding box columns so they match what is needed for the ggmap::get_map() function
+### fucntion (ggmap:getmap()) pulls basemap
+nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
+
+# check result
+nc_bbox_fix
+
+# get basemap
+### type get_map in help to see figure out how much you want to zoom 
+nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 10)
+class(nc_basemap)
+st_crs(nc_basemap)
+
+
+ellerbe_map <- 
+  get_map (location = c( long = 36.0283820, lat = -78.9020959), 
+           maptype ='terrain-background', source = 'stamen', zoom = 10)
+
+class(nc_basemap)
+st_crs(nc_basemap)
+# convert nc_state_bounds_geom to WGS84 so it matches nc_basemap
+### converts it back to lat/long 
+nc_state_bounds_geom_wsg84 <- nc_state_bounds_geom %>%
+  st_transform(4326)
+
+st_crs(nc_state_bounds_geom_wsg84)
+```
+
+# Get Basemap for Ellerbe Watershed 
+```{r}
+## add basemap 
+sq_map <- get_map(location = c(long = 36.0283820, lat = -78.9020959),
+                  maptype = "terrain-background", source = 'stamen', zoom = 5)
+
+ggmap(sq_map)
+
+nc_state_bounds_geom <- southeast_state_bounds_raw %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
+
+nc_bbox <- ellerbe_watershed12 %>%
+  st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
+  st_transform(4326) %>% # WGS84 (for lat and long)
+  st_bbox()
+nc_bbox # check
+
+# fix bounding box columns so they match what is needed for the ggmap::get_map() function
+### fucntion (ggmap:getmap()) pulls basemap
+nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
+
+# check result
+nc_bbox_fix
+
+# get basemap
+### type get_map in help to see figure out how much you want to zoom 
+nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
+class(nc_basemap)
+st_crs(nc_basemap)
+
+```
+
+
+
+# Plot 
+```{r}
+### Plot 
+
+pdf(here("Output", "nc_with_basemap.pdf"), width = 11, height = 8.5)
+ggmap(nc_basemap) +
+  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)
+dev.off()
+
+pdf(here("Output", "EC_with_basemap.pdf"), width = 11, height = 8.5)
+ggmap(nc_basemap) +
+  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)+
+  geom_sf(data = ellerbe_gages_as_sf, color = "red")
+dev.off()
+
+
+
+pdf(here("Output", "ellerbe_watershed_test1.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = ellerbe_watershed12, fill = "blue", lwd = 2) +
+  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+  theme_bw()
+dev.off()
+
+
+pdf(here("Lessons", "ellerbe_watershed_test2"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = ellerbe_watershed, fill = "lightblue", lwd = 0.5) +
+  geom_sf(data = nc_rivers_HUC8, color = "blue")+
+  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+  theme_bw()
+dev.off()
+
+pdf(here("Output", "ellerbe_watershed_HUC12.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
+  geom_sf(data = waterfeatures, color = "black")+
+  geom_sf(data = nc_rivers_ellerbe, color = "blue")+
+  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+   xlim(-79,-78.75)+
+   ylim(35.9,36.1)+
+  theme_bw()
+dev.off()
+
+
+### convert data to wsg84
+
+ellerbe_watershed_wsg84 <- ellerbe_watershed12 %>%
+  st_transform(4326)
+
+ellerbe_gages_wsg84 <- ellerbe_gages_as_sf
+ st_transform(4326)
+ 
+ st_crs(ellerbe_gages_wsg84)
+ st_crs(ellerbe_gages_as_sf)
+ st_crs(nc_basemap)
+ 
+ st_crs(nc_basemap) <- 4326
+
+pdf(here("Output", "ellerbe_watershed12_test.pdf"), width = 11, height = 8.5)
+ ggmap(nc_basemap) +
+  geom_sf(data = ellerbe_watershed_wsg84, fill = "NA", lwd = 2,inherit.aes = FALSE) +
+    geom_sf(data = ellerbe_gages_as_sf, color = "red", inherit.aes = FALSE)+
+   xlim(-79,-78.75)+
+   ylim(35.9,36.1)+
+  theme_bw()
+dev.off()
+
+```
+#Neuse Example 
+
+```{r}
+
+#Load data 
+
+waterfeatures <- st_read("./Data/Raw/hydrogl020.dbf")
+class(waterfeatures)
+
+# Filter for North Carolina
+waterfeatures <- filter(waterfeatures, STATE == "NC")
+
+# Remove a couple feature types we don't care about
+waterfeatures <- filter(waterfeatures, FEATURE != "Apparent Limit" & FEATURE != "Closure Line")
+
+pdf(here("Output", "ellerbe_waterfeatures.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = ellerbe_watershed_wsg84, fill = "darkgray") +
+  geom_sf(data = waterfeatures, aes(fill = FEATURE, color = FEATURE, geometry = "geometry")) +
+  geom_sf(data = ellerbe_gages_as_sf, color = "red", inherit.aes = FALSE)+
+     xlim(-79,-78.75)+
+   ylim(35.9,36.1)+
+  labs(title = "Neuse River Basin", color = "Feature", fill = "Feature") +
+  scale_color_viridis_d(option = "magma", end = 0.9) +
+  scale_fill_viridis_d(option = "magma", end = 0.9)
+dev.off()
+
+pdf(here("Output", "waterfeatures2.pdf"), width = 11, height = 8.5)
+ggplot(waterfeatures) +
+  geom_sf(aes(fill = FEATURE, color = FEATURE, geometry = "geometry")) +
+  scale_color_viridis_d(option = "magma", end = 0.9) +
+  scale_fill_viridis_d(option = "magma", end = 0.9)
+dev.off()
+      
+```
+
+
+
