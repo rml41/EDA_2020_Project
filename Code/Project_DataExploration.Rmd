@@ -396,6 +396,81 @@ ClubPatternPlot <-
   labs(x = "Day of Year", y = expression("Discharge (ft"^3*"/s)")) 
 print(ClubPatternPlot)
 ```
+# Data Visualization Plot 
+
+```{r}
+NPplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, color = Location)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))+
+scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(NPplot)
+
+Flowplot <-
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, color = Location)) +
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "")+
+  theme(plot.caption = element_text(hjust = 0.5, size = 11))+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(Flowplot)
+
+plot_grid(NPplot, Flowplot, nrow = 2, align = "v", rel_heights = c(2,1))
+
+TPMonth_boxplot <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = TP, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TPMonth_boxplot)
+
+TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mixed_N, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TNMonth_boxplot)
+
+plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('A', 'B'))
+plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('C', 'D'))
+
+# now add the title
+title <- ggdraw() + 
+  draw_label(
+    "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+title2 <- ggdraw() + 
+  draw_label(
+    "A. Boxplot of Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek in North Carolina. B. Boxplot of flow at upstream and downstream monitoring sites on ELlerbe Creek. C. and D. Boxplot of monthly nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek.",
+    fontface = 'italic',
+    x = 0,
+    hjust = 0, size = 11
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+
+plot_grid(
+  title, plot_row1, plot_row2, title2,
+  ncol = 1,
+  rel_heights = c(0.1, 1, 0.5)
+)
+
+plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = "v", rel_heights = c(2,1), labels = c('A', 'B', 'C', 'D'))
+
+```
+
 
 # Nutrients near Club vs. Gorman
 ```{r}
@@ -415,7 +490,7 @@ library("viridis")
 NPplot <-
   ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, color = Location)) +
   geom_boxplot()+
-  labs(title = "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek", x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))+
 scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(NPplot)
@@ -423,12 +498,64 @@ print(NPplot)
 Flowplot <-
   ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, color = Location)) +
   geom_boxplot(show.legend = FALSE)+
-  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "", caption = "Figure 1. Boxplot of nitrogen and phosphorus concentrations at monitoring sites upsteam (near Club Blvd in Durham, NC) \nand downstream (near Falls Lake in Gorman, NC) in comparison to boxplot of upstream and downstream flow of Ellerbe Creek in North Carolina.")+
+  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "")+
   theme(plot.caption = element_text(hjust = 0.5, size = 11))+
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(Flowplot)
 
 plot_grid(NPplot, Flowplot, nrow = 2, align = "v", rel_heights = c(2,1))
+
+TPMonth_boxplot <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = TP, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TPMonth_boxplot)
+
+TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mixed_N, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TNMonth_boxplot)
+
+plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('A', 'B'))
+plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('C', 'D'))
+
+# now add the title
+title <- ggdraw() + 
+  draw_label(
+    "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+title2 <- ggdraw() + 
+  draw_label(
+    "A. Boxplot of Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek in North Carolina. B. Boxplot of flow at upstream and downstream monitoring sites on ELlerbe Creek. C. and D. Boxplot of monthly nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek.",
+    fontface = 'italic',
+    x = 0,
+    hjust = 0, size = 11
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+
+plot_grid(
+  title, plot_row1, plot_row2, title2,
+  ncol = 1,
+  rel_heights = c(0.1, 1, 0.5)
+)
+
+plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = "v", rel_heights = c(2,1), labels = c('A', 'B', 'C', 'D'))
 
 Gageplot <-
   ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Gage.Height, fill = Location, color = Location)) +
@@ -455,6 +582,26 @@ ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = TP, y = Mixed_N, color = Locatio
   geom_smooth(method='lm')
 print(NvsP)
 
+NutrientMonth_boxplot <-
+ggplot(Club.Gorman_Flow.NP_Long, aes(x = month, y = ResultMeasureValue, color = Location, fill = CharacteristicName))+ geom_boxplot()+
+  labs(x = "Month", y = expression("Phosphorus" ~ (mu*g / L)), color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(NutrientMonth_boxplot)
+
+TPMonth_boxplot <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = TP, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TPMonth_boxplot)
+
+TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mixed_N, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TNMonth_boxplot)
+
+plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = "v", rel_heights = c(2,1), labels = c('A', 'B', 'C', 'D'))
 
 #########################
 ### Flow vs Nutrients ###
