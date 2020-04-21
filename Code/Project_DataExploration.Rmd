@@ -43,6 +43,7 @@ getwd()
 library(plyr)
 library(tidyverse)
 library(ggplot2)
+library(lubridate)
 library(viridis)
 library(RColorBrewer)
 library(cowplot)
@@ -77,7 +78,8 @@ class(Club.Gorman_Flow_Long$X_00060_00003)
 
 Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
 
-
+Club.Gorman_Flow.Nutrients_Long <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
 ```
 
 # Format Dates
@@ -142,11 +144,6 @@ interval(first(Club.Gorman_Flow_Long$Date), last(Club.Gorman_Flow_Long$Date))
 
 ```
 
-interval(first(Club.Gorman_Flow_Long$Date), last(Club.Gorman_Flow_Long$Date))
-
-interval(NTL.phys.data.PeterPaul1$sampledate[1], NTL.phys.data.PeterPaul1$sampledate[21613])
-interval(first(NTL.phys.data.PeterPaul1$sampledate), last(NTL.phys.data.PeterPaul1$sampledate))
-
 
 # Get summaries 
 NTL.PeterPaul.summaries <- 
@@ -160,7 +157,7 @@ NTL.PeterPaul.summaries <-
             sdTN = sd(tn_ug), 
             meanTP = mean(tp_ug), 
             sdTP = sd(tp_ug))
-            
+# Flow Summaries             
 ```{r}
 Club.Gorman_Flow_MonthSummary <- Club.Gorman_Flow_Long %>% 
   mutate(month = month(Date, label = TRUE)) %>% 
@@ -181,6 +178,8 @@ Club.Gorman_Flow_YearSummary <- Club.Gorman_Flow_Long %>%
             minDischarge = min(Discharge),
             maxDischarge = max(Discharge))
 ```
+# Nutrient Summaries
+
 
 # Flow 
 ```{r}
@@ -197,9 +196,27 @@ IQR(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
 
 # Mean Annual Discharge 
 MeanDischargeplot <-
-  ggplot(Club.Gorman_Flow_YearSummary, aes(x = year, y = meanDischarge)) +
-  geom_point()
+  ggplot(Club.Gorman_Flow_YearSummary, aes(x = year, y = meanDischarge, color = site_no)) +
+  geom_point()+
+  geom_smooth(method='lm')
 print(MeanDischargeplot)
+
+MeanMonthDischarge <- 
+   ggplot(Club.Gorman_Flow_MonthSummary, aes(x = month, y = meanDischarge, color = site_no)) +
+  geom_point()
+print(MeanMonthDischarge)
+
+MAxMonthDischarge <- 
+   ggplot(Club.Gorman_Flow_MonthSummary, aes(x = month, y = maxDischarge, color = site_no)) +
+  geom_point()
+print(MAxMonthDischarge)
+
+
+MaxYearDischarge <-
+   ggplot(Club.Gorman_Flow_YearSummary, aes(x = year, y = maxDischarge, color = site_no)) +
+  geom_point()
+print(MaxYearDischarge)
+
 
 DischargeTimeplot <-
   ggplot(Club.Gorman_Flow_Long, 
@@ -289,14 +306,15 @@ print(Discharge_TN)
 logDischarge_logTN <-ggplot(EC_Flow.Nutrients_Wide, 
          aes(x = log(Inorganic_N), y =log(Discharge.G)))+
   geom_point()+
-  geom_smooth()
+  geom_smooth(method='lm')
 print(logDischarge_logTN)
 
 
 Discharge_Turbidity <-
   ggplot(EC_Flow.Nutrients_Wide, 
-         aes(x = Turbidity, y = X_00060_00003.x, color = HydrologicEvent))+
-  geom_point() 
+         aes(x = Turbidity, y = log(Discharge.G), color = HydrologicEvent))+
+  geom_point()+
+  geom_smooth(method = 'lm')
 print(Discharge_Turbidity)
 
 Discharge_XY <-
@@ -382,4 +400,4 @@ ClubPatternPlot <-
 print(ClubPatternPlot)
 ```
 
-# Summaries 
+# Nutrients near Club vs. Gorman

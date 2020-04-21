@@ -199,25 +199,52 @@ write.csv(Ellerbe_Nutrients_Wide, row.names = FALSE,
 
 ```{r}
 
-ClubGorman_Nutrients_Wide <- subset(Ellerbe_Nutrients_Wide, site_no == "0208675010" | site_no == "02086849")
+ClubGorman_Nutrients_Wide <- subset(Ellerbe_Nutrients_Wide, site_no == "0208675010" | site_no == "02086849" | site_no == "J1330000")
 
 write.csv(ClubGorman_Nutrients_Wide, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_Nutrients_Wide_Processed.csv")
 
 ```
+# Subset Long Nutrient Data to include just measurements at Gages 
+```{r}
+Ellerbe_Nutrients_Long <- Ellerbe_Nutrients %>%
+  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText) %>% 
+  mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
+  separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
+  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText)
+
+
+ClubGorman_Nutrients_Long <- subset(Ellerbe_Nutrients_Long, site_no == "0208675010" | site_no == "02086849" | site_no == "J1330000")
+
+write.csv(ClubGorman_Nutrients_Long, row.names = FALSE, 
+          file = "./Data/Processed/CClubGorman_Nutrients_Long_Processed.csv")
+```
+
 
 # Join Discharge and Nutrients 
 ```{r}
 
-### Just USGS Gage Sies
+### Just USGS Gage Sites - Wide 
 class(ClubGorman_Nutrients_Wide$Date)
 class(Ellerbe_USGSDischarge_Long$Date)
 
 EC_USGS_Combined <- full_join(ClubGorman_Nutrients_Wide, Ellerbe_USGSDischarge_Long, by = c("site_no","Date"))
 
-
 write.csv(EC_USGS_Combined, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
+
+# Just USGS Gage Sites - Wide 
+class(ClubGorman_Nutrients_Long$Date)
+EC_USGS_Long_Combined <- full_join(ClubGorman_Nutrients_Long, Ellerbe_USGSDischarge_Long, by = c("site_no","Date"))
+
+EC_USGS_Long_Combined$Location <- EC_USGS_Long_Combined$site_no
+
+EC_USGS_Long_Combined$Location <- gsub("J1330000", "Downstream", EC_USGS_Long_Combined$Location)
+EC_USGS_Long_Combined$Location <- gsub("02086849", "Downstream", EC_USGS_Long_Combined$Location)
+EC_USGS_Long_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Long_Combined$Location)
+
+write.csv(EC_USGS_Long_Combined, row.names = FALSE, 
+          file = "./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
 
 ### Join Flow data with all Nutrient data 
 
