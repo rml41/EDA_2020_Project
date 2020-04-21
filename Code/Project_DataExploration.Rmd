@@ -47,14 +47,6 @@ library(lubridate)
 library(viridis)
 library(RColorBrewer)
 library(cowplot)
-library(LAGOSNE)
-library(sf)
-library(maps)
-library(gganimate)
-library(sf)
-library(ggmap)
-library(here)
-library(maps)
 
 # Set your ggplot theme
 
@@ -99,6 +91,11 @@ class(Club.Gorman_Flow_Long$Date)
 EC_Flow.Nutrients_Wide$Date <- 
   as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
 class(EC_Flow.Nutrients_Wide$Date)
+
+Club.Gorman_Flow.Nutrients_Long$Date <-
+  as.Date(Club.Gorman_Flow.Nutrients_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Long$Date)
+
 
 ```
 
@@ -401,3 +398,37 @@ print(ClubPatternPlot)
 ```
 
 # Nutrients near Club vs. Gorman
+```{r}
+
+Club.Gorman_Flow.NP_Long <- subset(Club.Gorman_Flow.Nutrients_Long,  CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"| CharacteristicName == "Phosphorus")
+
+NPplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, fill = Location)) +
+  geom_boxplot()
+print(NPplot)
+
+Flowplot <-
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, fill = Location, color = Location)) +
+  geom_boxplot()
+print(Flowplot)
+
+Gageplot <-
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Gage.Height, fill = Location, color = Location)) +
+  geom_boxplot()
+print(Gageplot)
+
+
+NvPplotUpstream <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Upstream"), aes(x = Mixed_N, y = TP)) +
+  geom_point()
+print(NvPplotUpstream)
+
+NvPplotDownstream <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Downstream"), aes(x = Mixed_N, y = TP)) +
+  geom_point()+
+  geom_smooth(method = 'lm')
+print(NvPplotDownstream)
+
+ggplot(EC_Flow.Nutrients_Wide, aes(x=Nitrate, y= Inorganic_N))+
+  geom_point()
+
+```
+

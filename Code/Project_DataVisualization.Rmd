@@ -58,6 +58,9 @@ southeast_state_bounds_raw <- st_read(here("Data","Raw","data", "spatial_data", 
 nc_rivers <- st_read(here("Data","Raw", "MajorHydro.shp"))
 
 nc_12HUC <- st_read(here("Data","Raw","12Digit_HUC_Subwatersheds", "12Digit_HUC_Subwatersheds.shp"))
+
+waterfeatures <- st_read("./Data/Raw/hydrogl020.dbf")
+class(waterfeatures)
 ```
 
 Check CRS and define proj and EPSG
@@ -154,8 +157,10 @@ nc_rivers_ellerbe <- nc_rivers %>%
 nc_rivers_HUC8 <- nc_rivers %>% 
   st_intersection(ellerbe_watershed8)
 
-waterfeatures_HUC8 <- waterfeatures  %>% 
-  st_intersection(ellerbe_watershed8)
+waterfeatures_NC <- waterfeatures_wsg84 %>%
+  filter(STATE == "NC") %>%
+  st_geometry()
+
 
 st_crs(ellerbe_watershed8)
 st_crs(waterfeatures_wsg84)
@@ -166,9 +171,7 @@ waterfeatures_wsg84 <- waterfeatures %>%
 
 ```
 
-#Plot 
-
-Plot
+#Basemap
 
 ```{r}
 ## add basemap 
@@ -269,15 +272,20 @@ ggplot() +
   geom_sf(data = ellerbe_gages_as_sf, color = "red")+
   theme_bw()
 dev.off()
+ 
+library(ggrepel)
 
-
-pdf(here("Lessons", "ellerbe_watershed_test2"), width = 11, height = 8.5)
-ggplot() +
-  geom_sf(data = ellerbe_watershed, fill = "lightblue", lwd = 0.5) +
+pdf(here("Output", "ellerbe_watershed_zoom.pdf"), width = 11, height = 8.5)
+ggplot(ellerbe_gages_as_sf) +
+  geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
+  geom_sf_text(aes(label = MonitoringLocationIdentifier), color = "black", size=2)+
   geom_sf(data = nc_rivers_HUC8, color = "blue")+
   geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+   xlim(-79,-78.75)+
+   ylim(35.95,36.1)+
   theme_bw()
 dev.off()
+
 
 pdf(here("Output", "ellerbe_watershed_HUC12.pdf"), width = 11, height = 8.5)
 ggplot() +
