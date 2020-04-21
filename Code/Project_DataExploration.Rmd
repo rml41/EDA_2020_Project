@@ -556,7 +556,6 @@ title2 <- ggdraw() +
     plot.margin = margin(0, 0, 0, 7)
   )
 
-
 plot_grid(
   title, plot_row1, plot_row2, title2,
   ncol = 1,
