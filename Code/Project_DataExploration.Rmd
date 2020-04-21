@@ -402,33 +402,90 @@ print(ClubPatternPlot)
 
 Club.Gorman_Flow.NP_Long <- subset(Club.Gorman_Flow.Nutrients_Long,  CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"| CharacteristicName == "Phosphorus")
 
+Club.Gorman_Flow.NP_Long$CharacteristicName <- gsub("Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)", "TN", Club.Gorman_Flow.NP_Long$CharacteristicName)
+
+
+
+#################
+### Box Plots ###
+#################
+
+library("viridis")
+
 NPplot <-
-  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, fill = Location)) +
-  geom_boxplot()
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, color = Location)) +
+  geom_boxplot()+
+  labs(title = "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek", x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))+
+scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(NPplot)
 
 Flowplot <-
-  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, fill = Location, color = Location)) +
-  geom_boxplot()
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, color = Location)) +
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "", caption = "Figure 1. Boxplot of nitrogen and phosphorus concentrations at monitoring sites upsteam (near Club Blvd in Durham, NC) \nand downstream (near Falls Lake in Gorman, NC) in comparison to boxplot of upstream and downstream flow of Ellerbe Creek in North Carolina.")+
+  theme(plot.caption = element_text(hjust = 0.5, size = 11))+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(Flowplot)
+
+plot_grid(NPplot, Flowplot, nrow = 2, align = "v", rel_heights = c(2,1))
 
 Gageplot <-
   ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Gage.Height, fill = Location, color = Location)) +
   geom_boxplot()
 print(Gageplot)
 
-
+#################
+###   N vs P  ###
+#################
 NvPplotUpstream <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Upstream"), aes(x = Mixed_N, y = TP)) +
   geom_point()
 print(NvPplotUpstream)
 
 NvPplotDownstream <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Downstream"), aes(x = Mixed_N, y = TP)) +
-  geom_point()+
-  geom_smooth(method = 'lm')
+  geom_point()
 print(NvPplotDownstream)
 
 ggplot(EC_Flow.Nutrients_Wide, aes(x=Nitrate, y= Inorganic_N))+
   geom_point()
 
+NvsP <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = TP, y = Mixed_N, color = Location))+
+  geom_point()+
+  geom_smooth(method='lm')
+print(NvsP)
+
+
+#########################
+### Flow vs Nutrients ###
+#########################
+
+### Nitrogen 
+
+UpstreamNvQ <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Upstream"), aes(x = Discharge, y = Mixed_N)) +
+  geom_point()
+print(UpstreamNvQ)
+
+DownstreamNvQ <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Downstream"), aes(x = Discharge, y = Mixed_N)) +
+  geom_point()
+print(DownstreamNvQ)
+
+TotalNvQ <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Discharge, y = Mixed_N, color = Location)) +
+  geom_point()
+print(TotalNvQ)
+
+### Phosphorus 
+
+UpstreamPvQ <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Upstream"), aes(x = Discharge, y = TP)) +
+  geom_point()
+print(UpstreamPvQ)
+
+DownstreamPvQ <- ggplot(subset(Club.Gorman_Flow.Nutrients_Wide, Location == "Downstream"), aes(x = Discharge, y = TP)) +
+  geom_point()
+print(DownstreamPvQ)
+
+TotalPvQ <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Discharge, y = TP, color = Location)) +
+  geom_point()
+print(TotalPvQ)
 ```
 
