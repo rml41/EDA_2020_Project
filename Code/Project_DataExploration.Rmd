@@ -528,6 +528,7 @@ TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mi
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TNMonth_boxplot)
 
+
 plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('a.', 'b.'))
 plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('c.', 'd.'))
 
