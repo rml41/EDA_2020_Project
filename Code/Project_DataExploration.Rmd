@@ -399,6 +399,17 @@ print(ClubPatternPlot)
 # Data Visualization Plot 
 
 ```{r}
+
+### With Caption 
+NPplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, color = Location)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "", caption = "Kathleen is a superstar")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"), plot.caption = element_text(hjust = 0.5))+
+scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(NPplot)
+
+####
 NPplot <-
   ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = ResultMeasureValue, color = Location)) +
   geom_boxplot()+
@@ -477,9 +488,8 @@ plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = 
 
 Club.Gorman_Flow.NP_Long <- subset(Club.Gorman_Flow.Nutrients_Long,  CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"| CharacteristicName == "Phosphorus")
 
-Club.Gorman_Flow.NP_Long$CharacteristicName <- gsub("Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)", "TN", Club.Gorman_Flow.NP_Long$CharacteristicName)
 
-
+Club.Gorman_Flow.NP_Long$CharacteristicName[Club.Gorman_Flow.NP_Long$CharacteristicName =="Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"]<- "Nitrogen"
 
 #################
 ### Box Plots ###
@@ -518,16 +528,16 @@ TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mi
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TNMonth_boxplot)
 
-plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('A', 'B'))
-plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('C', 'D'))
+plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('a.', 'b.'))
+plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('c.', 'd.'))
 
 # now add the title
 title <- ggdraw() + 
   draw_label(
     "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek",
     fontface = 'bold',
-    x = 0,
-    hjust = 0
+    size = 14,
+    hjust = 0.5
   ) +
   theme(
     # add margin on the left of the drawing canvas,
@@ -537,10 +547,8 @@ title <- ggdraw() +
 
 title2 <- ggdraw() + 
   draw_label(
-    "A. Boxplot of Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek in North Carolina. B. Boxplot of flow at upstream and downstream monitoring sites on ELlerbe Creek. C. and D. Boxplot of monthly nitrogen and phosphorus concentrations at upstream and downstream monitoring sites on ELlerbe Creek.",
-    fontface = 'italic',
-    x = 0,
-    hjust = 0, size = 11
+    "Figure 1. Distributions of nutrient concentrations and flow at upstream and downstream monitoring sites along Ellerbe Creek in North Carolina. \na) Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites. b) Flow at upstream and downstream monitoring sites. \nc) and d) Monthly distributions of nitrogen and phosphorus concentrations at upstream and downstream monitoring sites.",
+    hjust = 0.5, size = 11
   ) +
   theme(
     # add margin on the left of the drawing canvas,
@@ -555,7 +563,7 @@ plot_grid(
   rel_heights = c(0.1, 1, 0.5)
 )
 
-plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = "v", rel_heights = c(2,1), labels = c('A', 'B', 'C', 'D'))
+plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = "v", rel_heights = c(2,1), labels = c('a', 'b', 'c', 'd'))
 
 Gageplot <-
   ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Gage.Height, fill = Location, color = Location)) +

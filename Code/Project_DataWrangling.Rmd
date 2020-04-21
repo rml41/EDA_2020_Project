@@ -216,10 +216,12 @@ Ellerbe_Nutrients_Long <- Ellerbe_Nutrients %>%
   rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText)
 
 
+
+
 ClubGorman_Nutrients_Long <- subset(Ellerbe_Nutrients_Long,  site_no == "0208675010" | site_no == "02086849" | site_no == "J1330000" | site_no == "J1270000"| site_no == "0208675009")
 
 write.csv(ClubGorman_Nutrients_Long, row.names = FALSE, 
-          file = "./Data/Processed/CClubGorman_Nutrients_Long_Processed.csv")
+          file = "./Data/Processed/ClubGorman_Nutrients_Long_Processed.csv")
 ```
 
 
@@ -240,6 +242,7 @@ EC_USGS_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Combined$Loc
 EC_USGS_Combined$Location <- gsub("J1270000", "Upstream", EC_USGS_Combined$Location)
 EC_USGS_Combined$Location <- gsub("0208675009", "Upstream", EC_USGS_Combined$Location)
 
+
 write.csv(EC_USGS_Combined, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
 
@@ -255,6 +258,10 @@ EC_USGS_Long_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Long_Co
 EC_USGS_Long_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Long_Combined$Location)
 EC_USGS_Long_Combined$Location <- gsub("J1270000", "Upstream", EC_USGS_Long_Combined$Location)
 EC_USGS_Long_Combined$Location <- gsub("0208675009", "Upstream", EC_USGS_Long_Combined$Location)
+
+EC_USGS_Long_Combine$Chara <- gsub("J1330000", "Downstream", EC_USGS_Combined$Location)
+
+EC_USGS_Long_Combined$CharacteristicName <- gsub("`Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`", "Nitrogen", EC_USGS_Long_Combined$CharacteristicName)
 
 write.csv(EC_USGS_Long_Combined, row.names = FALSE, 
           file = "./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
