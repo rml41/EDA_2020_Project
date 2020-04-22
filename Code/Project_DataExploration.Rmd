@@ -428,16 +428,20 @@ print(Flowplot)
 
 plot_grid(NPplot, Flowplot, nrow = 2, align = "v", rel_heights = c(2,1))
 
+
+
 TPMonth_boxplot <-
 ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = TP, color = Location))+ 
   geom_boxplot(show.legend = FALSE)+
   labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+  xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TPMonth_boxplot)
 
 TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mixed_N, color = Location))+ 
   geom_boxplot(show.legend = FALSE)+
   labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+  xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TNMonth_boxplot)
 
@@ -488,8 +492,10 @@ plot_grid(NPplot, Flowplot, TNMonth_boxplot, TPMonth_boxplot, nrow = 2, align = 
 
 Club.Gorman_Flow.NP_Long <- subset(Club.Gorman_Flow.Nutrients_Long,  CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"| CharacteristicName == "Phosphorus")
 
+class(Club.Gorman_Flow.NP_Long$CharacteristicName)
+Club.Gorman_Flow.NP_Long$CharacteristicName <- as.character(Club.Gorman_Flow.NP_Long$CharacteristicName)
 
-Club.Gorman_Flow.NP_Long$CharacteristicName[Club.Gorman_Flow.NP_Long$CharacteristicName =="Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"]<- "Nitrogen"
+Club.Gorman_Flow.NP_Long$CharacteristicName[Club.Gorman_Flow.NP_Long$CharacteristicName =="Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"] <- "Nitrogen"
 
 #################
 ### Box Plots ###
@@ -519,12 +525,14 @@ TPMonth_boxplot <-
 ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = TP, color = Location))+ 
   geom_boxplot(show.legend = FALSE)+
   labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TPMonth_boxplot)
 
 TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Mixed_N, color = Location))+ 
   geom_boxplot(show.legend = FALSE)+
   labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
   scale_color_manual(values = c("#82FF33", "#33ADFF"))
 print(TNMonth_boxplot)
 
