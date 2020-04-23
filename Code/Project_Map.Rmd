@@ -163,14 +163,17 @@ ggplot() +
   theme_bw()
 dev.off()
 
-### Add labesl to gages 
+
+### Add labels to gages 
 
 pdf(here("Output", "ellerbe_watershed_HUC12_labels.pdf"), width = 11, height = 8.5)
-ggplot(ellerbe_gages_as_sf) +
+ggplot(ellerbe_gages_raw) +
   geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
-  geom_sf_text(aes(label = MonitoringLocationIdentifier), color = "black", size=2)+
+  geom_text_repel(aes(x = LongitudeMeasure, y= LatitudeMeasure, label = MonitoringLocationIdentifier), color = "black", size=2)+
+  geom_sf_text(data = waterfeatures, aes(label = NAME), color = "black", size=2)+
   geom_sf(data = nc_rivers_HUC8, color = "blue")+
   geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+  ###geom_sf(data = ####DURHAM)
    xlim(-79,-78.75)+
    ylim(35.95,36.1)+
   theme_bw()
