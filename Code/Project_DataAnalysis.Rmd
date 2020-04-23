@@ -1,6 +1,8 @@
 ---
 title: "Project_DataAnalysis"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -27,3 +29,391 @@ plot(pressure)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
+# Set Working Directory and Load Data 
+```{r setup, include=FALSE}
+# Set your working directory
+
+setwd("/Users/rmlandman/Desktop/Data Analytics/Environmental_Data_Analytics_2020/Project/EDA_2020_Project")
+getwd()
+
+# Load your packages
+
+
+library(plyr)
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(viridis)
+library(RColorBrewer)
+library(cowplot)
+
+# Set your ggplot theme
+
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+
+theme_set(mytheme)
+
+# Load your datasets
+
+EC_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/EC_Flow.Nutrients_Wide_Processed.csv")
+
+Club.Gorman_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
+
+Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
+
+Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
+
+Club.Gorman_Flow.Nutrients_Long <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
+```
+
+# Format Dates
+```{r}
+Club.Gorman_Flow.Nutrients_Wide$Date <- 
+  as.Date(Club.Gorman_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Wide$Date)
+
+Club.Gorman_Flow_Wide$Date <- 
+  as.Date(Club.Gorman_Flow_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Wide$Date)
+
+Club.Gorman_Flow_Long$Date <- 
+  as.Date(Club.Gorman_Flow_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Long$Date)
+
+EC_Flow.Nutrients_Wide$Date <- 
+  as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(EC_Flow.Nutrients_Wide$Date)
+
+Club.Gorman_Flow.Nutrients_Long$Date <-
+  as.Date(Club.Gorman_Flow.Nutrients_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Long$Date)
+
+
+```
+
+#Format Site Number to Character
+```{r}
+
+Club.Gorman_Flow.Nutrients_Wide$site_no <- 
+  as.character(Club.Gorman_Flow.Nutrients_Wide$site_no)
+class(Club.Gorman_Flow.Nutrients_Wide$site_no)
+
+Club.Gorman_Flow_Wide$site_no.x <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.x)
+class(Club.Gorman_Flow_Wide$site_no.x)
+
+Club.Gorman_Flow_Wide$site_no.y <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.y)
+class(Club.Gorman_Flow_Wide$site_no.y)
+
+Club.Gorman_Flow_Long$site_no <- 
+  as.character(Club.Gorman_Flow_Long$site_no, format)
+class(Club.Gorman_Flow_Long$site_no)
+
+EC_Flow.Nutrients_Wide$site_no <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no)
+class(EC_Flow.Nutrients_Wide$site_no)
+
+EC_Flow.Nutrients_Wide$site_no.x <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.x)
+class(EC_Flow.Nutrients_Wide$site_no.x)
+
+EC_Flow.Nutrients_Wide$site_no.y <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.y)
+class(EC_Flow.Nutrients_Wide$site_no.y)
+
+```
+
+
+#Ttest 
+ 
+```{r}
+#Is there a difference between upstream and downstream nutrient levels? 
+### continuous response (N or P)
+### categorical explanatory
+```
+
+### Nitrogen
+```{r}
+summary(EC_Flow.Nutrients_Wide$Mixed_N)
+
+# Evaluate assumption of normal distribution 
+shapiro.test((EC_Flow.Nutrients_Wide$Mixed_N))
+
+### shapiro wilke test the null hypothesis is that the data are a normal distribution 
+### p value <0.05 shows we reject null and data is not normally distributed
+######## "not well approximated by a normal distribution"
+
+ggplot(EC_Flow.Nutrients_Wide, aes(x = Mixed_N)) +
+  geom_histogram(binwidth = 20) 
+
+### histogram shows data is not very rightly skewed 
+
+qqnorm(EC_Flow.Nutrients_Wide$Mixed_N); qqline(EC_Flow.Nutrients_Wide$Mixed_N)
+## some samples are higher than normal and some are lower
+
+N.onesample <- t.test(EC_Flow.Nutrients_Wide$Mixed_N, mu = 10, alternative = "greater")
+N.onesample
+
+# Null hypothesis is that mean = 10, alternative is mean is less than 10
+# p value >0.05 so we can not reject the null the mean =10
+
+# plot 
+
+N.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Mixed_N)) +
+  #geom_density(stat = "count", fill = "gray") + #<-shows count so it's more jagged
+  geom_density(fill = "gray") +
+  geom_vline(xintercept = 10, color = "#238b45", lty = 2, size = 0.9) +
+  scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+print(N.plot)
+
+
+```
+##### Nitrogen Results 
+> Nitrogen measurments in ellerbe creek were not significantly greater than 10 mg/L, the Maximum Contaminent Level for Nitrogen in drinking water (one sample t-test; t= 3.515, df = 139, p < 0.001) 
+
+### Phosphorus
+```{r}
+summary(EC_Flow.Nutrients_Wide$TP)
+
+# Evaluate assumption of normal distribution 
+shapiro.test((EC_Flow.Nutrients_Wide$TP))
+
+### shapiro wilke test the null hypothesis is that the data are a normal distribution 
+### p value <0.05 shows we reject null and data is not normally distributed
+######## "not well approximated by a normal distribution"
+
+ggplot(EC_Flow.Nutrients_Wide, aes(x = TP)) +
+  geom_histogram(binwidth = 1) 
+
+### histogram shows data is not very rightly skewed 
+
+qqnorm(EC_Flow.Nutrients_Wide$TP); qqline(EC_Flow.Nutrients_Wide$TP)
+## samples are higher than normal distribution
+
+P.onesample <- t.test(EC_Flow.Nutrients_Wide$TP, mu = 1, alternative = "greater")
+P.onesample
+
+# Null hypothesis is that mean = 1, alternative is mean is less than 1
+# p value <0.05 so we can reject the null the mean = 1
+
+# plot 
+
+P.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = TP)) +
+  #geom_density(stat = "count", fill = "gray") + #<-shows count so it's more jagged
+  geom_density(fill = "gray") +
+  geom_vline(xintercept = 1, color = "#238b45", lty = 2, size = 0.9) +
+  scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+print(N.plot)
+
+
+```
+##### Phosphorus Results 
+> Phosphorus measurments in ellerbe creek were significantly greater than 1 mg/L, the Maximum Contaminent Level for phosphorus in water (one sample t-test; t= 2.5264, df = 242, p = 0.006) 
+
+#Two Sample t-test (Upstream vs. Downstream)
+### Nitrogen
+```{r}
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
+var.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+
+### "var.test" test variance 
+### asks are the variances eqaul - what is the diff between variances 
+### results: variances are significantly different 
+### results: violate assumption of normality and equal variance
+
+ggplot(Club.Gorman_Flow.Nutrients_Wide$Mixed_N, aes(x = Mixed_N, color = Location)) +
+  geom_freqpoly()
+
+
+N.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+N.twosample
+
+```
+
+### Phosphorus
+```{r}
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$TP[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$TP[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
+var.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+
+### "var.test" test variance 
+### asks are the variances eqaul - what is the diff between variances 
+### results: variances are significantly different 
+### results: violate assumption of normality and equal variance
+
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = TP, color = Location)) +
+  geom_freqpoly()
+
+
+P.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+P.twosample
+
+```
+
+# Wilcox Test (Don't Assume Normality)
+### Nitrogen
+```{r}
+N.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N, mu = 10, alternative = "greater")
+N.onesample.wilcox
+N.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+N.twosample.wilcox
+```
+
+### Phosphorus
+```{r}
+P.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$TP, mu = 1, alternative = "greater")
+P.onesample.wilcox
+P.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+P.twosample.wilcox
+```
+
+# Simple Linear Regression 
+>Is flow a significant predictor of nutrient levels? 
+>continuous response (N or P)
+>continuous predictor (discharge)
+
+###Nitrogen 
+```{r}
+NitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, Mixed_N ~ Discharge.C)
+summary(NitrogenClub.regression)
+## adj R squared says 1 % of variance is explained by depth 
+
+cor.test(EC_Flow.Nutrients_Wide$Mixed_N, EC_Flow.Nutrients_Wide$Discharge.C)
+
+
+NitrogenGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, Mixed_N ~ Discharge.G)
+summary(NitrogenGorman.regression)
+## adj R squared says 1 % of variance is explained by depth 
+
+cor.test(EC_Flow.Nutrients_Wide$Mixed_N, EC_Flow.Nutrients_Wide$Discharge.G)
+```
+
+###Phosphorus 
+```{r}
+PhosphorusClub.regression <-lm(data = EC_Flow.Nutrients_Wide, TP ~ Discharge.C)
+summary(PhosphorusClub.regression)
+## adj R squared says 8 % of variance is explained by depth 
+## significant relationship p < 0.001
+
+cor.test(EC_Flow.Nutrients_Wide$TP, EC_Flow.Nutrients_Wide$Discharge.C)
+
+
+PhosphorusGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, TP ~ Discharge.G)
+summary(PhosphorusGorman.regression)
+## adj R squared says 9 % of variance is explained by depth
+## significant relationship p < 0.001
+
+cor.test(EC_Flow.Nutrients_Wide$TP, EC_Flow.Nutrients_Wide$Discharge.G)
+```
+# Plot Regression
+### Nitrogen
+```{r}
+Nitrogen_Discharge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = Mixed_N))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(Nitrogen_Discharge)
+
+#log discharge 
+Nitrogen_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = Mixed_N))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(Nitrogen_logDischarge)
+
+#log both 
+logNitrogen_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Mixed_N)))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(logNitrogen_logDischarge)
+```
+
+### Phosphorus 
+```{r}
+Phosphorus_Discharge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = TP))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,2.5)
+print(Phosphorus_Discharge)
+
+#log discharge 
+Phosphorus_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = TP))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(Phosphorus_logDischarge)
+
+#log both 
+logPhosphorus_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(TP)))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(logPhosphorus_logDischarge)
+```
+
+#Nutrients over Time 
+```{r}
+Nitrogen_Time <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = Mixed_N))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Nitrogen_Time)
+
+ Phosphorus_Time <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = TP))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Phosphorus_Time)
+```
+
+#Test subset post 2000
+```{r}
+Post2000Nutrients <- subset(EC_Flow.Nutrients_Wide, Date > "2000-01-01" & Date < "2020-12-31")
+
+```
+
+# Plot 
+### Nitrogen
+```{r}
+Nitrogen_Discharge2000 <- 
+  ggplot(Post2000Nutrients , aes (x=log(Discharge.C), y = Mixed_N))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(Nitrogen_Discharge2000)
+
+Nitrogen_Time2000 <- 
+  ggplot(Post2000Nutrients, aes (x=Date, y = Mixed_N))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Nitrogen_Time2000)
+```
+
+### Phosphorus 
+```{r}
+Phosphorus_Discharge2000 <- 
+  ggplot(Post2000Nutrients, aes (x=log(Discharge.G), y = TP))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,2.5)
+print(Phosphorus_Discharge2000)
+
+Phosphorus_Time2000 <- 
+  ggplot(Post2000Nutrients, aes (x=Date, y = TP))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Phosphorus_Time2000)
+```

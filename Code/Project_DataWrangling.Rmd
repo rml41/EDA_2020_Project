@@ -93,7 +93,7 @@ summary(Ellerbe_Raw$CharacteristicName)
 #Clean Ellerbe Creek Data (WQ Portal)
 ```{r}
 # Select Columns of Interest 
-Ellerbe_Clean <- Ellerbe_Raw %>%
+Ellerbe_Clean<- Ellerbe_Raw %>%
   select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName) %>%
   mutate_all(na_if,"") %>% 
   drop_na(ResultMeasureValue)
@@ -139,7 +139,7 @@ write.csv(Ellerbe_USGSDischarge_Long, row.names = FALSE,
 
 #Pull out just nutrient data 
 ```{r}
-Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Total suspended solids" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Inorganic nitrogen (nitrate and nitrite)" | CharacteristicName == "Phosphorus")
+Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Phosphorus")
 
 
 ```
@@ -159,13 +159,14 @@ Ellerbe_Nutrients$ActivityStartDate <- create.early.dates(Ellerbe_Nutrients$Acti
 #
 Ellerbe_Nutrients$ActivityStartDate <- as.Date(Ellerbe_Nutrients$ActivityStartDate, format = "%Y%m%d")
 class(Ellerbe_Nutrients$ActivityStartDate)
+ 
 
-Ellerbe_Nutrients$ResultMeasureValue <-as.numeric(Ellerbe_Nutrients$ResultMeasureValue)
+Ellerbe_Nutrients$ResultMeasureValue <-as.numeric(as.character(Ellerbe_Nutrients$ResultMeasureValue))
 class(Ellerbe_Nutrients$ResultMeasureValue)
 
 ```
 
-#Save Processed Long Dat a
+#Save Processed Long Data
 ```{r}
 
 write.csv(Ellerbe_Nutrients, row.names = FALSE, 
@@ -183,7 +184,7 @@ summarise (meanresult = mean(ResultMeasureValue)) %>%
   mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
   select(MonitoringLocationIdentifier, ActivityStartDate, month, HydrologicEvent:Turbidity) %>% 
   separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
-  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText, "Inorganic_N" = `Inorganic nitrogen (nitrate and nitrite)`, "Mixed_N" = `Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`, "TP" = Phosphorus, "TSS" =  `Total suspended solids`, "Temperature" =`Temperature, water`)
+  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText, "Nitrate" = Nitrate, "Mixed_N" = `Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`, "TP" = Phosphorus, "Temperature" =`Temperature, water`)
 
 
 # Save processed dataset 
@@ -214,9 +215,6 @@ Ellerbe_Nutrients_Long <- Ellerbe_Nutrients %>%
   mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
   separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
   rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText)
-
-
-
 
 ClubGorman_Nutrients_Long <- subset(Ellerbe_Nutrients_Long,  site_no == "0208675010" | site_no == "02086849" | site_no == "J1330000" | site_no == "J1270000"| site_no == "0208675009")
 
@@ -258,8 +256,6 @@ EC_USGS_Long_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Long_Co
 EC_USGS_Long_Combined$Location <- gsub("0208675010", "Upstream", EC_USGS_Long_Combined$Location)
 EC_USGS_Long_Combined$Location <- gsub("J1270000", "Upstream", EC_USGS_Long_Combined$Location)
 EC_USGS_Long_Combined$Location <- gsub("0208675009", "Upstream", EC_USGS_Long_Combined$Location)
-
-EC_USGS_Long_Combine$Chara <- gsub("J1330000", "Downstream", EC_USGS_Combined$Location)
 
 EC_USGS_Long_Combined$CharacteristicName <- gsub("`Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`", "Nitrogen", EC_USGS_Long_Combined$CharacteristicName)
 

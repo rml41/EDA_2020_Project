@@ -331,10 +331,11 @@ print(TP_TN)
 #Discharge vs Gage
 ```{r}
 DvsGHplot <-
-  ggplot(Club.Gorman_Flow_Long, aes(x = Discharge, y = Gage.Height, color=site_no)) +
-  scale_color_brewer(palette="YlGnBu")+
-  geom_point(alpha = 0.75) 
+  ggplot(Club.Gorman_Flow_Long, aes(x = Discharge, y = Gage.Height, color=Date, shape = site_no)) +
+  geom_point(alpha = 0.75)
 print(DvsGHplot)
+
+class(Club.Gorman_Flow_Long$Date)
 ```
 
 # Seasonal Trend 
