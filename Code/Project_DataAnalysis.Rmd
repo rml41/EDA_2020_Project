@@ -9,28 +9,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
 # Set Working Directory and Load Data 
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 # Set your working directory
 
 setwd("/Users/rmlandman/Desktop/Data Analytics/Environmental_Data_Analytics_2020/Project/EDA_2020_Project")
@@ -72,7 +52,7 @@ Club.Gorman_Flow.Nutrients_Long <-
 ```
 
 # Format Dates
-```{r}
+```{r, include=FALSE}
 Club.Gorman_Flow.Nutrients_Wide$Date <- 
   as.Date(Club.Gorman_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
 class(Club.Gorman_Flow.Nutrients_Wide$Date)
@@ -96,8 +76,8 @@ class(Club.Gorman_Flow.Nutrients_Long$Date)
 
 ```
 
-#Format Site Number to Character
-```{r}
+# Format Site Number to Character
+```{r, include=FALSE}
 
 Club.Gorman_Flow.Nutrients_Wide$site_no <- 
   as.character(Club.Gorman_Flow.Nutrients_Wide$site_no)
@@ -130,7 +110,7 @@ class(EC_Flow.Nutrients_Wide$site_no.y)
 ```
 
 
-#Ttest 
+# Ttest 
  
 ```{r}
 #Is there a difference between upstream and downstream nutrient levels? 
@@ -161,7 +141,7 @@ N.onesample <- t.test(EC_Flow.Nutrients_Wide$Mixed_N, mu = 10, alternative = "gr
 N.onesample
 
 # Null hypothesis is that mean = 10, alternative is mean is less than 10
-# p value >0.05 so we can not reject the null the mean =10
+# p value >0.05 so we can reject the null the mean =10
 
 # plot 
 
@@ -216,7 +196,7 @@ print(N.plot)
 ##### Phosphorus Results 
 > Phosphorus measurments in ellerbe creek were significantly greater than 1 mg/L, the Maximum Contaminent Level for phosphorus in water (one sample t-test; t= 2.5264, df = 242, p = 0.006) 
 
-#Two Sample t-test (Upstream vs. Downstream)
+# Two Sample t-test (Upstream vs. Downstream)
 ### Nitrogen
 ```{r}
 shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
@@ -228,7 +208,7 @@ var.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wi
 ### results: variances are significantly different 
 ### results: violate assumption of normality and equal variance
 
-ggplot(Club.Gorman_Flow.Nutrients_Wide$Mixed_N, aes(x = Mixed_N, color = Location)) +
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Mixed_N, color = Location)) +
   geom_freqpoly()
 
 
@@ -254,7 +234,6 @@ ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = TP, color = Location)) +
 
 P.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 P.twosample
-
 ```
 
 # Wilcox Test (Don't Assume Normality)
@@ -312,6 +291,7 @@ summary(PhosphorusGorman.regression)
 
 cor.test(EC_Flow.Nutrients_Wide$TP, EC_Flow.Nutrients_Wide$Discharge.G)
 ```
+
 # Plot Regression
 ### Nitrogen
 ```{r}
@@ -364,7 +344,7 @@ logPhosphorus_logDischarge <-
 print(logPhosphorus_logDischarge)
 ```
 
-#Nutrients over Time 
+# Nutrients over Time 
 ```{r}
 Nitrogen_Time <- 
   ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = Mixed_N))+
@@ -379,7 +359,52 @@ print(Nitrogen_Time)
 print(Phosphorus_Time)
 ```
 
-#Test subset post 2000
+# Nutrient Summaries
+```{r}
+EC_Nutrient_MonthSummary <- EC_Flow.Nutrients_Wide %>% 
+  mutate(month = month(Date, label = TRUE)) %>% 
+  group_by(month) %>% 
+  filter(!is.na(Mixed_N), !is.na(TP)) %>% 
+  summarise(meanN = mean(Mixed_N),
+            sdN = sd(Mixed_N),
+            minN = min(Mixed_N),
+            maxN = max(Mixed_N),
+            meanP = mean(TP),
+            sdP = sd(TP),
+            minP = min(TP),
+            maxP = max(TP))
+
+ggplot(EC_Nutrient_MonthSummary)+
+  geom_point(aes(y = meanN, x=month))
+
+ggplot(EC_Nutrient_MonthSummary)+
+  geom_point(aes(y = meanP, x=month))
+
+EC_Nutrient_YearSummary <- EC_Flow.Nutrients_Wide %>% 
+  mutate(year = year(Date)) %>% 
+  group_by(year) %>% 
+  filter(!is.na(Mixed_N), !is.na(TP)) %>% 
+  summarise(meanN = mean(Mixed_N),
+            sdN = sd(Mixed_N),
+            minN = min(Mixed_N),
+            maxN = max(Mixed_N),
+            meanP = mean(TP),
+            sdP = sd(TP),
+            minP = min(TP),
+            maxP = max(TP))
+
+ggplot(EC_Nutrient_YearSummary, aes(y = meanN, x=year))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+ggplot(EC_Nutrient_YearSummary, aes(y = meanP, x=year))+
+  geom_point()+
+  geom_smooth(method=lm)
+
+```
+
+
+# Test subset post 2000
 ```{r}
 Post2000Nutrients <- subset(EC_Flow.Nutrients_Wide, Date > "2000-01-01" & Date < "2020-12-31")
 

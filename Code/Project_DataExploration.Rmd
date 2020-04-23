@@ -5,31 +5,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE) 
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
 # Set Working Directory and Load Data 
 ```{r setup, include=FALSE}
 # Set your working directory
@@ -141,19 +116,6 @@ interval(first(Club.Gorman_Flow_Long$Date), last(Club.Gorman_Flow_Long$Date))
 
 ```
 
-
-# Get summaries 
-NTL.PeterPaul.summaries <- 
-  NTL.phys.nutrient.data.PeterPaul %>%
-  filter(depth == 0) %>%
-  group_by(lakename, month) %>%
-  filter(!is.na(temperature_C) & !is.na(tn_ug) & !is.na(tp_ug)) %>%
-  summarise(meantemp = mean(temperature_C), 
-            sdtemp = sd(temperature_C), 
-            meanTN = mean(tn_ug), 
-            sdTN = sd(tn_ug), 
-            meanTP = mean(tp_ug), 
-            sdTP = sd(tp_ug))
 # Flow Summaries             
 ```{r}
 Club.Gorman_Flow_MonthSummary <- Club.Gorman_Flow_Long %>% 
@@ -175,7 +137,49 @@ Club.Gorman_Flow_YearSummary <- Club.Gorman_Flow_Long %>%
             minDischarge = min(Discharge),
             maxDischarge = max(Discharge))
 ```
+
 # Nutrient Summaries
+```{r}
+EC_Nutrient_MonthSummary <- EC_Flow.Nutrients_Wide %>% 
+  mutate(month = month(Date, label = TRUE)) %>% 
+  group_by(month) %>% 
+  filter(!is.na(Mixed_N), !is.na(TP)) %>% 
+  summarise(meanN = mean(Mixed_N),
+            sdN = sd(Mixed_N),
+            minN = min(Mixed_N),
+            maxN = max(Mixed_N),
+            meanP = mean(TP),
+            sdP = sd(TP),
+            minP = min(TP),
+            maxP = max(TP))
+
+ggplot(EC_Nutrient_MonthSummary)+
+  geom_point(aes(y = meanN, x=month))
+
+ggplot(EC_Nutrient_MonthSummary)+
+  geom_point(aes(y = meanP, x=month))
+
+EC_Nutrient_YearSummary <- EC_Flow.Nutrients_Wide %>% 
+  mutate(year = year(Date)) %>% 
+  group_by(year) %>% 
+  filter(!is.na(Mixed_N), !is.na(TP)) %>% 
+  summarise(meanN = mean(Mixed_N),
+            sdN = sd(Mixed_N),
+            minN = min(Mixed_N),
+            maxN = max(Mixed_N),
+            meanP = mean(TP),
+            sdP = sd(TP),
+            minP = min(TP),
+            maxP = max(TP))
+
+ggplot(EC_Nutrient_YearSummary)+
+  geom_point(aes(y = meanN, x=year))
+
+ggplot(EC_Nutrient_YearSummary)+
+  geom_point(aes(y = meanP, x=year))
+
+
+```
 
 
 # Flow 
@@ -193,7 +197,7 @@ IQR(Club.Gorman_Flow_Long$Discharge, na.rm=TRUE)
 
 # Mean Annual Discharge 
 MeanDischargeplot <-
-  ggplot(Club.Gorman_Flow_YearSummary, aes(x = year, y = meanDischarge, color = site_no)) +
+  ggplot(Club.Gorman_Flow_YearSummary, aes(x = as.factor(year), y = meanDischarge, color = site_no)) +
   geom_point()+
   geom_smooth(method='lm')
 print(MeanDischargeplot)

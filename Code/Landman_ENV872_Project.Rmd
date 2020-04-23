@@ -30,9 +30,19 @@ getwd()
 # Load your packages
 
 library(tidyverse)
+library(plyr)
+library(dataRetrieval)
+library(ggplot2)
+library(cowplot)
+library(lubridate)
 
 # Set your ggplot theme
 
+mytheme <- theme_bw(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+
+theme_set(mytheme)
 
 
 # Load your datasets
@@ -42,7 +52,7 @@ library(tidyverse)
 
 # Rationale and Research Questions
 
-
+Ellerbe Creek runs into the Falls Lake Resovoir, through the city of Durham, North Carolina. Falls Lake serves as the source of drinking water for the City of Raleigh and does not meet North Carolina standards for *chlorophyll a*, which is found in algae (SOURCE: https://durhamnc.gov/716/Falls-Lake). Algal blooms generally come from excess nutrients such as phosphorus and nitrogen. Ellerbe Creek is one of the sources of excess nutrients and contaminents in Falls Lake. The Ellerbe Creek Watershed has the highest population density of Durham's watersheds, with an estimated 22% impervious surface (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf). It is impacted by both point and nonpoint sources and was found to deliver the highest nutrient loads to Falls Lake (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf). Ellerbe Creek and Falls Lake are both on the state's impaired water bodies list (303(d) list) (SOURCE https://durhamnc.gov/711/Ellerbe-Creek-Watershed, https://www.usgs.gov/centers/sa-water/science/groundwatersurface-water-interaction-near-ellerbe-creek-durham-nc?qt-science_center_objects=0#qt-science_center_objects). Ellerbe Creek was first listed on the 303(d) list in 1998 (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf)
 
 \newpage
 
