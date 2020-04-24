@@ -10,7 +10,8 @@ subtitle: "https://github.com/rml41/EDA_2020_Project.git"
 author: "Rachel Landman"
 fontsize: 12pt
 mainfont: Times New Roman
-
+editor_options: 
+  chunk_output_type: console
 ---
 
 \newpage
@@ -35,6 +36,12 @@ library(dataRetrieval)
 library(ggplot2)
 library(cowplot)
 library(lubridate)
+library(knitr)
+library("readr")
+library("purrr")
+library("sf")
+library("ggmap")
+library(ggrepel)
 
 # Set your ggplot theme
 
@@ -46,6 +53,45 @@ theme_set(mytheme)
 
 
 # Load your datasets
+EC_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/EC_Flow.Nutrients_Wide_Processed.csv")
+
+Club.Gorman_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
+
+Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
+Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
+
+# Format Dates
+EC_Flow.Nutrients_Wide$Date <- 
+  as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+
+Club.Gorman_Flow.Nutrients_Wide$Date <- 
+  as.Date(Club.Gorman_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+
+Club.Gorman_Flow_Wide$Date <- 
+  as.Date(Club.Gorman_Flow_Wide$Date, format = "%Y-%m-%d")
+
+Club.Gorman_Flow_Long$Date <- 
+  as.Date(Club.Gorman_Flow_Long$Date, format = "%Y-%m-%d")
+
+
+# Format Site No to Character
+EC_Flow.Nutrients_Wide$site_no <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no)
+
+Club.Gorman_Flow.Nutrients_Wide$site_no <- 
+  as.character(Club.Gorman_Flow.Nutrients_Wide$site_no)
+
+Club.Gorman_Flow_Wide$site_no.x <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.x)
+
+Club.Gorman_Flow_Wide$site_no.y <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.y)
+
+Club.Gorman_Flow_Long$site_no <- 
+  as.character(Club.Gorman_Flow_Long$site_no)
+
 
 ```
 
@@ -55,7 +101,7 @@ theme_set(mytheme)
 Ellerbe Creek runs into the Falls Lake Resovoir, through the city of Durham, North Carolina. Falls Lake serves as the source of drinking water for the City of Raleigh and does not meet North Carolina standards for *chlorophyll a*, which is found in algae (SOURCE: https://durhamnc.gov/716/Falls-Lake). Algal blooms generally come from excess nutrients such as phosphorus and nitrogen. Ellerbe Creek is one of the sources of excess nutrients and contaminents in Falls Lake. The Ellerbe Creek Watershed has the highest population density of Durham's watersheds, with an estimated 22% impervious surface (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf). It is impacted by both point and nonpoint sources and was found to deliver the highest nutrient loads to Falls Lake (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf). Ellerbe Creek and Falls Lake are both on the state's impaired water bodies list (303(d) list) (SOURCE https://durhamnc.gov/711/Ellerbe-Creek-Watershed, https://www.usgs.gov/centers/sa-water/science/groundwatersurface-water-interaction-near-ellerbe-creek-durham-nc?qt-science_center_objects=0#qt-science_center_objects). Ellerbe Creek was first listed on the 303(d) list in 1998 (SOURCE: https://files.nc.gov/ncdeq/Water%20Quality/Planning/BPU/BPU/Neuse/Neuse%20Plans/2009%20Plan/Chapter%201.pdf)
 
 This analysis and report will aim to answer the following questions: 
-1. What are the overall Nitrogen and Phosphorus levels in Ellerbe Creek?
+1. Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended levels?
 2. Is there a relationship between flow and Nitrogen or Phosphorus levels?
 3. How does location, upstream vs. downstream, impact nutrient levels? 
 
@@ -79,15 +125,152 @@ Discharge Gorman | ft^3/s | 7.52 - 1750.00 | 48.84 | 20.50 | USGS
 
 ## Initial Exploration 
 
-Explored raw data from the water quality portal to determine potential variables for analysis and time period of data. Selected Nitrogen and Phosphorus as the two variables to analyze. Explore discharge data to determine date range of data.  
+Explored raw data from the water quality portal to determine potential variables for analysis and time period of data. Examined a summary of all the characteristics in the dataset to determine the count for each variable. Selected Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3) and Phosphorus as the two variables to analyze. Explored discharge data to determine date range of data.  
+
+Table 2. Sample of summary results from raw data 
+
+Variable | Count 
+--------------|-----
+Dissolved Oxygen | 636
+Nitrate | 128
+Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3) | 209
+Phosphorus | 286 
+RBP Stream Width | 14
+Temperature, water | 1146
+Total Dissolved Solids | 278
 
 ## Discharge Data Wrangling 
 
 Flow data from the two USGS stream gages were combined in two data sets, one as a long format with all discharge in one column and one in wide format, with two seperate columns for discharge based on location. 
 
+## Discharge Data Exploration
+
+A boxplot was made to visualize the range of discharge at each site
+```{r, echo=FALSE}
+Dischargeplot <-
+  ggplot(Club.Gorman_Flow_Long, aes(y = Discharge, x = site_no)) +
+  geom_boxplot()
+print(Dischargeplot)
+```
+
+The discharge over time at each location does not show any obvious seasonal or annual trends. 
+```{r, echo=FALSE}
+DischargeTimeplot.G <-
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.G)) +
+  geom_line()+
+  labs(x = "", (expression(paste("Discharge"  (ft^3/s)))))
+print(DischargeTimeplot.G)
+
+DischargeTimeplot.C <-
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.C)) +
+  geom_line()+
+  labs(x = "Date", (expression(paste("Discharge"  (ft^3/s)))))
+print(DischargeTimeplot.C)
+
+plot_grid(DischargeTimeplot.C, DischargeTimeplot.G, align = "h", ncol = 1)
+
+```
+
+
 ## Nutrient Data Wrangling 
 
-The nutrient data set from the water quality portal was cleans to remove all irrelevant information and retain just characterstics of interest, Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert Nitrogen and Phosphorus values to mg/L of N or P. 
+The nutrient data set from the water quality portal was cleans to remove all irrelevant information and retain just characterstics of interest, Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert Nitrogen and Phosphorus values to mg/L of N or P. Relevant columns such as data, location, hydrologic event, variable name, measured value, and units were selected and processed data were saved as both long and wide format. 
+
+## Nutrient Data Exploration 
+
+## Location of Monitoring Sites 
+
+```{r, include=FALSE}
+#Load Data 
+### Basin Boudaries
+basins_nf_seplains_raw <- st_read("./Data/Raw/data/spatial_data/bas_nonref_SEPlains.shp")
+
+### State Boundaries 
+southeast_state_bounds_raw <- st_read("./Data/Raw/data/spatial_data/southeast_state_bounds.shp")
+
+nc_rivers <- st_read("./Data/Raw/MajorHydro.shp")
+
+nc_12HUC <- st_read("./Data/Raw/12Digit_HUC_Subwatersheds/12Digit_HUC_Subwatersheds.shp")
+
+ellerbe_gages_raw <- read_csv("./Data/Raw/Ellerbe_12DigitHUC_Stream_Stations.csv") %>% as.data.frame()
+
+class(ellerbe_gages_raw)
+
+# convert to sf object
+ellerbe_gages_as_sf <- st_as_sf(ellerbe_gages_raw, 
+                                coords = c("LongitudeMeasure",
+                                           "LatitudeMeasure"), 
+                                crs = 4326, dim = "XY") 
+```
+
+```{r, include=FALSE}
+#CRS
+
+st_crs(basins_nf_seplains_raw)
+st_crs(southeast_state_bounds_raw)
+
+## define 
+my_proj4 <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+my_epsg <- 5070
+
+## set 
+
+st_crs(basins_nf_seplains_raw) <- my_proj4
+st_crs(basins_nf_seplains_raw) <- my_epsg
+
+st_crs(southeast_state_bounds_raw) <- my_proj4
+st_crs(southeast_state_bounds_raw) <- my_epsg
+
+st_crs(ellerbe_gages_as_sf)
+
+```
+
+```{r, include=FALSE}
+
+# Select NC State Bounds
+nc_state_bounds_geom <- southeast_state_bounds_raw %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
+
+head (nc_state_bounds_geom)
+
+nc_basins_nf_seplains <- basins_nf_seplains_raw %>%
+  st_intersection(nc_state_bounds_geom)
+
+head(nc_basins_nf_seplains)
+
+nc_area <- st_area(nc_state_bounds_geom)
+nc_centroid <- st_centroid(nc_state_bounds_geom)
+nc_gages_buffer_100m <- st_buffer (ellerbe_gages_as_sf, dist = 100)
+
+# Select Ellerbe HUC 
+ellerbe_watershed8 <- nc_12HUC %>%
+  filter(HUC_8 == "03020201") %>%
+  st_geometry()
+
+ellerbe_watershed12 <- nc_12HUC %>%
+filter(HUC_12 == "030202010403")%>%
+  st_geometry()
+
+class(ellerbe_watershed12)
+class(ellerbe_watershed8)
+
+```
+
+```{r, echo=FALSE}
+#pdf(here("Output", "ellerbe_watershed_HUC12_labels.pdf"), width = 11, height = 8.5)
+WatershedMap <- ggplot(ellerbe_gages_raw) +
+  geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
+  geom_text_repel(aes(x = LongitudeMeasure, y= LatitudeMeasure, label = MonitoringLocationIdentifier), color = "black", size=2)+
+  geom_sf(data = nc_rivers, color = "blue")+
+  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
+  ###geom_sf(data = ####DURHAM)
+   xlim(-79,-78.75)+
+   ylim(35.95,36.1)+
+  theme_bw()
+print(WatershedMap)
+#dev.off()
+```
 
 \newpage
 
@@ -95,10 +278,125 @@ The nutrient data set from the water quality portal was cleans to remove all irr
 
 
 
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+## Question 1: Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended levels?
+```{r, echo=FALSE}
+Nutrients_summary <- EC_Flow.Nutrients_Wide %>%
+  summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
+            min.N = min(Nitrogen, na.rm = TRUE),
+            max.N = max(Nitrogen, na.rm = TRUE),
+            Standard.dev.N = sd(Nitrogen, na.rm = TRUE),
+            mean.P = mean(Phosphorus, na.rm = TRUE),
+            min.P = min(Phosphorus, na.rm = TRUE),
+            max.P = max(Phosphorus, na.rm = TRUE),
+            Standard.dev.P = sd(Phosphorus, na.rm = TRUE))
 
-## Question 2: 
+kable(Nutrients_summary, caption = "Total Nitrogen and Phosphorus Conentrations")
 
+# Nitrogen Test 
+shapiro.test((EC_Flow.Nutrients_Wide$Nitrogen))
+
+N.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Nitrogen)) +
+  geom_density(fill = "gray") +
+  geom_vline(xintercept = 10, color = "#238b45", lty = 2, size = 0.9) +
+  scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+
+
+N.onesample.wilcox <- wilcox.test(EC_Flow.Nutrients_Wide$Nitrogen, mu = 10)
+N.onesample.wilcox
+
+# Phosphorus Test 
+shapiro.test((EC_Flow.Nutrients_Wide$Phosphorus))
+
+P.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Phosphorus)) +
+  geom_density(fill = "gray") +
+  geom_vline(xintercept = 1, color = "#238b45", lty = 2, size = 0.9) +
+  scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
+
+
+P.onesample.wilcox <- wilcox.test(EC_Flow.Nutrients_Wide$Phosphorus, mu = 1)
+P.onesample.wilcox
+
+# Plot both densities 
+plot_grid(N.plot, P.plot, align = "h", nrow = 1)
+
+```
+ 
+
+## Question 2: Is there a relationship between flow and Nitrogen or Phosphorus levels?
+```{r, echo=FALSE}
+
+#Nitrogen
+logNitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Nitrogen) ~ log(Discharge.C))
+summary(logNitrogenClub.regression)
+## EXPLAIN LOG LOG RELATIONSHIP 
+
+logNitrogenGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Nitrogen) ~ log(Discharge.G))
+summary(logNitrogenGorman.regression)
+
+ 
+#Phosphorus 
+logPhosphorusClub.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Phosphorus) ~ log(Discharge.C))
+summary(logPhosphorusClub.regression)
+## adj R squared says 8 % of variance is explained by depth 
+## significant relationship p < 0.001
+
+
+logPhosphorusGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Phosphorus) ~ log(Discharge.G))
+summary(logPhosphorusGorman.regression)
+## adj R squared says 9 % of variance is explained by depth
+## significant relationship p < 0.001
+
+
+```
+
+```{r, echo=FALSE}
+# Nitrogen Regression 
+
+logNitrogen_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Nitrogen)))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,10)
+print(logNitrogen_logDischarge)
+
+# Phosphorus Regression 
+
+logPhosphorus_logDischarge <- 
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Phosphorus)))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(logPhosphorus_logDischarge)
+
+```
+
+
+## Question 3: How does location, upstream vs. downstream, impact nutrient levels? 
+```{r,echo=FALSE}
+Nutrients_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
+   group_by(Location) %>%
+  summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
+            min.N = min(Nitrogen, na.rm = TRUE),
+            max.N = max(Nitrogen, na.rm = TRUE),
+            Standard.dev.N = sd(Nitrogen, na.rm = TRUE),
+            mean.P = mean(Phosphorus, na.rm = TRUE),
+            min.P = min(Phosphorus, na.rm = TRUE),
+            max.P = max(Phosphorus, na.rm = TRUE),
+            Standard.dev.P = sd(Phosphorus, na.rm = TRUE))
+
+kable(Nutrients_Location_summary, caption = "Nitrogen and Phosphorus conentrations by Location")
+```
+
+```{r, echo=FALSE}
+
+# Nitrogen 
+N.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+N.twosample.wilcox
+
+# Phosphorus 
+P.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+P.twosample.wilcox
+
+```
 
 
 

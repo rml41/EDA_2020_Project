@@ -122,6 +122,12 @@ bodies list (303(d) list) (SOURCE
 Ellerbe Creek was first listed on the 303(d) list in 1998 (SOURCE:
 \url{https://files.nc.gov/ncdeq/Water\%20Quality/Planning/BPU/BPU/Neuse/Neuse\%20Plans/2009\%20Plan/Chapter\%201.pdf})
 
+This analysis and report will aim to answer the following questions: 1.
+Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended
+levels? 2. Is there a relationship between flow and Nitrogen or
+Phosphorus levels? 3. How does location, upstream vs.~downstream, impact
+nutrient levels?
+
 \newpage
 
 \hypertarget{dataset-information}{%
@@ -142,16 +148,19 @@ nitrite, ammonia, ammonium, organic nitrogen, phosphate, and organic
 phosphorus. The USGS gage locations are Club Blvd (0208675010),
 upstream, and Gorman (02086849), downstream.
 
-\begin{longtable}[]{@{}lllll@{}}
+\begin{longtable}[]{@{}llllll@{}}
 \toprule
-Variable & Units & Range & Mean & Median\tabularnewline
+Variable & Units & Range & Mean & Median & Source\tabularnewline
 \midrule
 \endhead
-Nitrogen & mg/L N & 0.37 - 33.00 & 7.18 & 2.82\tabularnewline
-Phosphorus & mg/L P & 0.039 - 17.00 & 1.091 & 0.157\tabularnewline
-Discarge Club & ft\^{}3/s & 0.20 - 781.00 & 9.39 & 1.28\tabularnewline
-Discharge Gorman & ft\^{}3/s & 7.52 - 1750.00 & 48.84 &
-20.50\tabularnewline
+Nitrogen & mg/L N & 0.37 - 33.00 & 7.18 & 2.82 & NC DENR and
+USGS\tabularnewline
+Phosphorus & mg/L P & 0.039 - 17.00 & 1.091 & 0.157 & NC DENR and
+USGS\tabularnewline
+Discarge Club & ft\^{}3/s & 0.20 - 781.00 & 9.39 & 1.28 &
+USGS\tabularnewline
+Discharge Gorman & ft\^{}3/s & 7.52 - 1750.00 & 48.84 & 20.50 &
+USGS\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -160,24 +169,312 @@ Discharge Gorman & ft\^{}3/s & 7.52 - 1750.00 & 48.84 &
 \hypertarget{exploratory-analysis}{%
 \section{Exploratory Analysis}\label{exploratory-analysis}}
 
+\hypertarget{initial-exploration}{%
+\subsection{Initial Exploration}\label{initial-exploration}}
+
+Explored raw data from the water quality portal to determine potential
+variables for analysis and time period of data. Examined a summary of
+all the characteristics in the dataset to determine the count for each
+variable. Selected Nitrogen, mixed forms (NH3), (NH4), organic, (NO2)
+and (NO3) and Phosphorus as the two variables to analyze. Explored
+discharge data to determine date range of data.
+
+Table 2. Sample of summary results from raw data
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Variable & Count\tabularnewline
+\midrule
+\endhead
+Dissolved Oxygen & 636\tabularnewline
+Nitrate & 128\tabularnewline
+Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3) &
+209\tabularnewline
+Phosphorus & 286\tabularnewline
+RBP Stream Width & 14\tabularnewline
+Temperature, water & 1146\tabularnewline
+Total Dissolved Solids & 278\tabularnewline
+\bottomrule
+\end{longtable}
+
 \hypertarget{discharge-data-wrangling}{%
 \subsection{Discharge Data Wrangling}\label{discharge-data-wrangling}}
 
+Flow data from the two USGS stream gages were combined in two data sets,
+one as a long format with all discharge in one column and one in wide
+format, with two seperate columns for discharge based on location.
+
+\hypertarget{discharge-data-exploration}{%
+\subsection{Discharge Data
+Exploration}\label{discharge-data-exploration}}
+
+A boxplot was made to visualize the range of discharge at each site
+
+\begin{verbatim}
+## Warning: Removed 9 rows containing non-finite values (stat_boxplot).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+The discharge over time at each location does not show any obvious
+seasonal or annual trends.
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 213 rows containing missing values (geom_path).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-2.pdf}
+
+\begin{verbatim}
+## Warning: Removed 213 rows containing missing values (geom_path).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-3.pdf}
+
 \hypertarget{nutrient-data-wrangling}{%
 \subsection{Nutrient Data Wrangling}\label{nutrient-data-wrangling}}
+
+The nutrient data set from the water quality portal was cleans to remove
+all irrelevant information and retain just characterstics of interest,
+Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples
+were recorded as both mg/L of N and P, and of NO3 and PO4 respectively.
+Data were downloaded in long format and were converted to wide format in
+order to convert Nitrogen and Phosphorus values to mg/L of N or P.
+Relevant columns such as data, location, hydrologic event, variable
+name, measured value, and units were selected and processed data were
+saved as both long and wide format.
+
+\hypertarget{nutrient-data-exploration}{%
+\subsection{Nutrient Data Exploration}\label{nutrient-data-exploration}}
+
+\hypertarget{geographic-exploration}{%
+\subsection{Geographic Exploration}\label{geographic-exploration}}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \newpage
 
 \hypertarget{analysis}{%
 \section{Analysis}\label{analysis}}
 
-\hypertarget{question-1-insert-specific-question-here-and-add-additional-subsections-for-additional-questions-below-if-needed}{%
-\subsection{Question 1: \textless{}insert specific question here and add
-additional subsections for additional questions below, if
-needed\textgreater{}}\label{question-1-insert-specific-question-here-and-add-additional-subsections-for-additional-questions-below-if-needed}}
+\hypertarget{question-1-are-nitrogen-and-phosphorus-levels-in-ellerbe-creek-above-recommended-levels}{%
+\subsection{Question 1: Are Nitrogen and Phosphorus levels in Ellerbe
+Creek above recommended
+levels?}\label{question-1-are-nitrogen-and-phosphorus-levels-in-ellerbe-creek-above-recommended-levels}}
 
-\hypertarget{question-2}{%
-\subsection{Question 2:}\label{question-2}}
+\begin{longtable}[]{@{}rrrrrrrr@{}}
+\caption{Total Nitrogen and Phosphorus Conentrations}\tabularnewline
+\toprule
+mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
+Standard.dev.P\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
+Standard.dev.P\tabularnewline
+\midrule
+\endhead
+7.183095 & 0.37 & 33 & 7.773407 & 1.091398 & 0.039 & 17 &
+2.082384\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  (EC_Flow.Nutrients_Wide$Nitrogen)
+## W = 0.79284, p-value = 8.616e-13
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Wilcoxon signed rank test with continuity correction
+## 
+## data:  EC_Flow.Nutrients_Wide$Nitrogen
+## V = 2773.5, p-value = 1.735e-05
+## alternative hypothesis: true location is not equal to 10
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  (EC_Flow.Nutrients_Wide$Phosphorus)
+## W = 0.54427, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Wilcoxon signed rank test with continuity correction
+## 
+## data:  EC_Flow.Nutrients_Wide$Phosphorus
+## V = 10319, p-value = 5.817e-05
+## alternative hypothesis: true location is not equal to 1
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 5428 rows containing non-finite values (stat_density).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 5325 rows containing non-finite values (stat_density).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\hypertarget{question-2-is-there-a-relationship-between-flow-and-nitrogen-or-phosphorus-levels}{%
+\subsection{Question 2: Is there a relationship between flow and
+Nitrogen or Phosphorus
+levels?}\label{question-2-is-there-a-relationship-between-flow-and-nitrogen-or-phosphorus-levels}}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(Nitrogen) ~ log(Discharge.C), data = EC_Flow.Nutrients_Wide)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.09532 -0.42011 -0.04936  0.34030  1.27602 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)       0.23863    0.11547   2.067    0.043 *
+## log(Discharge.C)  0.05712    0.03698   1.545    0.127  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.5865 on 62 degrees of freedom
+##   (5504 observations deleted due to missingness)
+## Multiple R-squared:  0.03707,    Adjusted R-squared:  0.02154 
+## F-statistic: 2.387 on 1 and 62 DF,  p-value: 0.1275
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(Nitrogen) ~ log(Discharge.G), data = EC_Flow.Nutrients_Wide)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.19343 -0.41534 -0.06062  0.36557  1.22521 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(>|t|)
+## (Intercept)      0.0004363  0.2646138   0.002    0.999
+## log(Discharge.G) 0.0885713  0.0598832   1.479    0.144
+## 
+## Residual standard error: 0.5874 on 62 degrees of freedom
+##   (5504 observations deleted due to missingness)
+## Multiple R-squared:  0.03408,    Adjusted R-squared:  0.0185 
+## F-statistic: 2.188 on 1 and 62 DF,  p-value: 0.1442
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(Phosphorus) ~ log(Discharge.C), data = EC_Flow.Nutrients_Wide)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.07959 -0.40661 -0.03792  0.36471  1.39270 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)      -2.28888    0.04884 -46.864  < 2e-16 ***
+## log(Discharge.C)  0.18248    0.02132   8.557 9.91e-15 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.5479 on 157 degrees of freedom
+##   (5409 observations deleted due to missingness)
+## Multiple R-squared:  0.3181, Adjusted R-squared:  0.3137 
+## F-statistic: 73.22 on 1 and 157 DF,  p-value: 9.906e-15
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = log(Phosphorus) ~ log(Discharge.G), data = EC_Flow.Nutrients_Wide)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.06245 -0.41659 -0.08926  0.37264  2.19712 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)      -3.38679    0.15130 -22.385  < 2e-16 ***
+## log(Discharge.G)  0.36805    0.04104   8.967 7.12e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.5482 on 162 degrees of freedom
+##   (5404 observations deleted due to missingness)
+## Multiple R-squared:  0.3317, Adjusted R-squared:  0.3276 
+## F-statistic: 80.41 on 1 and 162 DF,  p-value: 7.124e-16
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 5520 rows containing non-finite values (stat_smooth).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 5520 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{verbatim}
+## Warning: Removed 5404 rows containing non-finite values (stat_smooth).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 5404 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-2.pdf}
+
+\hypertarget{question-3-how-does-location-upstream-vs.downstream-impact-nutrient-levels}{%
+\subsection{Question 3: How does location, upstream vs.~downstream,
+impact nutrient
+levels?}\label{question-3-how-does-location-upstream-vs.downstream-impact-nutrient-levels}}
+
+\begin{longtable}[]{@{}rrrrrrrr@{}}
+\caption{Nitrogen and Phosphorus conentrations by
+Location}\tabularnewline
+\toprule
+mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
+Standard.dev.P\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
+Standard.dev.P\tabularnewline
+\midrule
+\endhead
+7.740577 & 0.37 & 33 & 7.952157 & 1.134506 & 0.039 & 17 &
+2.116099\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+## 
+##  Wilcoxon rank sum test with continuity correction
+## 
+## data:  Club.Gorman_Flow.Nutrients_Wide$Nitrogen by Club.Gorman_Flow.Nutrients_Wide$Location
+## W = 2938, p-value = 2.446e-14
+## alternative hypothesis: true location shift is not equal to 0
+\end{verbatim}
+
+\begin{verbatim}
+## 
+##  Wilcoxon rank sum test with continuity correction
+## 
+## data:  Club.Gorman_Flow.Nutrients_Wide$Phosphorus by Club.Gorman_Flow.Nutrients_Wide$Location
+## W = 4062.5, p-value = 0.1651
+## alternative hypothesis: true location shift is not equal to 0
+\end{verbatim}
 
 \newpage
 

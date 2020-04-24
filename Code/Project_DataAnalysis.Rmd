@@ -418,7 +418,7 @@ print(Phosphorus_Time2000)
 # Nutrient Summaries
 ```{r}
 EC_Nutrient_MonthSummary <- EC_Flow.Nutrients_Wide %>% 
-  group_by(month) %>% 
+  group_by(as.character(month)) %>% 
   filter(!is.na(Nitrogen), !is.na(Phosphorus)) %>% 
   summarise(meanN = mean(Nitrogen),
             sdN = sd(Nitrogen),

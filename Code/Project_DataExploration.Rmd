@@ -262,15 +262,15 @@ print(ClubDischargePlot)
 ### Phosphorus 
 
 Pboxplot <-
-  ggplot(EC_Flow.Nutrients_Wide, aes(x = HydrologicEvent, y = TP)) +
+  ggplot(EC_Flow.Nutrients_Wide, aes(x = HydrologicEvent, y = Phosphorus)) +
   geom_boxplot()
 print(Pboxplot)
 
 
 Discharge_TP <-
   ggplot(EC_Flow.Nutrients_Wide, 
-         aes(x = TP, y = Discharge.C, color = HydrologicEvent))+
-  xlim(0,400)+
+         aes(x = Phosphorus, y = Discharge.C, color = HydrologicEvent))+
+  xlim(0,2.5)+
   ylim(0,400)+
   geom_point() 
 print(Discharge_TP)
