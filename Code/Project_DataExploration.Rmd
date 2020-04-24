@@ -255,7 +255,27 @@ print(ClubDischargePlot)
 
 ```
 
+## Nutrient Data Exploration 
 
+```{r Exploratory Analysis Figure 4, echo=FALSE, warnings=FALSE, messages=FALSE, fig.cap = "Distribution of Nitrogen and Phosphorus Concentrations in Ellerbe Creek from November 17, 1982 to December 17, 2018.}
+
+NPboxplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = value)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+print(NPboxplot)
+
+```
+
+```{r Exploratory Analysis Figure 5, echo=FALSE, warnings=FALSE, messages=FALSE, fig.cap = "Concentrations of Nitrogen and Phosphorus over Time in Ellerbe Creek from November 17, 1982 to December 17, 2018.}
+NPTime <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= Date, y = value, color = CharacteristicName)) +
+  geom_point()+
+  labs(x = "Date", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+print(NPTime)
+```
 
 # Explore Nutrients with ggplot 
 ```{r}
@@ -265,6 +285,14 @@ Pboxplot <-
   ggplot(EC_Flow.Nutrients_Wide, aes(x = HydrologicEvent, y = Phosphorus)) +
   geom_boxplot()
 print(Pboxplot)
+
+NPboxplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = value)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+print(NPboxplot)
+
 
 
 Discharge_TP <-

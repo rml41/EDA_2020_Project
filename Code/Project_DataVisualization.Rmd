@@ -13,330 +13,168 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Install Packages
 
-```{r}
-# some tidyverse packages
-library(readr)
-library(dplyr)
-library(tidyr)
+
+```{r setup, include=FALSE}
+
+# Set your working directory
+
+setwd("/Users/rmlandman/Desktop/Data Analytics/Environmental_Data_Analytics_2020/Project/EDA_2020_Project")
+getwd()
+
+# Load your packages
+
+
+library(plyr)
+library(tidyverse)
 library(ggplot2)
-library(purrr)
-library(sf)
-library(ggmap)
-library(here)
-library(maps)
-```
+library(lubridate)
+library(viridis)
+library(RColorBrewer)
+library(cowplot)
 
-# Map Data
+# Set your ggplot theme
 
-# Load Data
-```{r}
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
 
-basins_nf_seplains_raw <- st_read(here("Data","Raw", "data", "spatial_data", "bas_nonref_SEPlains.shp"))
+theme_set(mytheme)
 
-southeast_state_bounds_raw <- st_read(here("Data","Raw","data", "spatial_data", "southeast_state_bounds.shp"))
+# Load your datasets
 
-nc_rivers <- st_read(here("Data","Raw", "MajorHydro.shp"))
+EC_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/EC_Flow.Nutrients_Wide_Processed.csv")
 
-nc_12HUC <- st_read(here("Data","Raw","12Digit_HUC_Subwatersheds", "12Digit_HUC_Subwatersheds.shp"))
+Club.Gorman_Flow.Nutrients_Wide <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Wide_Processed.csv")
 
-waterfeatures <- st_read("./Data/Raw/hydrogl020.dbf")
-class(waterfeatures)
-```
+Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
 
-Check CRS and define proj and EPSG
-```{r}
-st_crs(basins_nf_seplains_raw)
-st_crs(southeast_state_bounds_raw)
+class(Club.Gorman_Flow_Long$X_00060_00003)
 
-## define 
-my_proj4 <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-my_epsg <- 5070
+Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
 
-## set 
-
-st_crs(basins_nf_seplains_raw) <- my_proj4
-st_crs(basins_nf_seplains_raw) <- my_epsg
-
-st_crs(southeast_state_bounds_raw) <- my_proj4
-st_crs(southeast_state_bounds_raw) <- my_epsg
-
-st_crs(waterfeatures) <- my_proj4
-st_crs(waterfeatures) <- my_epsg
-
-st_crs(waterfeatures)
-```
-
-Convert Ellerbe Tabular to Spatial 
-
-```{r}
-ellerbe_gages_raw <- read_csv(here("Data","Raw", "Ellerbe_12DigitHUC_Stream_Stations.csv")) %>% as.data.frame()
-
-class(ellerbe_gages_raw)
-names(ellerbe_gages_raw)
-
-# convert to sf object
-ellerbe_gages_as_sf <- st_as_sf(ellerbe_gages_raw, 
-                                coords = c("LongitudeMeasure",
-                                           "LatitudeMeasure"), 
-                                crs = 4326, dim = "XY") 
-# lat long so set CRS = WGS84
-
-# check class and CRS
-class(ellerbe_gages_as_sf)
-head(ellerbe_gages_as_sf)
-st_crs(ellerbe_gages_as_sf)
-
-pdf(here("Output", "test.pdf"), width = 11, height = 8.5)
-ggplot() +
-  geom_sf(data = ellerbe_gages_as_sf) +
-  theme_bw()
-dev.off()
+Club.Gorman_Flow.Nutrients_Long <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
 
 ```
 
-Select NC from State Bounds
-
+# Format Dates
 ```{r}
-nc_state_bounds_geom <- southeast_state_bounds_raw %>%
-  filter(NAME == "North Carolina") %>%
-  st_geometry()
+Club.Gorman_Flow.Nutrients_Wide$Date <- 
+  as.Date(Club.Gorman_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Wide$Date)
 
-head (nc_state_bounds_geom)
+Club.Gorman_Flow_Wide$Date <- 
+  as.Date(Club.Gorman_Flow_Wide$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Wide$Date)
 
-nc_basins_nf_seplains <- basins_nf_seplains_raw %>%
-  st_intersection(nc_state_bounds_geom)
+Club.Gorman_Flow_Long$Date <- 
+  as.Date(Club.Gorman_Flow_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow_Long$Date)
 
-head(nc_basins_nf_seplains)
+EC_Flow.Nutrients_Wide$Date <- 
+  as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
+class(EC_Flow.Nutrients_Wide$Date)
 
-nc_area <- st_area(nc_state_bounds_geom)
-nc_centroid <- st_centroid(nc_state_bounds_geom)
-nc_gages_buffer_100m <- st_buffer (ellerbe_gages_as_sf, dist = 100)
+Club.Gorman_Flow.Nutrients_Long$Date <-
+  as.Date(Club.Gorman_Flow.Nutrients_Long$Date, format = "%Y-%m-%d")
+class(Club.Gorman_Flow.Nutrients_Long$Date)
+
 
 ```
 
-Select Ellerbe HUC
-
+#Format Site Number to Character
 ```{r}
-ellerbe_watershed8 <- nc_12HUC %>%
-  filter(HUC_8 == "03020201") %>%
-  st_geometry()
 
-ellerbe_watershed12 <- nc_12HUC %>%
-filter(HUC_12 == "030202010403")%>%
-  st_geometry()
+Club.Gorman_Flow.Nutrients_Wide$site_no <- 
+  as.character(Club.Gorman_Flow.Nutrients_Wide$site_no)
+class(Club.Gorman_Flow.Nutrients_Wide$site_no)
 
-class(ellerbe_watershed12)
-head(ellerbe_watershed8)
-```
+Club.Gorman_Flow_Wide$site_no.x <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.x)
+class(Club.Gorman_Flow_Wide$site_no.x)
 
-Intersect Rivers with Ellerbe HUC
-```{r}
-nc_rivers_ellerbe <- nc_rivers %>% 
-  st_intersection(ellerbe_watershed12)
+Club.Gorman_Flow_Wide$site_no.y <- 
+  as.character(Club.Gorman_Flow_Wide$site_no.y)
+class(Club.Gorman_Flow_Wide$site_no.y)
 
-nc_rivers_HUC8 <- nc_rivers %>% 
-  st_intersection(ellerbe_watershed8)
+Club.Gorman_Flow_Long$site_no <- 
+  as.character(Club.Gorman_Flow_Long$site_no, format)
+class(Club.Gorman_Flow_Long$site_no)
 
-waterfeatures_NC <- waterfeatures_wsg84 %>%
-  filter(STATE == "NC") %>%
-  st_geometry()
+EC_Flow.Nutrients_Wide$site_no <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no)
+class(EC_Flow.Nutrients_Wide$site_no)
 
+EC_Flow.Nutrients_Wide$site_no.x <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.x)
+class(EC_Flow.Nutrients_Wide$site_no.x)
 
-st_crs(ellerbe_watershed8)
-st_crs(waterfeatures_wsg84)
+EC_Flow.Nutrients_Wide$site_no.y <- 
+  as.character(EC_Flow.Nutrients_Wide$site_no.y)
+class(EC_Flow.Nutrients_Wide$site_no.y)
 
-# Convert waterfeatures to 4326
-waterfeatures_wsg84 <- waterfeatures %>%
-  st_transform(4326)
-
-```
-
-#Basemap
-
-```{r}
-## add basemap 
-
-nc_state_bounds_geom <- southeast_state_bounds_raw %>%
-  filter(NAME == "North Carolina") %>%
-  st_geometry()
-
-nc_bbox <- nc_state_bounds_geom %>%
-  st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
-  st_transform(4326) %>% # WGS84 (for lat and long)
-  st_bbox()
-nc_bbox # check
-
-# fix bounding box columns so they match what is needed for the ggmap::get_map() function
-### fucntion (ggmap:getmap()) pulls basemap
-nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
-
-# check result
-nc_bbox_fix
-
-# get basemap
-### type get_map in help to see figure out how much you want to zoom 
-nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 10)
-class(nc_basemap)
-st_crs(nc_basemap)
-
-
-ellerbe_map <- 
-  get_map (location = c( long = 36.0283820, lat = -78.9020959), 
-           maptype ='terrain-background', source = 'stamen', zoom = 10)
-
-class(nc_basemap)
-st_crs(nc_basemap)
-# convert nc_state_bounds_geom to WGS84 so it matches nc_basemap
-### converts it back to lat/long 
-nc_state_bounds_geom_wsg84 <- nc_state_bounds_geom %>%
-  st_transform(4326)
-
-st_crs(nc_state_bounds_geom_wsg84)
-```
-
-# Get Basemap for Ellerbe Watershed 
-```{r}
-## add basemap 
-sq_map <- get_map(location = c(long = 36.0283820, lat = -78.9020959),
-                  maptype = "terrain-background", source = 'stamen', zoom = 5)
-
-ggmap(sq_map)
-
-nc_state_bounds_geom <- southeast_state_bounds_raw %>%
-  filter(NAME == "North Carolina") %>%
-  st_geometry()
-
-nc_bbox <- ellerbe_watershed12 %>%
-  st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
-  st_transform(4326) %>% # WGS84 (for lat and long)
-  st_bbox()
-nc_bbox # check
-
-# fix bounding box columns so they match what is needed for the ggmap::get_map() function
-### fucntion (ggmap:getmap()) pulls basemap
-nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]], top = nc_bbox[[4]])
-
-# check result
-nc_bbox_fix
-
-# get basemap
-### type get_map in help to see figure out how much you want to zoom 
-nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
-class(nc_basemap)
-st_crs(nc_basemap)
 
 ```
 
 
-
-# Plot 
+# Upstream v Downstream Plot
 ```{r}
-### Plot 
+NPplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = value, color = Location)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))+
+scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(NPplot)
 
-pdf(here("Output", "nc_with_basemap.pdf"), width = 11, height = 8.5)
-ggmap(nc_basemap) +
-  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)
-dev.off()
+Flowplot <-
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, color = Location)) +
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "")+
+  theme(plot.caption = element_text(hjust = 0.5, size = 11))+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(Flowplot)
 
-pdf(here("Output", "EC_with_basemap.pdf"), width = 11, height = 8.5)
-ggmap(nc_basemap) +
-  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)+
-  geom_sf(data = ellerbe_gages_as_sf, color = "red")
-dev.off()
+TPMonth_boxplot <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Phosphorus, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TPMonth_boxplot)
 
-
-
-pdf(here("Output", "ellerbe_watershed_test1.pdf"), width = 11, height = 8.5)
-ggplot() +
-  geom_sf(data = ellerbe_watershed12, fill = "blue", lwd = 2) +
-  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
-  theme_bw()
-dev.off()
- 
-library(ggrepel)
-
-pdf(here("Output", "ellerbe_watershed_zoom.pdf"), width = 11, height = 8.5)
-ggplot(ellerbe_gages_as_sf) +
-  geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
-  geom_sf_text(aes(label = MonitoringLocationIdentifier), color = "black", size=2)+
-  geom_sf(data = nc_rivers_HUC8, color = "blue")+
-  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
-   xlim(-79,-78.75)+
-   ylim(35.95,36.1)+
-  theme_bw()
-dev.off()
+TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Nitrogen, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+print(TNMonth_boxplot)
 
 
-pdf(here("Output", "ellerbe_watershed_HUC12.pdf"), width = 11, height = 8.5)
-ggplot() +
-  geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
-  geom_sf(data = waterfeatures, color = "black")+
-  geom_sf(data = nc_rivers_ellerbe, color = "blue")+
-  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
-   xlim(-79,-78.75)+
-   ylim(35.9,36.1)+
-  theme_bw()
-dev.off()
+plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('a.', 'b.'))
+plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('c.', 'd.'))
+
+# now add the title
+title <- ggdraw() + 
+  draw_label(
+    "Nutrient Concentrations and Flow at Upstream and Downstream Locations along Ellerbe Creek",
+    fontface = 'bold',
+    size = 14,
+    hjust = 0.5) +
+  theme(
+    plot.margin = margin(0, 0, 0, 7))
+
+title2 <- ggdraw() + 
+  draw_label(
+    "Figure 1. Distributions of nutrient concentrations and flow at upstream and downstream monitoring sites along Ellerbe Creek in North Carolina. \na) Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites. b) Flow at upstream and downstream monitoring sites. \nc) and d) Monthly distributions of nitrogen and phosphorus concentrations at upstream and downstream monitoring sites.",
+    hjust = 0.5, size = 11) +
+  theme( plot.margin = margin(0, 0, 0, 7))
+
+plot_grid(title, plot_row1, plot_row2, title2,ncol = 1,rel_heights = c(0.1, 1, 0.5))
 
 
-### convert data to wsg84
-
-ellerbe_watershed_wsg84 <- ellerbe_watershed12 %>%
-  st_transform(4326)
-
-ellerbe_gages_wsg84 <- ellerbe_gages_as_sf
- st_transform(4326)
- 
- st_crs(ellerbe_gages_wsg84)
- st_crs(ellerbe_gages_as_sf)
- st_crs(nc_basemap)
- 
- st_crs(nc_basemap) <- 4326
-
-pdf(here("Output", "ellerbe_watershed12_test.pdf"), width = 11, height = 8.5)
- ggmap(nc_basemap) +
-  geom_sf(data = ellerbe_watershed_wsg84, fill = "NA", lwd = 2,inherit.aes = FALSE) +
-    geom_sf(data = ellerbe_gages_as_sf, color = "red", inherit.aes = FALSE)+
-   xlim(-79,-78.75)+
-   ylim(35.9,36.1)+
-  theme_bw()
-dev.off()
-
-```
-#Neuse Example 
-
-```{r}
-
-#Load data 
-
-waterfeatures <- st_read("./Data/Raw/hydrogl020.dbf")
-class(waterfeatures)
-
-# Filter for North Carolina
-waterfeatures <- filter(waterfeatures, STATE == "NC")
-
-# Remove a couple feature types we don't care about
-waterfeatures <- filter(waterfeatures, FEATURE != "Apparent Limit" & FEATURE != "Closure Line")
-
-pdf(here("Output", "ellerbe_waterfeatures.pdf"), width = 11, height = 8.5)
-ggplot() +
-  geom_sf(data = ellerbe_watershed_wsg84, fill = "darkgray") +
-  geom_sf(data = waterfeatures, aes(fill = FEATURE, color = FEATURE, geometry = "geometry")) +
-  geom_sf(data = ellerbe_gages_as_sf, color = "red", inherit.aes = FALSE)+
-     xlim(-79,-78.75)+
-   ylim(35.9,36.1)+
-  labs(title = "Neuse River Basin", color = "Feature", fill = "Feature") +
-  scale_color_viridis_d(option = "magma", end = 0.9) +
-  scale_fill_viridis_d(option = "magma", end = 0.9)
-dev.off()
-
-pdf(here("Output", "waterfeatures2.pdf"), width = 11, height = 8.5)
-ggplot(waterfeatures) +
-  geom_sf(aes(fill = FEATURE, color = FEATURE, geometry = "geometry")) +
-  scale_color_viridis_d(option = "magma", end = 0.9) +
-  scale_fill_viridis_d(option = "magma", end = 0.9)
-dev.off()
-      
 ```
 
 

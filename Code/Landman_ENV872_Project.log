@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 00:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 10:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -522,35 +522,35 @@ Package: titling 2009/09/04 v2.1d maketitle typesetting
 ) (./Landman_ENV872_Project.aux)
 \openout1 = `Landman_ENV872_Project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 90.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 91.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 9
-0.
+1.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 90
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 91.
+LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 91
 .
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Info: Redefining \microtypecontext on input line 90.
+LaTeX Info: Redefining \microtypecontext on input line 91.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -603,7 +603,7 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring OFF on input line 90.
+Package hyperref Info: Link coloring OFF on input line 91.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -613,9 +613,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count125
 )
-LaTeX Info: Redefining \ref on input line 90.
-LaTeX Info: Redefining \pageref on input line 90.
-LaTeX Info: Redefining \nameref on input line 90.
+LaTeX Info: Redefining \ref on input line 91.
+LaTeX Info: Redefining \pageref on input line 91.
+LaTeX Info: Redefining \nameref on input line 91.
 (./Landman_ENV872_Project.out) (./Landman_ENV872_Project.out)
 \@outlinefile=\write3
 \openout3 = `Landman_ENV872_Project.out'.
@@ -650,39 +650,39 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 9
-1.
+2.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
-1.
+2.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-91.
+92.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-91.
+92.
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 91.
+(Font)              <14.4> on input line 92.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 91.
+(Font)              <10> on input line 92.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 91.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 91.
+(Font)              <7> on input line 92.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 92.
 
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2019basic/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 91.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 92.
 
 (/usr/local/texlive/2019basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -711,178 +711,160 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \openout6 = `Landman_ENV872_Project.lof'.
 
 [4]
-Underfull \hbox (badness 1509) in paragraph at lines 105--124
+Underfull \hbox (badness 1509) in paragraph at lines 106--125
 \T1/lmr/m/n/12 (+20) im-per-vi-ous sur-face (SOURCE: []$https : / / ^^\les . nc
  . gov / ncdeq / Water % 20Quality / Planning /
  []
 
 
-Underfull \hbox (badness 2213) in paragraph at lines 105--124
+Underfull \hbox (badness 2213) in paragraph at lines 106--125
 \T1/lmr/m/n/12 (+20) BPU / BPU / Neuse / Neuse % 20Plans / 2009 % 20Plan / Chap
 ter % 201 . pdf$[]). It is im-pacted
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--124
+Underfull \hbox (badness 10000) in paragraph at lines 106--125
 []$\T1/lmr/m/n/12 (+20) https : / / durhamnc . gov / 711 / Ellerbe-[]Creek-[]Wa
 tershed$[], []$https : / / www . usgs . gov / centers /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--124
+Underfull \hbox (badness 10000) in paragraph at lines 106--125
 \T1/lmr/m/n/12 (+20) sa-[]water / science / groundwatersurface-[]water-[]intera
 ction-[]near-[]ellerbe-[]creek-[]durham-[]nc ?
  []
 
 [5] [6]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-13.
-(/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-1-1".pdf, id=133, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-1-1".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-1-1".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-1-1".pdf  used on input line 217.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[7]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-1".pdf, id=146, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-1".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-1".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-2-1".pdf  used on input line 221.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[8 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-1-1.pdf>]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-2".pdf, id=156, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-2".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-2".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-2-2".pdf  used on input line 227.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[9 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-1.pdf>]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-3".pdf, id=166, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-3".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-2-3".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-2-3".pdf  used on input line 233.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[10 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-2.pdf>]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-6-1".pdf, id=176, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-6-1".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-6-1".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-6-1".pdf  used on input line 254.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[11 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-3.pdf>] [12 <.
-/Landman_ENV872_Project_files/figure-latex/unnamed-chunk-6-1.pdf>]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-7-1".pdf, id=199, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-7-1".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-7-1".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-7-1".pdf  used on input line 325.
-(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[13]
-Overfull \hbox (24.24486pt too wide) in paragraph at lines 352--352
-[]\T1/lmtt/m/n/12 ## lm(formula = log(Nitrogen) ~ log(Discharge.C), data = EC_F
-low.Nutrients_Wide)[] 
+<"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1-1".
+pdf, id=156, 596.2275pt x 578.16pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
+1-1".pdf Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1
+-1".pdf>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
+ry Analysis Figure 1-1".pdf  used on input line 207.
+(pdftex.def)             Requested size: 469.75908pt x 455.52396pt.
+[7] [8 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure
+ 1-1.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2-1".
+pdf, id=176, 505.89pt x 505.89pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
+2-1".pdf Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2
+-1".pdf>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
+ry Analysis Figure 2-1".pdf  used on input line 226.
+(pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
+
+Overfull \hbox (327.05907pt too wide) in paragraph at lines 225--227
+\T1/lmr/m/n/12 (-20) A box-plot was made to vi-su-al-ize the range of dis-charg
+e at each site [] 
  []
 
-LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-352.
-(/usr/local/texlive/2019basic/texmf-dist/tex/latex/lm/ts1lmtt.fd
-File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [14 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-7-1.pdf>]
-Overfull \hbox (24.24486pt too wide) in paragraph at lines 372--372
-[]\T1/lmtt/m/n/12 ## lm(formula = log(Nitrogen) ~ log(Discharge.G), data = EC_F
-low.Nutrients_Wide)[] 
- []
-
-
-Overfull \hbox (36.59486pt too wide) in paragraph at lines 394--394
-[]\T1/lmtt/m/n/12 ## lm(formula = log(Phosphorus) ~ log(Discharge.C), data = EC
-_Flow.Nutrients_Wide)[] 
- []
-
-
-Overfull \hbox (36.59486pt too wide) in paragraph at lines 416--416
-[]\T1/lmtt/m/n/12 ## lm(formula = log(Phosphorus) ~ log(Discharge.G), data = EC
-_Flow.Nutrients_Wide)[] 
- []
-
-[15]
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-1".pdf, id=222, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-1".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-1".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-9-1".pdf  used on input line 426.
+[9 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 2-1
+.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3-1".
+pdf, id=188, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
+3-1".pdf Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3
+-1".pdf>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
+ry Analysis Figure 3-1".pdf  used on input line 232.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<"Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-2".pdf, id=223, 4
-69.755pt x 325.215pt>
-File: "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-2".pdf Graph
-ic file (type pdf)
-<use "Landman_ENV872_Project_files/figure-latex/""unnamed-chunk-9-2".pdf>
-Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""unnamed-c
-hunk-9-2".pdf  used on input line 436.
+[10 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 3-
+1.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4-1".
+pdf, id=198, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
+4-1".pdf Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4
+-1".pdf>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
+ry Analysis Figure 4-1".pdf  used on input line 254.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[16 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-1.pdf>]
-Overfull \hbox (110.6949pt too wide) in paragraph at lines 468--468
-[]\T1/lmtt/m/n/12 ## data:  Club.Gorman_Flow.Nutrients_Wide$Nitrogen by Club.Go
-rman_Flow.Nutrients_Wide$Location[] 
- []
-
-
-Overfull \hbox (123.0449pt too wide) in paragraph at lines 477--477
-[]\T1/lmtt/m/n/12 ## data:  Club.Gorman_Flow.Nutrients_Wide$Phosphorus by Club.
-Gorman_Flow.Nutrients_Wide$Location[] 
- []
-
-[17 <./Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-2.pdf>] [18] [
-19]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 493.
-[20]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 493.
+[11 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 4-
+1.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5-1".
+pdf, id=210, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
+5-1".pdf Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5
+-1".pdf>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
+ry Analysis Figure 5-1".pdf  used on input line 263.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[12 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 5-
+1.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf, id
+=222, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pd
+f Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf
+>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
+ysis Figure 6-1".pdf  used on input line 299.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf, id
+=223, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pd
+f Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf
+>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
+ysis Figure 7-1".pdf  used on input line 312.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+<"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf, id
+=224, 469.755pt x 325.215pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pd
+f Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf
+>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
+ysis Figure 8-1".pdf  used on input line 319.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[13 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 6-1.pdf>]
+[14 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 7-1.pdf>]
+[15 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 8-1.pdf>]
+<"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf, id
+=260, 596.2275pt x 578.16pt>
+File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pd
+f Graphic file (type pdf)
+<use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf
+>
+Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
+ysis Figure 9-1".pdf  used on input line 351.
+(pdftex.def)             Requested size: 469.75908pt x 455.52396pt.
+[16] [17 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 9-1.
+pdf>] [18]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 374.
+[19]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 374.
 (./Landman_ENV872_Project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 493.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 493.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 374.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 374.
 Package rerunfilecheck Info: File `Landman_ENV872_Project.out' has not changed.
 
-(rerunfilecheck)             Checksum: A7A37F7A1A02D7AA6900B5742D9EC9F8;3440.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 493.
+(rerunfilecheck)             Checksum: C472B1A00AECE9A23120A0C3D525163A;3476.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 374.
  ) 
 Here is how much of TeX's memory you used:
- 13004 strings out of 493610
- 192096 string characters out of 6159294
- 294123 words of memory out of 5000000
- 16867 multiletter control sequences out of 15000+600000
- 61940 words of font info for 87 fonts, out of 8000000 for 9000
+ 12938 strings out of 493610
+ 191710 string characters out of 6159294
+ 293895 words of memory out of 5000000
+ 16800 multiletter control sequences out of 15000+600000
+ 61498 words of font info for 87 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 34i,6n,42p,985b,449s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2019basic/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/
-local/texlive/2019basic/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/local/tex
-live/2019basic/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/
-2019basic/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2019ba
-sic/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2019basic/te
-xmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2019basic/texmf-d
-ist/fonts/type1/public/lm/lmtt12.pfb>
-Output written on Landman_ENV872_Project.pdf (20 pages, 366182 bytes).
+ 34i,6n,42p,985b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2019basic/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/l
+ocal/texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/
+texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texliv
+e/2019basic/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2019
+basic/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
+Output written on Landman_ENV872_Project.pdf (19 pages, 379081 bytes).
 PDF statistics:
- 301 PDF objects out of 1000 (max. 8388607)
- 255 compressed objects within 3 object streams
- 58 named destinations out of 1000 (max. 500000)
- 14497 words of extra memory for PDF output out of 17280 (max. 10000000)
+ 321 PDF objects out of 1000 (max. 8388607)
+ 275 compressed objects within 3 object streams
+ 64 named destinations out of 1000 (max. 500000)
+ 14502 words of extra memory for PDF output out of 17280 (max. 10000000)
 

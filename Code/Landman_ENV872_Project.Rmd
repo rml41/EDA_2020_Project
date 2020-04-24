@@ -5,7 +5,7 @@ output:
     fig_caption: yes
     number_sections: yes
 geometry: margin=2.54cm
-title: "Insert title of project here"
+title: "Examining the Relationship between Flow and Nutrient Levels at Upstream and Downstream Locations along Ellerbe Creek, North Carolina"
 subtitle: "https://github.com/rml41/EDA_2020_Project.git"
 author: "Rachel Landman"
 fontsize: 12pt
@@ -62,6 +62,10 @@ Club.Gorman_Flow.Nutrients_Wide <-
 Club.Gorman_Flow_Wide <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Wide.csv")
 Club.Gorman_Flow_Long <- read.csv("./Data/Processed/ClubGorman_USGSDischarge_Long.csv")
 
+
+Club.Gorman_Flow.Nutrients_Long <-
+  read.csv("./Data/Processed/ClubGorman_Flow.Nutrients_Long_Processed.csv")
+
 # Format Dates
 EC_Flow.Nutrients_Wide$Date <- 
   as.Date(EC_Flow.Nutrients_Wide$Date, format = "%Y-%m-%d")
@@ -74,6 +78,9 @@ Club.Gorman_Flow_Wide$Date <-
 
 Club.Gorman_Flow_Long$Date <- 
   as.Date(Club.Gorman_Flow_Long$Date, format = "%Y-%m-%d")
+
+Club.Gorman_Flow.Nutrients_Long$Date <-
+  as.Date(Club.Gorman_Flow.Nutrients_Long$Date, format = "%Y-%m-%d")
 
 
 # Format Site No to Character
@@ -91,6 +98,17 @@ Club.Gorman_Flow_Wide$site_no.y <-
 
 Club.Gorman_Flow_Long$site_no <- 
   as.character(Club.Gorman_Flow_Long$site_no)
+
+Club.Gorman_Flow.Nutrients_Long$site_no <-
+  as.character(Club.Gorman_Flow.Nutrients_Long$site_no)
+
+### Subset just N and P 
+Club.Gorman_Flow.NP_Long <- subset(Club.Gorman_Flow.Nutrients_Long,  CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"| CharacteristicName == "Phosphorus")
+
+class(Club.Gorman_Flow.NP_Long$CharacteristicName)
+Club.Gorman_Flow.NP_Long$CharacteristicName <- as.character(Club.Gorman_Flow.NP_Long$CharacteristicName)
+
+Club.Gorman_Flow.NP_Long$CharacteristicName[Club.Gorman_Flow.NP_Long$CharacteristicName =="Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"] <- "Nitrogen"
 
 
 ```
@@ -127,6 +145,7 @@ Discharge Gorman | ft^3/s | 7.52 - 1750.00 | 48.84 | 20.50 | USGS
 
 Explored raw data from the water quality portal to determine potential variables for analysis and time period of data. Examined a summary of all the characteristics in the dataset to determine the count for each variable. Selected Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3) and Phosphorus as the two variables to analyze. Explored discharge data to determine date range of data.  
 
+
 Table 2. Sample of summary results from raw data 
 
 Variable | Count 
@@ -138,45 +157,6 @@ Phosphorus | 286
 RBP Stream Width | 14
 Temperature, water | 1146
 Total Dissolved Solids | 278
-
-## Discharge Data Wrangling 
-
-Flow data from the two USGS stream gages were combined in two data sets, one as a long format with all discharge in one column and one in wide format, with two seperate columns for discharge based on location. 
-
-## Discharge Data Exploration
-
-A boxplot was made to visualize the range of discharge at each site
-```{r, echo=FALSE}
-Dischargeplot <-
-  ggplot(Club.Gorman_Flow_Long, aes(y = Discharge, x = site_no)) +
-  geom_boxplot()
-print(Dischargeplot)
-```
-
-The discharge over time at each location does not show any obvious seasonal or annual trends. 
-```{r, echo=FALSE}
-DischargeTimeplot.G <-
-  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.G)) +
-  geom_line()+
-  labs(x = "", (expression(paste("Discharge"  (ft^3/s)))))
-print(DischargeTimeplot.G)
-
-DischargeTimeplot.C <-
-  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.C)) +
-  geom_line()+
-  labs(x = "Date", (expression(paste("Discharge"  (ft^3/s)))))
-print(DischargeTimeplot.C)
-
-plot_grid(DischargeTimeplot.C, DischargeTimeplot.G, align = "h", ncol = 1)
-
-```
-
-
-## Nutrient Data Wrangling 
-
-The nutrient data set from the water quality portal was cleans to remove all irrelevant information and retain just characterstics of interest, Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert Nitrogen and Phosphorus values to mg/L of N or P. Relevant columns such as data, location, hydrologic event, variable name, measured value, and units were selected and processed data were saved as both long and wide format. 
-
-## Nutrient Data Exploration 
 
 ## Location of Monitoring Sites 
 
@@ -257,8 +237,8 @@ class(ellerbe_watershed8)
 
 ```
 
-```{r, echo=FALSE}
-#pdf(here("Output", "ellerbe_watershed_HUC12_labels.pdf"), width = 11, height = 8.5)
+```{r Exploratory Analysis Figure 1, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Map of the Ellerbe Creek Watershed and Monitoring Locations along Ellerbe Creek", fig.height=8, fig.width=8.25}
+
 WatershedMap <- ggplot(ellerbe_gages_raw) +
   geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
   geom_text_repel(aes(x = LongitudeMeasure, y= LatitudeMeasure, label = MonitoringLocationIdentifier), color = "black", size=2)+
@@ -269,7 +249,73 @@ WatershedMap <- ggplot(ellerbe_gages_raw) +
    ylim(35.95,36.1)+
   theme_bw()
 print(WatershedMap)
-#dev.off()
+```
+
+\newpage
+
+## Discharge Data Wrangling 
+
+Flow data from the two USGS stream gages were combined in two data sets, one as a long format with all discharge in one column and one in wide format, with two seperate columns for discharge based on location. 
+
+## Discharge Data Exploration
+
+A boxplot was made to visualize the range of discharge at each site
+```{r Exploratory Analysis Figure 2, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Distribution of discharge at two sites, upstream (208675010) and downstream (2086849) along Ellerbe Creek from January 1, 2008 to April 17, 2020", fig.height=7, fig.width=7}
+
+Dischargeplot <-
+  ggplot(Club.Gorman_Flow_Long, aes(y = Discharge, x = site_no)) +
+  geom_boxplot()
+print(Dischargeplot)
+```
+
+\newpage
+
+The discharge over time at each location does not show any obvious seasonal or annual trends. 
+```{r Exploratory Analysis Figure 3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Daily discharge at along Ellerbe Creek from January 1, 2008 to April 17, 2020"}
+
+DischargeTimeplot.G <-
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.G)) +
+  geom_line()+
+  labs(x = "", (expression(paste("Discharge"  (ft^3/s)))))
+
+DischargeTimeplot.C <-
+  ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.C)) +
+  geom_line()+
+  labs(x = "Date", (expression(paste("Discharge"  (ft^3/s)))))
+
+plot_grid(DischargeTimeplot.C, DischargeTimeplot.G, align = "h", ncol = 1)
+
+```
+
+\newpage
+
+## Nutrient Data Wrangling 
+
+The nutrient data set from the water quality portal was cleans to remove all irrelevant information and retain just characterstics of interest, Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert Nitrogen and Phosphorus values to mg/L of N or P. Relevant columns such as data, location, hydrologic event, variable name, measured value, and units were selected and processed data were saved as both long and wide format. 
+
+## Nutrient Data Exploration 
+
+```{r Exploratory Analysis Figure 4, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Distribution of Nitrogen and Phosphorus Concentrations in Ellerbe Creek from November 17, 1982 to December 17, 2018"}
+
+NPboxplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = value)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+print(NPboxplot)
+
+```
+
+\newpage
+
+
+```{r Exploratory Analysis Figure 5, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Concentrations of Nitrogen and Phosphorus over Time in Ellerbe Creek from November 17, 1982 to December 17, 2018"}
+NPTime <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= Date, y = value, color = CharacteristicName)) +
+  geom_point()+
+  labs(x = "Date", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+print(NPTime)
 ```
 
 \newpage
@@ -277,9 +323,9 @@ print(WatershedMap)
 # Analysis
 
 
-
 ## Question 1: Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended levels?
-```{r, echo=FALSE}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 Nutrients_summary <- EC_Flow.Nutrients_Wide %>%
   summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
             min.N = min(Nitrogen, na.rm = TRUE),
@@ -291,7 +337,9 @@ Nutrients_summary <- EC_Flow.Nutrients_Wide %>%
             Standard.dev.P = sd(Phosphorus, na.rm = TRUE))
 
 kable(Nutrients_summary, caption = "Total Nitrogen and Phosphorus Conentrations")
+```
 
+```{r, include=FALSE, warning=FALSE, message=FALSE}
 # Nitrogen Test 
 shapiro.test((EC_Flow.Nutrients_Wide$Nitrogen))
 
@@ -315,15 +363,20 @@ P.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Phosphorus)) +
 
 P.onesample.wilcox <- wilcox.test(EC_Flow.Nutrients_Wide$Phosphorus, mu = 1)
 P.onesample.wilcox
+```
 
+\newpage
+
+```{r Data Analysis Figure 6, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Density plots of Nitrogen and Phosphorus Concentrations"}
 # Plot both densities 
 plot_grid(N.plot, P.plot, align = "h", nrow = 1)
 
 ```
  
+\newpage
 
 ## Question 2: Is there a relationship between flow and Nitrogen or Phosphorus levels?
-```{r, echo=FALSE}
+```{r, include=FALSE, warning=FALSE, message=FALSE}
 
 #Nitrogen
 logNitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Nitrogen) ~ log(Discharge.C))
@@ -349,7 +402,7 @@ summary(logPhosphorusGorman.regression)
 
 ```
 
-```{r, echo=FALSE}
+```{r Data Analysis Figure 7, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Linear regression of the log of Nitrogen Concentration vs. the log of Discharge", echo=FALSE, warnings=FALSE, messages=FALSE}
 # Nitrogen Regression 
 
 logNitrogen_logDischarge <- 
@@ -358,7 +411,9 @@ logNitrogen_logDischarge <-
   geom_smooth(method=lm)+
   ylim(0,10)
 print(logNitrogen_logDischarge)
+```
 
+```{r Data Analysis Figure 8, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Linear regression of the log of Phosphorus Concentration vs. the log of Discharge", echo=FALSE, warnings=FALSE, messages=FALSE}
 # Phosphorus Regression 
 
 logPhosphorus_logDischarge <- 
@@ -369,9 +424,10 @@ print(logPhosphorus_logDischarge)
 
 ```
 
+\newpage
 
 ## Question 3: How does location, upstream vs. downstream, impact nutrient levels? 
-```{r,echo=FALSE}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 Nutrients_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
    group_by(Location) %>%
   summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
@@ -386,7 +442,7 @@ Nutrients_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
 kable(Nutrients_Location_summary, caption = "Nitrogen and Phosphorus conentrations by Location")
 ```
 
-```{r, echo=FALSE}
+```{r, include=FALSE, warning=FALSE, message=FALSE}
 
 # Nitrogen 
 N.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen ~ Club.Gorman_Flow.Nutrients_Wide$Location)
@@ -398,6 +454,47 @@ P.twosample.wilcox
 
 ```
 
+```{r Data Analysis Figure 9, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Distributions of nutrient concentrations and flow at upstream and downstream monitoring sites along Ellerbe Creek in North Carolina. a) Nitrogen and phosphorus concentrations at upstream and downstream monitoring sites. b) Flow at upstream and downstream monitoring sites. c) and d) Monthly distributions of nitrogen and phosphorus concentrations at upstream and downstream monitoring sites.", echo=FALSE, warnings=FALSE, messages=FALSE, fig.height=8, fig.width=8.25}
+# Visualization of Upstream vs Downstream 
+
+NPplot <-
+  ggplot(Club.Gorman_Flow.NP_Long, aes(x= CharacteristicName, y = value, color = Location)) +
+  geom_boxplot()+
+  labs(x = "Nutrient", y = "Concentration (mg/L)", color = "")+
+  theme(plot.title = element_text(hjust = 0.75, face = "bold"))+
+scale_color_manual(values = c("#82FF33", "#33ADFF"))
+
+
+Flowplot <-
+  ggplot(Club.Gorman_Flow.Nutrients_Long, aes(x= "", y = Discharge, color = Location)) +
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "", y = (expression(paste("Discharge"  (ft^3/s)))), color = "")+
+  theme(plot.caption = element_text(hjust = 0.5, size = 11))+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+
+
+TPMonth_boxplot <-
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Phosphorus, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y = "Phosphorus (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+
+
+TNMonth_boxplot <- ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = month, y = Nitrogen, color = Location))+ 
+  geom_boxplot(show.legend = FALSE)+
+  labs(x = "Month", y ="Nitrogen (mg/L)", color = "")+
+   xlim("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")+
+  scale_color_manual(values = c("#82FF33", "#33ADFF"))
+
+
+plot_row1 <- plot_grid(NPplot, Flowplot, labels = c('a.', 'b.'))
+plot_row2 <- plot_grid(TNMonth_boxplot,TPMonth_boxplot, labels = c('c.', 'd.'))
+
+
+plot_grid(plot_row1, plot_row2, ncol = 1,rel_heights = c(1, 0.5))
+
+```
 
 
 \newpage

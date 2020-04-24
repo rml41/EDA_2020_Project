@@ -25,7 +25,7 @@
 \usepackage[margin=2.54cm]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Insert title of project here},
+            pdftitle={Examining the Relationship between Flow and Nutrient Levels at Upstream and Downstream Locations along Ellerbe Creek, North Carolina},
             pdfauthor={Rachel Landman},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -76,7 +76,8 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Insert title of project here}
+  \title{Examining the Relationship between Flow and Nutrient Levels at Upstream
+and Downstream Locations along Ellerbe Creek, North Carolina}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
   \subtitle{\url{https://github.com/rml41/EDA_2020_Project.git}}
@@ -197,6 +198,19 @@ Total Dissolved Solids & 278\tabularnewline
 \bottomrule
 \end{longtable}
 
+\hypertarget{location-of-monitoring-sites}{%
+\subsection{Location of Monitoring
+Sites}\label{location-of-monitoring-sites}}
+
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 1-1.pdf}
+\caption{Map of the Ellerbe Creek Watershed and Monitoring Locations
+along Ellerbe Creek}
+\end{figure}
+
+\newpage
+
 \hypertarget{discharge-data-wrangling}{%
 \subsection{Discharge Data Wrangling}\label{discharge-data-wrangling}}
 
@@ -209,28 +223,15 @@ format, with two seperate columns for discharge based on location.
 Exploration}\label{discharge-data-exploration}}
 
 A boxplot was made to visualize the range of discharge at each site
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 2-1.pdf}
 
-\begin{verbatim}
-## Warning: Removed 9 rows containing non-finite values (stat_boxplot).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-1-1.pdf}
+\newpage
 
 The discharge over time at each location does not show any obvious
 seasonal or annual trends.
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 3-1.pdf}
 
-\begin{verbatim}
-## Warning: Removed 213 rows containing missing values (geom_path).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-2.pdf}
-
-\begin{verbatim}
-## Warning: Removed 213 rows containing missing values (geom_path).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-2-3.pdf}
+\newpage
 
 \hypertarget{nutrient-data-wrangling}{%
 \subsection{Nutrient Data Wrangling}\label{nutrient-data-wrangling}}
@@ -248,10 +249,21 @@ saved as both long and wide format.
 \hypertarget{nutrient-data-exploration}{%
 \subsection{Nutrient Data Exploration}\label{nutrient-data-exploration}}
 
-\hypertarget{geographic-exploration}{%
-\subsection{Geographic Exploration}\label{geographic-exploration}}
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 4-1.pdf}
+\caption{Distribution of Nitrogen and Phosphorus Concentrations in
+Ellerbe Creek from November 17, 1982 to December 17, 2018}
+\end{figure}
 
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-6-1.pdf}
+\newpage
+
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 5-1.pdf}
+\caption{Concentrations of Nitrogen and Phosphorus over Time in Ellerbe
+Creek from November 17, 1982 to December 17, 2018}
+\end{figure}
 
 \newpage
 
@@ -280,160 +292,36 @@ Standard.dev.P\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{verbatim}
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  (EC_Flow.Nutrients_Wide$Nitrogen)
-## W = 0.79284, p-value = 8.616e-13
-\end{verbatim}
+\newpage
 
-\begin{verbatim}
-## 
-##  Wilcoxon signed rank test with continuity correction
-## 
-## data:  EC_Flow.Nutrients_Wide$Nitrogen
-## V = 2773.5, p-value = 1.735e-05
-## alternative hypothesis: true location is not equal to 10
-\end{verbatim}
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 6-1.pdf}
+\caption{Density plots of Nitrogen and Phosphorus Concentrations}
+\end{figure}
 
-\begin{verbatim}
-## 
-##  Shapiro-Wilk normality test
-## 
-## data:  (EC_Flow.Nutrients_Wide$Phosphorus)
-## W = 0.54427, p-value < 2.2e-16
-\end{verbatim}
-
-\begin{verbatim}
-## 
-##  Wilcoxon signed rank test with continuity correction
-## 
-## data:  EC_Flow.Nutrients_Wide$Phosphorus
-## V = 10319, p-value = 5.817e-05
-## alternative hypothesis: true location is not equal to 1
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: Removed 5428 rows containing non-finite values (stat_density).
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: Removed 5325 rows containing non-finite values (stat_density).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-7-1.pdf}
+\newpage
 
 \hypertarget{question-2-is-there-a-relationship-between-flow-and-nitrogen-or-phosphorus-levels}{%
 \subsection{Question 2: Is there a relationship between flow and
 Nitrogen or Phosphorus
 levels?}\label{question-2-is-there-a-relationship-between-flow-and-nitrogen-or-phosphorus-levels}}
 
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = log(Nitrogen) ~ log(Discharge.C), data = EC_Flow.Nutrients_Wide)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.09532 -0.42011 -0.04936  0.34030  1.27602 
-## 
-## Coefficients:
-##                  Estimate Std. Error t value Pr(>|t|)  
-## (Intercept)       0.23863    0.11547   2.067    0.043 *
-## log(Discharge.C)  0.05712    0.03698   1.545    0.127  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.5865 on 62 degrees of freedom
-##   (5504 observations deleted due to missingness)
-## Multiple R-squared:  0.03707,    Adjusted R-squared:  0.02154 
-## F-statistic: 2.387 on 1 and 62 DF,  p-value: 0.1275
-\end{verbatim}
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 7-1.pdf}
+\caption{Linear regression of the log of Nitrogen Concentration vs.~the
+log of Discharge}
+\end{figure}
 
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = log(Nitrogen) ~ log(Discharge.G), data = EC_Flow.Nutrients_Wide)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.19343 -0.41534 -0.06062  0.36557  1.22521 
-## 
-## Coefficients:
-##                   Estimate Std. Error t value Pr(>|t|)
-## (Intercept)      0.0004363  0.2646138   0.002    0.999
-## log(Discharge.G) 0.0885713  0.0598832   1.479    0.144
-## 
-## Residual standard error: 0.5874 on 62 degrees of freedom
-##   (5504 observations deleted due to missingness)
-## Multiple R-squared:  0.03408,    Adjusted R-squared:  0.0185 
-## F-statistic: 2.188 on 1 and 62 DF,  p-value: 0.1442
-\end{verbatim}
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 8-1.pdf}
+\caption{Linear regression of the log of Phosphorus Concentration
+vs.~the log of Discharge}
+\end{figure}
 
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = log(Phosphorus) ~ log(Discharge.C), data = EC_Flow.Nutrients_Wide)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.07959 -0.40661 -0.03792  0.36471  1.39270 
-## 
-## Coefficients:
-##                  Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)      -2.28888    0.04884 -46.864  < 2e-16 ***
-## log(Discharge.C)  0.18248    0.02132   8.557 9.91e-15 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.5479 on 157 degrees of freedom
-##   (5409 observations deleted due to missingness)
-## Multiple R-squared:  0.3181, Adjusted R-squared:  0.3137 
-## F-statistic: 73.22 on 1 and 157 DF,  p-value: 9.906e-15
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = log(Phosphorus) ~ log(Discharge.G), data = EC_Flow.Nutrients_Wide)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.06245 -0.41659 -0.08926  0.37264  2.19712 
-## 
-## Coefficients:
-##                  Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)      -3.38679    0.15130 -22.385  < 2e-16 ***
-## log(Discharge.G)  0.36805    0.04104   8.967 7.12e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.5482 on 162 degrees of freedom
-##   (5404 observations deleted due to missingness)
-## Multiple R-squared:  0.3317, Adjusted R-squared:  0.3276 
-## F-statistic: 80.41 on 1 and 162 DF,  p-value: 7.124e-16
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: Removed 5520 rows containing non-finite values (stat_smooth).
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: Removed 5520 rows containing missing values (geom_point).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-1.pdf}
-
-\begin{verbatim}
-## Warning: Removed 5404 rows containing non-finite values (stat_smooth).
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: Removed 5404 rows containing missing values (geom_point).
-\end{verbatim}
-
-\includegraphics{Landman_ENV872_Project_files/figure-latex/unnamed-chunk-9-2.pdf}
+\newpage
 
 \hypertarget{question-3-how-does-location-upstream-vs.downstream-impact-nutrient-levels}{%
 \subsection{Question 3: How does location, upstream vs.~downstream,
@@ -458,23 +346,16 @@ Standard.dev.P\tabularnewline
 \bottomrule
 \end{longtable}
 
-\begin{verbatim}
-## 
-##  Wilcoxon rank sum test with continuity correction
-## 
-## data:  Club.Gorman_Flow.Nutrients_Wide$Nitrogen by Club.Gorman_Flow.Nutrients_Wide$Location
-## W = 2938, p-value = 2.446e-14
-## alternative hypothesis: true location shift is not equal to 0
-\end{verbatim}
-
-\begin{verbatim}
-## 
-##  Wilcoxon rank sum test with continuity correction
-## 
-## data:  Club.Gorman_Flow.Nutrients_Wide$Phosphorus by Club.Gorman_Flow.Nutrients_Wide$Location
-## W = 4062.5, p-value = 0.1651
-## alternative hypothesis: true location shift is not equal to 0
-\end{verbatim}
+\begin{figure}
+\centering
+\includegraphics{Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 9-1.pdf}
+\caption{Distributions of nutrient concentrations and flow at upstream
+and downstream monitoring sites along Ellerbe Creek in North Carolina.
+a) Nitrogen and phosphorus concentrations at upstream and downstream
+monitoring sites. b) Flow at upstream and downstream monitoring sites.
+c) and d) Monthly distributions of nitrogen and phosphorus
+concentrations at upstream and downstream monitoring sites.}
+\end{figure}
 
 \newpage
 
