@@ -260,6 +260,7 @@ Flow data from the two USGS stream gages were combined in two data sets, one as 
 ## Discharge Data Exploration
 
 A boxplot was made to visualize the range of discharge at each site
+
 ```{r Exploratory Analysis Figure 2, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Distribution of discharge at two sites, upstream (208675010) and downstream (2086849) along Ellerbe Creek from January 1, 2008 to April 17, 2020", fig.height=7, fig.width=7}
 
 Dischargeplot <-
@@ -270,7 +271,8 @@ print(Dischargeplot)
 
 \newpage
 
-The discharge over time at each location does not show any obvious seasonal or annual trends. 
+The discharge over time at each location does not show any obvious seasonal or annual trends.
+
 ```{r Exploratory Analysis Figure 3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Daily discharge at along Ellerbe Creek from January 1, 2008 to April 17, 2020"}
 
 DischargeTimeplot.G <-

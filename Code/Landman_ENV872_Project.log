@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 10:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 12:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -736,7 +736,7 @@ ction-[]near-[]ellerbe-[]creek-[]durham-[]nc ?
 
 [5] [6]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1-1".
-pdf, id=156, 596.2275pt x 578.16pt>
+pdf, id=161, 596.2275pt x 578.16pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 1-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1
@@ -747,113 +747,107 @@ ry Analysis Figure 1-1".pdf  used on input line 207.
 [7] [8 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure
  1-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2-1".
-pdf, id=176, 505.89pt x 505.89pt>
+pdf, id=181, 505.89pt x 505.89pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 2-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 2-1".pdf  used on input line 226.
+ry Analysis Figure 2-1".pdf  used on input line 229.
 (pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
-
-Overfull \hbox (327.05907pt too wide) in paragraph at lines 225--227
-\T1/lmr/m/n/12 (-20) A box-plot was made to vi-su-al-ize the range of dis-charg
-e at each site [] 
- []
-
-[9 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 2-1
-.pdf>]
+[9] [10 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figur
+e 2-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3-1".
-pdf, id=188, 469.755pt x 325.215pt>
+pdf, id=197, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 3-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 3-1".pdf  used on input line 232.
+ry Analysis Figure 3-1".pdf  used on input line 242.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[10 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 3-
+[11 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 3-
 1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4-1".
-pdf, id=198, 469.755pt x 325.215pt>
+pdf, id=207, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 4-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 4-1".pdf  used on input line 254.
+ry Analysis Figure 4-1".pdf  used on input line 267.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[11 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 4-
+[12 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 4-
 1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5-1".
-pdf, id=210, 469.755pt x 325.215pt>
+pdf, id=219, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 5-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 5-1".pdf  used on input line 263.
+ry Analysis Figure 5-1".pdf  used on input line 276.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[12 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 5-
+[13 <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 5-
 1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf, id
-=222, 469.755pt x 325.215pt>
+=232, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 6-1".pdf  used on input line 299.
+ysis Figure 6-1".pdf  used on input line 312.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf, id
-=223, 469.755pt x 325.215pt>
+=233, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 7-1".pdf  used on input line 312.
+ysis Figure 7-1".pdf  used on input line 325.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf, id
-=224, 469.755pt x 325.215pt>
+=234, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 8-1".pdf  used on input line 319.
+ysis Figure 8-1".pdf  used on input line 332.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[13 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 6-1.pdf>]
-[14 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 7-1.pdf>]
-[15 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 8-1.pdf>]
+[14 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 6-1.pdf>]
+[15 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 7-1.pdf>]
+[16 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 8-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf, id
-=260, 596.2275pt x 578.16pt>
+=270, 596.2275pt x 578.16pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 9-1".pdf  used on input line 351.
+ysis Figure 9-1".pdf  used on input line 364.
 (pdftex.def)             Requested size: 469.75908pt x 455.52396pt.
-[16] [17 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 9-1.
-pdf>] [18]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 374.
-[19]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 374.
+[17] [18 <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 9-1.
+pdf>] [19]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 387.
+[20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 387.
 (./Landman_ENV872_Project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 374.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 374.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 387.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 387.
 Package rerunfilecheck Info: File `Landman_ENV872_Project.out' has not changed.
 
 (rerunfilecheck)             Checksum: C472B1A00AECE9A23120A0C3D525163A;3476.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 374.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 387.
  ) 
 Here is how much of TeX's memory you used:
- 12938 strings out of 493610
- 191710 string characters out of 6159294
- 293895 words of memory out of 5000000
+ 12943 strings out of 493610
+ 191755 string characters out of 6159294
+ 294895 words of memory out of 5000000
  16800 multiletter control sequences out of 15000+600000
- 61498 words of font info for 87 fonts, out of 8000000 for 9000
+ 61589 words of font info for 88 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  34i,6n,42p,985b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019basic/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/l
@@ -861,10 +855,10 @@ ocal/texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/
 texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texliv
 e/2019basic/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2019
 basic/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
-Output written on Landman_ENV872_Project.pdf (19 pages, 379081 bytes).
+Output written on Landman_ENV872_Project.pdf (20 pages, 380047 bytes).
 PDF statistics:
- 321 PDF objects out of 1000 (max. 8388607)
- 275 compressed objects within 3 object streams
- 64 named destinations out of 1000 (max. 500000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 284 compressed objects within 3 object streams
+ 67 named destinations out of 1000 (max. 500000)
  14502 words of extra memory for PDF output out of 17280 (max. 10000000)
 
