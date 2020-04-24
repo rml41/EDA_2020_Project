@@ -87,6 +87,7 @@ and Downstream Locations along Ellerbe Creek, North Carolina}
     \date{}
     \predate{}\postdate{}
   
+\usepackage{float}
 
 \begin{document}
 \maketitle
@@ -123,11 +124,13 @@ bodies list (303(d) list) (SOURCE
 Ellerbe Creek was first listed on the 303(d) list in 1998 (SOURCE:
 \url{https://files.nc.gov/ncdeq/Water\%20Quality/Planning/BPU/BPU/Neuse/Neuse\%20Plans/2009\%20Plan/Chapter\%201.pdf})
 
-This analysis and report will aim to answer the following questions: 1.
-Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended
+**This analysis and report will aim to answer the following questions:
+1. Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended
 levels? 2. Is there a relationship between flow and Nitrogen or
 Phosphorus levels? 3. How does location, upstream vs.~downstream, impact
-nutrient levels?
+nutrient levels? 4. Is there a significant difference between discharge
+at the upstream and downstream gages? 5. Is time of year, specifically
+month a predictor forflow or nutrient levels?
 
 \newpage
 
@@ -164,6 +167,26 @@ Discharge Gorman & ft\^{}3/s & 7.52 - 1750.00 & 48.84 & 20.50 &
 USGS\tabularnewline
 \bottomrule
 \end{longtable}
+
+\hypertarget{discharge-data-wrangling}{%
+\subsection{Discharge Data Wrangling}\label{discharge-data-wrangling}}
+
+Flow data from the two USGS stream gages were combined in two data sets,
+one as a long format with all discharge in one column and one in wide
+format, with two seperate columns for discharge based on location.
+
+\hypertarget{nutrient-data-wrangling}{%
+\subsection{Nutrient Data Wrangling}\label{nutrient-data-wrangling}}
+
+The nutrient data set from the water quality portal was cleans to remove
+all irrelevant information and retain just characterstics of interest,
+Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples
+were recorded as both mg/L of N and P, and of NO3 and PO4 respectively.
+Data were downloaded in long format and were converted to wide format in
+order to convert Nitrogen and Phosphorus values to mg/L of N or P.
+Relevant columns such as data, location, hydrologic event, variable
+name, measured value, and units were selected and processed data were
+saved as both long and wide format.
 
 \newpage
 
@@ -211,18 +234,18 @@ along Ellerbe Creek}
 
 \newpage
 
-\hypertarget{discharge-data-wrangling}{%
-\subsection{Discharge Data Wrangling}\label{discharge-data-wrangling}}
-
-Flow data from the two USGS stream gages were combined in two data sets,
-one as a long format with all discharge in one column and one in wide
-format, with two seperate columns for discharge based on location.
-
 \hypertarget{discharge-data-exploration}{%
 \subsection{Discharge Data
 Exploration}\label{discharge-data-exploration}}
 
 A boxplot was made to visualize the range of discharge at each site
+(Fig. 2). The distribution shows that the max discharge from 2008-2020
+is higher at the downstream location (2086849) than the upstream
+location (208675010), but it is not obvious if the mean is different.
+This led to running statistical analysis to determine if the difference
+in average discharge is significant. If there is a significant
+difference in discharge between upstream and downstream, that could
+influence the nutrient levels at each site.
 
 \begin{figure}
 \centering
@@ -235,32 +258,21 @@ April 17, 2020}
 \newpage
 
 The discharge over time at each location does not show any obvious
-seasonal or annual trends.
+seasonal or annual trends (Fig. 3).
 
 \begin{figure}
 \centering
 \includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 3-1.pdf}
-\caption{Daily discharge at along Ellerbe Creek from January 1, 2008 to
-April 17, 2020}
+\caption{Daily discharge (Q) at along Ellerbe Creek from January 1, 2008
+to April 17, 2020}
 \end{figure}
 
 \newpage
 
-\hypertarget{nutrient-data-wrangling}{%
-\subsection{Nutrient Data Wrangling}\label{nutrient-data-wrangling}}
-
-The nutrient data set from the water quality portal was cleans to remove
-all irrelevant information and retain just characterstics of interest,
-Nitrogen and Phosphorus. Nitrogen and Phosphorus values for many samples
-were recorded as both mg/L of N and P, and of NO3 and PO4 respectively.
-Data were downloaded in long format and were converted to wide format in
-order to convert Nitrogen and Phosphorus values to mg/L of N or P.
-Relevant columns such as data, location, hydrologic event, variable
-name, measured value, and units were selected and processed data were
-saved as both long and wide format.
-
 \hypertarget{nutrient-data-exploration}{%
 \subsection{Nutrient Data Exploration}\label{nutrient-data-exploration}}
+
+\newpage
 
 \begin{figure}
 \centering
@@ -269,14 +281,14 @@ saved as both long and wide format.
 Ellerbe Creek from November 17, 1982 to December 17, 2018}
 \end{figure}
 
-\newpage
-
 \begin{figure}
 \centering
 \includegraphics{Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure 5-1.pdf}
 \caption{Concentrations of Nitrogen and Phosphorus over Time in Ellerbe
 Creek from November 17, 1982 to December 17, 2018}
 \end{figure}
+
+\newpage
 
 \newpage
 
@@ -288,8 +300,29 @@ Creek from November 17, 1982 to December 17, 2018}
 Creek above recommended
 levels?}\label{question-1-are-nitrogen-and-phosphorus-levels-in-ellerbe-creek-above-recommended-levels}}
 
+Maximun contaminent levels (MCL) for nitrate is 10 mg/L and for nitrite
+it is 1mg/L, but there is not recommended water quality standard for
+total nitrogen, which is analyzed in this report. The EPA states that an
+acceptable range for total nitrogen is 2mg/L to 6mg/L (EPA Nitrogen,
+2013). There is no MCL for phosphorus, but the EPA says that 0.01 mg/L
+to 0.04 mg/L is an acceptable range (EPA Phosphorus, 2013). The mean
+concentration of each nutrient was compared with the higher end of the
+acceptable range to determine if nutrient levels in Ellerbe Creek are
+above recommended levels. In Table 1. you can see that the mean
+concentrations of N and P in the creek are botj above the recommended
+levels. Because the data are not normally distributed (Fig 6), a
+nonparametric stastical test was run. The results indicate that the
+average concentration of Nitrogen in Ellerbe Creek from 1984-2008 is not
+significantly greater than highest recommended value of 6mg/L (wilcoxon,
+p=0.3318). The average concentration of Phosphours in Ellerbe Creek from
+1984-2008 is significantly higher than the highest recommended value of
+0.04 mg/L (wilcoxon, p=0.033). The density plot in figure 6 shows the
+distribution of the data with a veritcal line representing the maximun
+recommended level of each nutrient.
+
 \begin{longtable}[]{@{}rrrrrrrr@{}}
-\caption{Total Nitrogen and Phosphorus Conentrations}\tabularnewline
+\caption{Summary of Total Nitrogen and Phosphorus
+Conentrations}\tabularnewline
 \toprule
 mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
 Standard.dev.P\tabularnewline
@@ -320,6 +353,19 @@ Standard.dev.P\tabularnewline
 Nitrogen or Phosphorus
 levels?}\label{question-2-is-there-a-relationship-between-flow-and-nitrogen-or-phosphorus-levels}}
 
+A simple linear regression was run to compare nutrient concentrations
+with flow at the downstream gage location. There is no significant
+relationship between Nitrogen and discharge at a significance of 0.05,
+but there is nearly a significant relationship at the 0.1 signifance
+level (Simple Linear Regression, Adj R-squared = 0.018, df = 62, p =
+0.1442). While we can't conclusively say there is a negative
+relationship between Nitrogen concetration and flow, you can see a
+downward trend in the results (Fig. 7). Flow is a significant predictor
+of Phosphorus levels and 33\% of the variance in phosphorus
+concentration can be explained by flow in Ellerbe Creek (Simple Linear
+Regression, Adj R-squared = 0.3276, df = 162, p \textless{} 0.0001). As
+flow increases so does the concentration of Phosphorus (Fig. 8).
+
 \begin{figure}
 \centering
 \includegraphics{Landman_ENV872_Project_files/figure-latex/Data Analysis Figure 7-1.pdf}
@@ -341,8 +387,15 @@ vs.~the log of Discharge}
 impact nutrient
 levels?}\label{question-3-how-does-location-upstream-vs.downstream-impact-nutrient-levels}}
 
+The mean Nitrogen concentration from 1984-2018 is significantly higher
+downstream near where ELlerbe Creek enters Falls Lake than it is
+upstream near Club Blvd (Wilcoxon, p \textless{} 0.0001). There is no
+significant difference between the mean concentration of Phosphorus as
+the upstream and downstream monitoring sites (Wilcoxon, p = 0.1651)
+(Fig. 9; Table 4).
+
 \begin{longtable}[]{@{}rrrrrrrr@{}}
-\caption{Nitrogen and Phosphorus conentrations by
+\caption{Summary of Nitrogen and Phosphorus conentrations by
 Location}\tabularnewline
 \toprule
 mean.N & min.N & max.N & Standard.dev.N & mean.P & min.P & max.P &
@@ -358,6 +411,42 @@ Standard.dev.P\tabularnewline
 2.116099\tabularnewline
 \bottomrule
 \end{longtable}
+
+\hypertarget{question-4-is-there-a-significant-difference-between-discharge-at-the-upstream-and-downstream-gages}{%
+\subsection{Question 4: Is there a significant difference between
+discharge at the upstream and downstream
+gages?}\label{question-4-is-there-a-significant-difference-between-discharge-at-the-upstream-and-downstream-gages}}
+
+Average discharge from 2008-2020 is significantly higher downstream near
+where Ellerbe Creek enters Falls Lake than it is upstream (Wilcoxon, -
+\textless{} 0.0001).
+
+\begin{longtable}[]{@{}rrrr@{}}
+\caption{Summary of Discharge by Location}\tabularnewline
+\toprule
+mean.Flow & min.Flow & max.Flow & Standard.dev.Flow\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+mean.Flow & min.Flow & max.Flow & Standard.dev.Flow\tabularnewline
+\midrule
+\endhead
+28.5721 & 0.02 & 1750 & 84.22213\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{question-5-is-time-of-year-specifically-month-a-predictor-for-flow-or-nutrient-levels}{%
+\subsection{Question 5: Is time of year, specifically month a predictor
+for flow or nutrient
+levels?}\label{question-5-is-time-of-year-specifically-month-a-predictor-for-flow-or-nutrient-levels}}
+
+Because there is a significant relationship between flow and Phosphorus
+levels, it is interesting to examine if there are seasonal trends in
+that relationship. Month is a significant predictor of flow, which makes
+sense because precipitation and runoff change between seasons
+(Kruskal-Wallis, df = 10, p-value = 0.04803). Month is not a significant
+predictor of Phosphorus (Kruskal-Wallis, df = 11, p-value = 0.4522) or
+Nitrogen (Kruskal-Wallis, df = 11, p-value = 0.935) (Fig. 9).
 
 \begin{figure}
 \centering
