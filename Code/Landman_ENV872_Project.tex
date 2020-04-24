@@ -30,6 +30,7 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -104,17 +105,66 @@ Questions}\label{rationale-and-research-questions}}
 Ellerbe Creek runs into the Falls Lake Resovoir, through the city of
 Durham, North Carolina. Falls Lake serves as the source of drinking
 water for the City of Raleigh and does not meet North Carolina standards
-for \emph{chlorophyll a} (SOURCE).
+for \emph{chlorophyll a}, which is found in algae (SOURCE:
+\url{https://durhamnc.gov/716/Falls-Lake}). Algal blooms generally come
+from excess nutrients such as phosphorus and nitrogen. Ellerbe Creek is
+one of the sources of excess nutrients and contaminents in Falls Lake.
+The Ellerbe Creek Watershed has the highest population density of
+Durham's watersheds, with an estimated 22\% impervious surface (SOURCE:
+\url{https://files.nc.gov/ncdeq/Water\%20Quality/Planning/BPU/BPU/Neuse/Neuse\%20Plans/2009\%20Plan/Chapter\%201.pdf}).
+It is impacted by both point and nonpoint sources and was found to
+deliver the highest nutrient loads to Falls Lake (SOURCE:
+\url{https://files.nc.gov/ncdeq/Water\%20Quality/Planning/BPU/BPU/Neuse/Neuse\%20Plans/2009\%20Plan/Chapter\%201.pdf}).
+Ellerbe Creek and Falls Lake are both on the state's impaired water
+bodies list (303(d) list) (SOURCE
+\url{https://durhamnc.gov/711/Ellerbe-Creek-Watershed},
+\url{https://www.usgs.gov/centers/sa-water/science/groundwatersurface-water-interaction-near-ellerbe-creek-durham-nc?qt-science_center_objects=0\#qt-science_center_objects}).
+Ellerbe Creek was first listed on the 303(d) list in 1998 (SOURCE:
+\url{https://files.nc.gov/ncdeq/Water\%20Quality/Planning/BPU/BPU/Neuse/Neuse\%20Plans/2009\%20Plan/Chapter\%201.pdf})
 
 \newpage
 
 \hypertarget{dataset-information}{%
 \section{Dataset Information}\label{dataset-information}}
 
+Nutrient data for this project were downloaded from the the Water
+Quality Portal, a coorperative service sponsered by the United States
+Geological Survey (USGS), the Environmental Protection Agency (EPA), and
+the National Water Quality Monitoring Council (NWQMC) on February 27,
+2020. Discharge data were downloaded for two stream gages along Ellerbe
+Creek, HUC code 030202010403, from USGS using the data dataRetrieval
+package in R. The dataset analyzed contains 21 monitoring locations with
+measurments for nitrogen and phosphorus levels from 1982 to 2018 and
+daily discharge data from 2008 to 20202. Not all locations had data for
+each nutrient. Nitrogen and Phosphorus concentrations are recorded as
+mg/L of Nitrogen or Phosphorus in various compounds including, nitrate,
+nitrite, ammonia, ammonium, organic nitrogen, phosphate, and organic
+phosphorus. The USGS gage locations are Club Blvd (0208675010),
+upstream, and Gorman (02086849), downstream.
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+Variable & Units & Range & Mean & Median\tabularnewline
+\midrule
+\endhead
+Nitrogen & mg/L N & 0.37 - 33.00 & 7.18 & 2.82\tabularnewline
+Phosphorus & mg/L P & 0.039 - 17.00 & 1.091 & 0.157\tabularnewline
+Discarge Club & ft\^{}3/s & 0.20 - 781.00 & 9.39 & 1.28\tabularnewline
+Discharge Gorman & ft\^{}3/s & 7.52 - 1750.00 & 48.84 &
+20.50\tabularnewline
+\bottomrule
+\end{longtable}
+
 \newpage
 
 \hypertarget{exploratory-analysis}{%
 \section{Exploratory Analysis}\label{exploratory-analysis}}
+
+\hypertarget{discharge-data-wrangling}{%
+\subsection{Discharge Data Wrangling}\label{discharge-data-wrangling}}
+
+\hypertarget{nutrient-data-wrangling}{%
+\subsection{Nutrient Data Wrangling}\label{nutrient-data-wrangling}}
 
 \newpage
 

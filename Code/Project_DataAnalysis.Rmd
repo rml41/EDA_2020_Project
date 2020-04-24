@@ -108,6 +108,11 @@ EC_Flow.Nutrients_Wide$site_no.y <-
 class(EC_Flow.Nutrients_Wide$site_no.y)
 
 ```
+# Flow Summaries 
+```{r}
+summary(EC_Flow.Nutrients_Wide$Discharge.C)
+summary(EC_Flow.Nutrients_Wide$Discharge.G)
+```
 
 
 # Ttest 
@@ -453,37 +458,4 @@ ggplot(EC_Nutrient_YearSummary, aes(y = meanP, x=year))+
   geom_point()+
   geom_smooth(method=lm)
 
-```
-
-# Plot 
-### Nitrogen
-```{r}
-Nitrogen_Discharge2000 <- 
-  ggplot(Post2000Nutrients , aes (x=log(Discharge.C), y = Mixed_N))+
-  geom_point()+
-  geom_smooth(method=lm)+
-  ylim(0,10)
-print(Nitrogen_Discharge2000)
-
-Nitrogen_Time2000 <- 
-  ggplot(Post2000Nutrients, aes (x=Date, y = Mixed_N))+
-  geom_point()+
-  geom_smooth(method=lm)
-print(Nitrogen_Time2000)
-```
-
-### Phosphorus 
-```{r}
-Phosphorus_Discharge2000 <- 
-  ggplot(Post2000Nutrients, aes (x=log(Discharge.G), y = TP))+
-  geom_point()+
-  geom_smooth(method=lm)+
-  ylim(0,2.5)
-print(Phosphorus_Discharge2000)
-
-Phosphorus_Time2000 <- 
-  ggplot(Post2000Nutrients, aes (x=Date, y = TP))+
-  geom_point()+
-  geom_smooth(method=lm)
-print(Phosphorus_Time2000)
 ```
