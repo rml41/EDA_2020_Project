@@ -120,24 +120,24 @@ class(EC_Flow.Nutrients_Wide$site_no.y)
 
 ### Nitrogen
 ```{r}
-summary(EC_Flow.Nutrients_Wide$Mixed_N)
+summary(EC_Flow.Nutrients_Wide$Nitrogen)
 
 # Evaluate assumption of normal distribution 
-shapiro.test((EC_Flow.Nutrients_Wide$Mixed_N))
+shapiro.test((EC_Flow.Nutrients_Wide$Nitrogen))
 
 ### shapiro wilke test the null hypothesis is that the data are a normal distribution 
 ### p value <0.05 shows we reject null and data is not normally distributed
 ######## "not well approximated by a normal distribution"
 
-ggplot(EC_Flow.Nutrients_Wide, aes(x = Mixed_N)) +
-  geom_histogram(binwidth = 20) 
+ggplot(EC_Flow.Nutrients_Wide, aes(x = Nitrogen)) +
+  geom_histogram(binwidth = 10) 
 
 ### histogram shows data is not very rightly skewed 
 
-qqnorm(EC_Flow.Nutrients_Wide$Mixed_N); qqline(EC_Flow.Nutrients_Wide$Mixed_N)
+qqnorm(EC_Flow.Nutrients_Wide$Nitrogen); qqline(EC_Flow.Nutrients_Wide$Nitrogen)
 ## some samples are higher than normal and some are lower
 
-N.onesample <- t.test(EC_Flow.Nutrients_Wide$Mixed_N, mu = 10, alternative = "greater")
+N.onesample <- t.test(EC_Flow.Nutrients_Wide$Nitrogen, mu = 10, alternative = "less")
 N.onesample
 
 # Null hypothesis is that mean = 10, alternative is mean is less than 10
@@ -145,7 +145,7 @@ N.onesample
 
 # plot 
 
-N.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Mixed_N)) +
+N.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Nitrogen)) +
   #geom_density(stat = "count", fill = "gray") + #<-shows count so it's more jagged
   geom_density(fill = "gray") +
   geom_vline(xintercept = 10, color = "#238b45", lty = 2, size = 0.9) +
@@ -159,24 +159,24 @@ print(N.plot)
 
 ### Phosphorus
 ```{r}
-summary(EC_Flow.Nutrients_Wide$TP)
+summary(EC_Flow.Nutrients_Wide$Phosphorus)
 
 # Evaluate assumption of normal distribution 
-shapiro.test((EC_Flow.Nutrients_Wide$TP))
+shapiro.test((EC_Flow.Nutrients_Wide$Phosphorus))
 
 ### shapiro wilke test the null hypothesis is that the data are a normal distribution 
 ### p value <0.05 shows we reject null and data is not normally distributed
 ######## "not well approximated by a normal distribution"
 
-ggplot(EC_Flow.Nutrients_Wide, aes(x = TP)) +
-  geom_histogram(binwidth = 1) 
+ggplot(EC_Flow.Nutrients_Wide, aes(x = Phosphorus)) +
+  geom_histogram(binwidth = 2) 
 
 ### histogram shows data is not very rightly skewed 
 
-qqnorm(EC_Flow.Nutrients_Wide$TP); qqline(EC_Flow.Nutrients_Wide$TP)
+qqnorm(EC_Flow.Nutrients_Wide$Phosphorus); qqline(EC_Flow.Nutrients_Wide$Phosphorus)
 ## samples are higher than normal distribution
 
-P.onesample <- t.test(EC_Flow.Nutrients_Wide$TP, mu = 1, alternative = "greater")
+P.onesample <- t.test(EC_Flow.Nutrients_Wide$Phosphorus, mu = 1, alternative = "less")
 P.onesample
 
 # Null hypothesis is that mean = 1, alternative is mean is less than 1
@@ -184,12 +184,12 @@ P.onesample
 
 # plot 
 
-P.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = TP)) +
+P.plot <- ggplot(EC_Flow.Nutrients_Wide, aes(x = Phosphorus)) +
   #geom_density(stat = "count", fill = "gray") + #<-shows count so it's more jagged
   geom_density(fill = "gray") +
   geom_vline(xintercept = 1, color = "#238b45", lty = 2, size = 0.9) +
   scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
-print(N.plot)
+print(P.plot)
 
 
 ```
@@ -199,57 +199,57 @@ print(N.plot)
 # Two Sample t-test (Upstream vs. Downstream)
 ### Nitrogen
 ```{r}
-shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
-shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
-var.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
+var.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 
 ### "var.test" test variance 
 ### asks are the variances eqaul - what is the diff between variances 
 ### results: variances are significantly different 
 ### results: violate assumption of normality and equal variance
 
-ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Mixed_N, color = Location)) +
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Nitrogen, color = Location)) +
   geom_freqpoly()
 
 
-N.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+N.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 N.twosample
 
 ```
 
 ### Phosphorus
 ```{r}
-shapiro.test(Club.Gorman_Flow.Nutrients_Wide$TP[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
-shapiro.test(Club.Gorman_Flow.Nutrients_Wide$TP[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
-var.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus[Club.Gorman_Flow.Nutrients_Wide$Location == "Upstream"])
+shapiro.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus[Club.Gorman_Flow.Nutrients_Wide$Location == "Downstream"])
+var.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 
 ### "var.test" test variance 
 ### asks are the variances eqaul - what is the diff between variances 
 ### results: variances are significantly different 
 ### results: violate assumption of normality and equal variance
 
-ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = TP, color = Location)) +
+ggplot(Club.Gorman_Flow.Nutrients_Wide, aes(x = Phosphorus, color = Location)) +
   geom_freqpoly()
 
 
-P.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+P.twosample <- t.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 P.twosample
 ```
 
 # Wilcox Test (Don't Assume Normality)
 ### Nitrogen
 ```{r}
-N.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N, mu = 10, alternative = "greater")
+N.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen, mu = 10)
 N.onesample.wilcox
-N.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Mixed_N ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+N.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Nitrogen ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 N.twosample.wilcox
 ```
 
 ### Phosphorus
 ```{r}
-P.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$TP, mu = 1, alternative = "greater")
+P.onesample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus, mu = 1)
 P.onesample.wilcox
-P.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$TP ~ Club.Gorman_Flow.Nutrients_Wide$Location)
+P.twosample.wilcox <- wilcox.test(Club.Gorman_Flow.Nutrients_Wide$Phosphorus ~ Club.Gorman_Flow.Nutrients_Wide$Location)
 P.twosample.wilcox
 ```
 
@@ -260,43 +260,72 @@ P.twosample.wilcox
 
 ###Nitrogen 
 ```{r}
-NitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, Mixed_N ~ Discharge.C)
+NitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, Nitrogen ~ Discharge.C)
 summary(NitrogenClub.regression)
 ## adj R squared says 1 % of variance is explained by depth 
 
-cor.test(EC_Flow.Nutrients_Wide$Mixed_N, EC_Flow.Nutrients_Wide$Discharge.C)
+cor.test(EC_Flow.Nutrients_Wide$Nitrogen, EC_Flow.Nutrients_Wide$Discharge.C)
 
 
-NitrogenGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, Mixed_N ~ Discharge.G)
+NitrogenGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, Nitrogen ~ Discharge.G)
 summary(NitrogenGorman.regression)
 ## adj R squared says 1 % of variance is explained by depth 
 
-cor.test(EC_Flow.Nutrients_Wide$Mixed_N, EC_Flow.Nutrients_Wide$Discharge.G)
+cor.test(EC_Flow.Nutrients_Wide$Nitrogen, EC_Flow.Nutrients_Wide$Discharge.G)
 ```
+
+### Nitrogen log-log 
+
+```{r}
+logNitrogenClub.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Nitrogen) ~ log(Discharge.C))
+summary(logNitrogenClub.regression)
+## EXPLAIN LOG LOG RELATIONSHIP 
+
+logNitrogenGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Nitrogen) ~ log(Discharge.G))
+summary(logNitrogenGorman.regression)
+## adj R squared says 1 % of variance is explained by depth 
+
+```
+
 
 ###Phosphorus 
 ```{r}
-PhosphorusClub.regression <-lm(data = EC_Flow.Nutrients_Wide, TP ~ Discharge.C)
+PhosphorusClub.regression <-lm(data = EC_Flow.Nutrients_Wide, Phosphorus ~ Discharge.C)
 summary(PhosphorusClub.regression)
 ## adj R squared says 8 % of variance is explained by depth 
 ## significant relationship p < 0.001
 
-cor.test(EC_Flow.Nutrients_Wide$TP, EC_Flow.Nutrients_Wide$Discharge.C)
+cor.test(EC_Flow.Nutrients_Wide$Phosphorus, EC_Flow.Nutrients_Wide$Discharge.C)
 
 
-PhosphorusGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, TP ~ Discharge.G)
+PhosphorusGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, Phosphorus ~ Discharge.G)
 summary(PhosphorusGorman.regression)
 ## adj R squared says 9 % of variance is explained by depth
 ## significant relationship p < 0.001
 
-cor.test(EC_Flow.Nutrients_Wide$TP, EC_Flow.Nutrients_Wide$Discharge.G)
+cor.test(EC_Flow.Nutrients_Wide$Phosphorus, EC_Flow.Nutrients_Wide$Discharge.G)
+```
+
+###Phosphorus Log-Log 
+```{r}
+logPhosphorusClub.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Phosphorus) ~ log(Discharge.C))
+summary(logPhosphorusClub.regression)
+## adj R squared says 8 % of variance is explained by depth 
+## significant relationship p < 0.001
+
+
+logPhosphorusGorman.regression <-lm(data = EC_Flow.Nutrients_Wide, log(Phosphorus) ~ log(Discharge.G))
+summary(logPhosphorusGorman.regression)
+## adj R squared says 9 % of variance is explained by depth
+## significant relationship p < 0.001
+
 ```
 
 # Plot Regression
 ### Nitrogen
 ```{r}
 Nitrogen_Discharge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = Mixed_N))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = Nitrogen))+
   geom_point()+
   geom_smooth(method=lm)+
   ylim(0,10)
@@ -304,7 +333,7 @@ print(Nitrogen_Discharge)
 
 #log discharge 
 Nitrogen_logDischarge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = Mixed_N))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = Nitrogen))+
   geom_point()+
   geom_smooth(method=lm)+
   ylim(0,10)
@@ -312,7 +341,7 @@ print(Nitrogen_logDischarge)
 
 #log both 
 logNitrogen_logDischarge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Mixed_N)))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Nitrogen)))+
   geom_point()+
   geom_smooth(method=lm)+
   ylim(0,10)
@@ -322,7 +351,7 @@ print(logNitrogen_logDischarge)
 ### Phosphorus 
 ```{r}
 Phosphorus_Discharge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = TP))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Discharge.G, y = Phosphorus))+
   geom_point()+
   geom_smooth(method=lm)+
   ylim(0,2.5)
@@ -330,7 +359,7 @@ print(Phosphorus_Discharge)
 
 #log discharge 
 Phosphorus_logDischarge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = TP))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = Phosphorus))+
   geom_point()+
   geom_smooth(method=lm)+
   ylim(0,10)
@@ -338,41 +367,64 @@ print(Phosphorus_logDischarge)
 
 #log both 
 logPhosphorus_logDischarge <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(TP)))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=log(Discharge.G), y = log(Phosphorus)))+
   geom_point()+
   geom_smooth(method=lm)
 print(logPhosphorus_logDischarge)
 ```
 
 # Nutrients over Time 
+### Nutrients over time 1980s-2020
 ```{r}
 Nitrogen_Time <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = Mixed_N))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = Nitrogen))+
   geom_point()+
   geom_smooth(method=lm)
 print(Nitrogen_Time)
 
  Phosphorus_Time <- 
-  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = TP))+
+  ggplot(EC_Flow.Nutrients_Wide, aes (x=Date, y = Phosphorus))+
   geom_point()+
   geom_smooth(method=lm)
 print(Phosphorus_Time)
 ```
 
+### Test subset post 2000
+```{r}
+Post2000Nutrients <- subset(EC_Flow.Nutrients_Wide, Date > "2000-01-01" & Date < "2020-12-31")
+
+```
+
+### Nutrients over Time 2000s
+```{r}
+Nitrogen_Time2000 <- 
+  ggplot(Post2000Nutrients, aes (x=Date, y = Nitrogen))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Nitrogen_Time2000)
+
+ Phosphorus_Time2000 <- 
+  ggplot(Post2000Nutrients, aes (x=Date, y = Phosphorus))+
+  geom_point()+
+  geom_smooth(method=lm)
+print(Phosphorus_Time2000)
+```
+
 # Nutrient Summaries
 ```{r}
 EC_Nutrient_MonthSummary <- EC_Flow.Nutrients_Wide %>% 
-  mutate(month = month(Date, label = TRUE)) %>% 
   group_by(month) %>% 
-  filter(!is.na(Mixed_N), !is.na(TP)) %>% 
-  summarise(meanN = mean(Mixed_N),
-            sdN = sd(Mixed_N),
-            minN = min(Mixed_N),
-            maxN = max(Mixed_N),
-            meanP = mean(TP),
-            sdP = sd(TP),
-            minP = min(TP),
-            maxP = max(TP))
+  filter(!is.na(Nitrogen), !is.na(Phosphorus)) %>% 
+  summarise(meanN = mean(Nitrogen),
+            sdN = sd(Nitrogen),
+            minN = min(Nitrogen),
+            maxN = max(Nitrogen),
+            meanP = mean(Phosphorus),
+            sdP = sd(Phosphorus),
+            minP = min(Phosphorus),
+            maxP = max(Phosphorus))
+
+summarise(EC_Flow.Nutrients_Wide, meanN=mean(Nitrogen))
 
 ggplot(EC_Nutrient_MonthSummary)+
   geom_point(aes(y = meanN, x=month))
@@ -400,13 +452,6 @@ ggplot(EC_Nutrient_YearSummary, aes(y = meanN, x=year))+
 ggplot(EC_Nutrient_YearSummary, aes(y = meanP, x=year))+
   geom_point()+
   geom_smooth(method=lm)
-
-```
-
-
-# Test subset post 2000
-```{r}
-Post2000Nutrients <- subset(EC_Flow.Nutrients_Wide, Date > "2000-01-01" & Date < "2020-12-31")
 
 ```
 

@@ -70,7 +70,7 @@ summary(Ellerbe_Raw$CharacteristicName)
 ```{r}
 # Select Columns of Interest 
 Ellerbe_Clean<- Ellerbe_Raw %>%
-  select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue, ResultStatusIdentifier, ResultValueTypeName) %>%
+  select(OrganizationIdentifier, ActivityStartDate, ActivityStartTime.Time, MonitoringLocationIdentifier, HydrologicEvent, HydrologicCondition, CharacteristicName, ResultSampleFractionText, ResultMeasureValue,ResultMeasure.MeasureUnitCode, ResultStatusIdentifier, ResultValueTypeName) %>%
   mutate_all(na_if,"") %>% 
   drop_na(ResultMeasureValue)
 
@@ -115,7 +115,7 @@ write.csv(Ellerbe_USGSDischarge_Long, row.names = FALSE,
 
 #Pull out just nutrient data 
 ```{r}
-Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Turbidity" | CharacteristicName == "Temperature, water" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Phosphorus")
+Ellerbe_Nutrients <- subset(Ellerbe_Clean, CharacteristicName == "Temperature, water" | CharacteristicName == "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)" | CharacteristicName == "Nitrate" | CharacteristicName == "Phosphorus")
 
 
 ```
@@ -142,34 +142,57 @@ class(Ellerbe_Nutrients$ResultMeasureValue)
 
 ```
 
+# Convert N and P Units 
+```{r}
+EC_Nutrients_Units <- Ellerbe_Nutrients %>%
+  group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText, ResultMeasure.MeasureUnitCode) %>% 
+  summarise (meanresult = mean(ResultMeasureValue))  %>% 
+  spread(ResultMeasure.MeasureUnitCode, meanresult) 
+
+# Convert NO3 to N
+### EC_Nutrients_Units <- mutate(EC_Nutrients_Units, Nitrogen = `mg/l asNO3`*0.2258)
+
+#Convert PO4 to P 
+### EC_Nutrients_Units <- mutate(EC_Nutrients_Units, Phosphorus = `mg/l PO4`*0.3261)
+
+# Just need to remove the columns for NO3 and PO4 because dataset already has columns for just N and P for each sample so no need to convert 
+EC_Nutrients_Units <- subset(EC_Nutrients_Units, select = -c(7,11:13))
+
+colnames(EC_Nutrients_Units)
+
+# Gather data 
+####Ellerbe_Nutrients_Processed <- gather(EC_Nutrients_Units, "Unit", "Measurment", c( `mg/l`, `mg/l as P`, `deg C`, `mg/l as N`))
+
+
+###Ellerbe_Nutrients_Processed <- unite(EC_Nutrients_Units, col = "ResultMeasureValue", `mg/l`, `mg/l as P`, `deg C`, `mg/l as N`, rm.na=TRUE)
+
+Ellerbe_Nutrients_Processed <- pivot_longer(EC_Nutrients_Units, cols = c(`mg/l`, `mg/l as P`, `deg C`, `mg/l as N`), names_to = c("Units")) %>% 
+  drop_na(value)
+
+```
+
+
 #Save Processed Long Data
 ```{r}
 
-write.csv(Ellerbe_Nutrients, row.names = FALSE, 
+write.csv(Ellerbe_Nutrients_Processed, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients_Processed.csv")
 ```
-
 
 #Convert to Wide - All Locations
 
 ```{r}
-Ellerbe_Nutrients_Wide <- Ellerbe_Nutrients %>%
+Ellerbe_Nutrients_Wide <- Ellerbe_Nutrients_Processed %>%
   group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText) %>% 
-summarise (meanresult = mean(ResultMeasureValue)) %>% 
-  spread(CharacteristicName, meanresult) %>% 
+  spread(CharacteristicName, value) %>% 
   mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
-  select(MonitoringLocationIdentifier, ActivityStartDate, month, HydrologicEvent:Turbidity) %>% 
   separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
-  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText, "Nitrate" = Nitrate, "Mixed_N" = `Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`, "TP" = Phosphorus, "Temperature" =`Temperature, water`)
+  rename("Date" = ActivityStartDate, "SampleFraction" = ResultSampleFractionText, "Nitrate" = Nitrate, "Nitrogen" = `Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)`,"Temperature" =`Temperature, water`)
 
 
 # Save processed dataset 
 write.csv(Ellerbe_Nutrients_Wide, row.names = FALSE, 
           file = "./Data/Processed/Ellerbe_Nutrients_Wide_Processed.csv")
-
-
-#### Ellerbe_Wide <- pivot_wider(Ellerbe_Nutrients, id_cols = c(MonitoringLocationIdentifier,ActivityStartDate, `ActivityStartTime.Time`), names_from = CharacteristicName, values_from = ResultMeasureValue)
-
 
 ```
 
@@ -186,7 +209,7 @@ write.csv(ClubGorman_Nutrients_Wide, row.names = FALSE,
 
 # Subset Long Nutrient Data to include just measurements at Gages 
 ```{r}
-Ellerbe_Nutrients_Long <- Ellerbe_Nutrients %>%
+Ellerbe_Nutrients_Long <- Ellerbe_Nutrients_Processed %>%
   group_by (MonitoringLocationIdentifier, ActivityStartDate, HydrologicEvent, CharacteristicName,ResultSampleFractionText) %>% 
   mutate(month = month(ActivityStartDate, label = TRUE)) %>% 
   separate(MonitoringLocationIdentifier, c("agency", "site_no"), sep = "-") %>% 
