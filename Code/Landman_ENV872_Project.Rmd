@@ -33,7 +33,7 @@ getwd()
 # Load your packages
 
 library(tidyverse)
-library(plyr)
+library(dplyr)
 library(dataRetrieval)
 library(ggplot2)
 library(cowplot)
@@ -44,6 +44,7 @@ library("purrr")
 library("sf")
 library("ggmap")
 library(ggrepel)
+library(viridis)
 
 # Set your ggplot theme
 
@@ -118,13 +119,13 @@ Club.Gorman_Flow.NP_Long$CharacteristicName[Club.Gorman_Flow.NP_Long$Characteris
 
 # Rationale and Research Questions
 
-Ellerbe Creek runs through the city of Durham, North Carolina into the Falls Lake Resovoir. Falls Lake serves as the source of drinking water for the City of Raleigh and does not meet North Carolina standards for *chlorophyll a*, which is found in algae (City of Durham, 2020). Algal blooms that lead to increased *chlorophyll a* generally come from excess nutrients such as phosphorus and nitrogen. Ellerbe Creek is one of the sources of excess nutrients and contaminents in Falls Lake. The Ellerbe Creek Watershed has the highest population density of Durham's watersheds, with an estimated 22% impervious surface (NC DEQ, 2009). It is impacted by both point and nonpoint sources and was found to deliver the highest nutrient loads to Falls Lake (NC DEQ, 2009). Ellerbe Creek and Falls Lake are both on the state's impaired water bodies list (303(d) list) (City of Durham, 2018). Ellerbe Creek was first listed on the 303(d) list in 1998 (NC DEQ, 2009). While Ellerbe Creek and Falls Lake have been on the state's impaired water bodies list, there is still excess nitrogen and phosphorus leading to *chlorophyll a* in Falls Lake. In order to achieve nitrogen and phosphorus reductions it is important to understand when nutrient levels are highest and what factors influence them. This will help managers determine the best managment practices for nitrogen and phosphorus removal.  
+Ellerbe Creek runs through the city of Durham, North Carolina into the Falls Lake Resevoir. Falls Lake serves as the source of drinking water for the City of Raleigh and does not meet North Carolina standards for *chlorophyll a*, which is found in algae (City of Durham, 2020). Algal blooms that lead to increased *chlorophyll a* generally come from excess nutrients such as phosphorus and nitrogen. Ellerbe Creek is one of the sources of excess nutrients and contaminents in Falls Lake. The Ellerbe Creek Watershed has the highest population density of Durham's watersheds, with an estimated 22% impervious surface (NC DEQ, 2009). It is impacted by both point and nonpoint sources and was found to deliver the highest nutrient loads to Falls Lake (NC DEQ, 2009). Ellerbe Creek and Falls Lake are both on the state's impaired water bodies list (303(d) list) (City of Durham, 2018). Ellerbe Creek was first listed on the 303(d) list in 1998 (NC DEQ, 2009). While Ellerbe Creek and Falls Lake have been on the state's impaired water bodies list, there is still excess nitrogen and phosphorus leading to *chlorophyll a* in Falls Lake. In order to achieve nitrogen and phosphorus reductions it is important to understand when nutrient levels are highest and what factors influence high concentrations. This information will help managers determine the best managment practices for nitrogen and phosphorus removal. This dataset was chosen because it compiles nitrogen and phosphorus data from monitoring locations along Ellerbe Creek allowing for analysis of the entire watershed. It was matched with USGS discharge data from two sites to examine the differences between upstream and downstream locations. 
 
 **This analysis and report will aim to answer the following questions:**
 
 1. Are nitrogen and phosphorus levels in Ellerbe Creek above recommended levels?
 
-2. Is there a relationship between flow and pitrogen or phosphorus concentrations?
+2. Is there a relationship between flow and nitrogen or phosphorus concentrations?
 
 3. How does location, upstream vs. downstream, impact nutrient levels?
 
@@ -136,7 +137,7 @@ Ellerbe Creek runs through the city of Durham, North Carolina into the Falls Lak
 
 # Dataset Information
 
-Nutrient data for this project were downloaded from the the Water Quality Portal, a coorperative service sponsered by the United States Geological Survey (USGS), the Environmental Protection Agency (EPA), and the National Water Quality Monitoring Council (NWQMC) on February 27, 2020. Discharge data were downloaded for two stream gages along Ellerbe Creek, HUC code 030202010403, from USGS using the data dataRetrieval package in R. The dataset analyzed contains 21 monitoring locations with measurments for nitrogen and phosphorus levels from 1982 to 2018 and daily discharge data from 2008 to 20202. Not all locations had data for each nutrient. Nitrogen and phosphorus concentrations are recorded as mg/L of nitrogen or phosphorus in various compounds including, nitrate, nitrite, ammonia, ammonium, organic nitrogen, phosphate, and organic phosphorus. The USGS gage locations are Club Blvd (0208675010), upstream, and Gorman (02086849), downstream. 
+Nutrient data for this project were downloaded from the the Water Quality Portal, a coorperative service sponsered by the United States Geological Survey (USGS), the Environmental Protection Agency (EPA), and the National Water Quality Monitoring Council (NWQMC) on February 27, 2020. Discharge data were downloaded for two stream gages along Ellerbe Creek, HUC code 030202010403, from USGS using the data dataRetrieval package in R. The dataset analyzed contains 21 monitoring locations with measurments for nitrogen and phosphorus levels from 1982 to 2018 and daily discharge data from 2008 to 2020. Not all locations had data for each nutrient. Nitrogen and phosphorus concentrations are recorded as mg/L of nitrogen or phosphorus in various compounds including, nitrate, nitrite, ammonia, ammonium, organic nitrogen, phosphate, and organic phosphorus. The USGS gage locations are Club Blvd (0208675010), upstream, and Gorman (02086849), downstream. 
 
 Table 1. Variables Analyzed from the Water Quality and USGS Gage Datasets  
 
@@ -153,7 +154,7 @@ Flow data from the two USGS stream gages were combined into two datasets, one as
 
 ## Nutrient Data Wrangling 
 
-The nutrient data set from the water quality portal was cleans to remove all irrelevant information and retain just characterstics of interest, nitrogen and phosphorus. Nitrogen and phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert nitrogen and phosphorus values to mg/L of N or P. Relevant columns such as data, location, hydrologic event, variable name, measured value, and units were selected and processed data were saved as both long and wide format.
+The nutrient dataset from the water quality portal was cleaned to remove all irrelevant information and retain just characteristics of interest, nitrogen and phosphorus. Nitrogen and phosphorus values for many samples were recorded as both mg/L of N and P, and of NO3 and PO4 respectively. Data were downloaded in long format and were converted to wide format in order to convert nitrogen and phosphorus values to mg/L of N or P. Relevant columns such as data, location, hydrologic event, variable name, measured value, and units were selected and processed data were saved as both long and wide format.
 
 \newpage
 
@@ -176,6 +177,8 @@ Temperature, water | 1146
 Total Dissolved Solids | 278
 
 ## Location of Monitoring Sites 
+
+Monitoring sites were maped to determine their locations within the Ellere Creek Watershed and their proximity to Falls Lake (Fig. 1). Monitoring sites represent the location of Ellerbe Creek and show its flow through the watershed. The map was used to determine which sites to classify as upstream and which to classify as downstream. 
 
 ```{r, include=FALSE}
 #Load Data 
@@ -254,16 +257,17 @@ class(ellerbe_watershed8)
 
 ```
 
-```{r Exploratory Analysis Figure 1, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Map of the Ellerbe Creek Watershed and Monitoring Locations along Ellerbe Creek", fig.height=8, fig.width=8.25}
+```{r Exploratory Analysis Figure 1, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Map of the Ellerbe Creek Watershed and Monitoring Locations along Ellerbe Creek Ranked from Upstream to Downstream", fig.height=8, fig.width=9}
 
 WatershedMap <- ggplot(ellerbe_gages_raw) +
   geom_sf(data = ellerbe_watershed12, fill = "lightblue", lwd = 0.5) +
   geom_text_repel(aes(x = LongitudeMeasure, y= LatitudeMeasure, label = MonitoringLocationIdentifier), color = "black", size=2)+
   geom_sf(data = nc_rivers, color = "blue")+
-  geom_sf(data = ellerbe_gages_as_sf, color = "red")+
-  ###geom_sf(data = ####DURHAM)
+  geom_point(aes(x = LongitudeMeasure, y= LatitudeMeasure, color = Ranks))+
+  labs(x = "Longitude", y = "Latitude", color = "Rank")+
    xlim(-79,-78.75)+
    ylim(35.95,36.1)+
+  scale_color_viridis(option = "magma", direction = -1, end = 0.8)+
   theme_bw()
 print(WatershedMap)
 ```
@@ -287,7 +291,7 @@ print(Dischargeplot)
 
 The discharge over time at each location does not show any obvious seasonal or annual trends (Fig. 3). 
 
-```{r Exploratory Analysis Figure 3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Daily discharge (Q) at along Ellerbe Creek from January 1, 2008 to April 17, 2020"}
+```{r Exploratory Analysis Figure 3, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Daily discharge (Q) along Ellerbe Creek from January 1, 2008 to April 17, 2020"}
 
 DischargeTimeplot.G <-
   ggplot(Club.Gorman_Flow_Wide, aes(x = Date, y = Discharge.G, color)) +
@@ -307,7 +311,7 @@ plot_grid(DischargeTimeplot.C, DischargeTimeplot.G, align = "h", ncol = 1)
 
 ## Nutrient Data Exploration 
 
-The distribution of the nitrogen and phosphorus concentrations shows that the mean and max nitrogen concetrations look higher than those for phosphorus (Fig. 4). Statistical analysis will determine if there is a significant difference in the concentrations of each nutrients. The range for nitrogen is very wide and therefore it will be interesting to examine potential causes for high and low concentrations. 
+The distribution of the nitrogen and phosphorus concentrations shows that the mean and max nitrogen concetrations look higher than those for phosphorus (Fig. 4). Statistical analysis will determine if there is a significant difference in the concentrations of each nutrient. The range for nitrogen is very wide and therefore it will be interesting to examine potential causes for high and low concentrations. 
 
 ```{r Exploratory Analysis Figure 4, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Distribution of Nitrogen and Phosphorus Concentrations in Ellerbe Creek from November 17, 1982 to December 17, 2018", fig.pos="h"}
 
@@ -320,7 +324,7 @@ print(NPboxplot)
 
 ```
 
-It is surprising that the values for nitrogen and phosphorus concentration have changed so drastically from the 1980s to the 2000s. Although measurement units were converted, the concentrations in the 1980s seem to be higher than expect and have a wider range than expected. 
+It is surprising that the values for nitrogen and phosphorus concentration have changed so drastically from the 1980s to the 2000s. Although measurement units were converted, the concentrations in the 1980s seem to be higher and have a wider range than expected. 
 
 ```{r Exploratory Analysis Figure 5, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Concentrations of Nitrogen and Phosphorus over Time in Ellerbe Creek from November 17, 1982 to December 17, 2018"}
 NPTime <-
@@ -338,20 +342,20 @@ print(NPTime)
 
 # Analysis
 
-## Question 1: Are Nitrogen and Phosphorus levels in Ellerbe Creek above recommended levels?
+## Question 1: Are nitrogen and phosphorus levels in Ellerbe Creek above recommended levels?
 
-Maximun contaminent levels (MCL) for nitrate is 10 mg/L and for nitrite it is 1mg/L, but there is not recommended water quality standard for total nitrogen, which is analyzed in this report. The EPA states that an acceptable range for total nitrogen is 2mg/L to 6mg/L (EPA Nitrogen, 2013). There is no MCL for phosphorus, but the EPA says that 0.01 mg/L to 0.04 mg/L is an acceptable range (EPA Phosphorus, 2013). The mean concentration of each nutrient was compared with the higher end of the acceptable range to determine if nutrient levels in Ellerbe Creek are above recommended levels. In Table 1. you can see that the mean concentrations of N and P in the creek are botj above the recommended levels. Because the data are not normally distributed (Fig 6), a nonparametric stastical test was run. The results indicate that the average concentration of Nitrogen in Ellerbe Creek from 1984-2008 is not significantly greater than highest recommended value of 6mg/L (wilcoxon, p=0.3318). The average concentration of Phosphours in Ellerbe Creek from 1984-2008 is significantly higher than the highest recommended value of 0.04 mg/L (wilcoxon, p=0.033). The density plot in figure 6 shows the distribution of the data with a veritcal line representing the maximun recommended level of each nutrient. 
+The maximun contaminent level (MCL) for nitrate is 10 mg/L and for nitrite is 1 mg/L, but there is not a recommended water quality standard for total nitrogen, which is analyzed in this report. The EPA states that an acceptable range for total nitrogen is 2 mg/L to 6 mg/L (EPA Nitrogen, 2013). There is no MCL for phosphorus, but the EPA says that 0.01 mg/L to 0.04 mg/L is an acceptable range (EPA Phosphorus, 2013). The mean concentration of each nutrient was compared with the higher end of the acceptable range to determine if nutrient levels in Ellerbe Creek are above recommended levels. In Table 3 you can see that the mean concentrations of N and P in the creek are both above the recommended levels. Because the data are not normally distributed (Fig 6), a nonparametric stastical test was run. The results indicate that the average concentration of nitrogen in Ellerbe Creek from 1984-2008 is not significantly greater than highest recommended value of 6 mg/L (wilcoxon, p=0.3318). The average concentration of phosphours in Ellerbe Creek from 1984-2008 is significantly higher than the highest recommended value of 0.04 mg/L (wilcoxon, p=0.033). The density plot in figure 6 shows the distribution of the data with a veritcal line representing the maximun recommended level of each nutrient. 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 Nutrients_summary <- EC_Flow.Nutrients_Wide %>%
   summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
             min.N = min(Nitrogen, na.rm = TRUE),
             max.N = max(Nitrogen, na.rm = TRUE),
-            Standard.dev.N = sd(Nitrogen, na.rm = TRUE),
+            St.dev.N = sd(Nitrogen, na.rm = TRUE),
             mean.P = mean(Phosphorus, na.rm = TRUE),
             min.P = min(Phosphorus, na.rm = TRUE),
             max.P = max(Phosphorus, na.rm = TRUE),
-            Standard.dev.P = sd(Phosphorus, na.rm = TRUE))
+            St.dev.P = sd(Phosphorus, na.rm = TRUE))
 
 kable(Nutrients_summary, caption = "Summary of Total Nitrogen and Phosphorus Conentrations")
 ```
@@ -392,9 +396,9 @@ plot_grid(N.plot, P.plot, align = "h", nrow = 1)
  
 \newpage
 
-## Question 2: Is there a relationship between flow and Nitrogen or Phosphorus levels?
+## Question 2: Is there a relationship between flow and nitrogen or phosphorus levels?
 
-A simple linear regression was run to compare nutrient concentrations with flow at the downstream gage location. There is no significant relationship between Nitrogen and discharge at a significance of 0.05, but there is nearly a significant relationship at the 0.1 signifance level (Simple Linear Regression, Adj R-squared = 0.018, df = 62, p = 0.1442). While we can't conclusively say there is a negative relationship between Nitrogen concetration and flow, you can see a downward trend in the results (Fig. 7). Flow is a significant predictor of Phosphorus levels and 33% of the variance in phosphorus concentration can be explained by flow in Ellerbe Creek (Simple Linear Regression, Adj R-squared = 0.3276, df = 162, p < 0.0001). As flow increases so does the concentration of Phosphorus (Fig. 8).
+There is no significant relationship between Nitrogen and discharge at a significance of 0.05, but there is nearly a significant relationship at the 0.1 signifance level (Simple Linear Regression, Adj R-squared = 0.018, df = 62, p = 0.1442). While we can't conclusively say there is a negative relationship between nitrogen concetration and flow, you can see a downward trend in the results (Fig. 7). Flow is a significant predictor of phosphorus levels and 33% of the variance in phosphorus concentration can be explained by flow in Ellerbe Creek (Simple Linear Regression, Adj R-squared = 0.3276, df = 162, p < 0.0001). As flow increases so does the concentration of Phosphorus (Fig. 8).
 
 ```{r, include=FALSE, warning=FALSE, message=FALSE}
 
@@ -442,7 +446,7 @@ print(logPhosphorus_logDischarge)
 
 ## Question 3: How does location, upstream vs. downstream, impact nutrient levels?
 
-The mean Nitrogen concentration from 1984-2018 is significantly higher downstream near where ELlerbe Creek enters Falls Lake than it is upstream near Club Blvd (Wilcoxon, p < 0.0001). There is no significant difference between the mean concentration of Phosphorus as the upstream and downstream monitoring sites (Wilcoxon, p = 0.1651) (Fig. 9; Table 4). 
+The mean nitrogen concentration from 1984-2018 is significantly higher downstream near where Ellerbe Creek enters Falls Lake than it is upstream near Club Blvd (Wilcoxon, p < 0.0001). There is no significant difference between the mean concentration of phosphorus at the upstream and downstream monitoring sites (Wilcoxon, p = 0.1651) (Fig. 9; Table 4). Higher levels of nitrogen downstream would indicate that there is a source of nitrogen entering the creek between the two locations. 
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 Nutrients_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
@@ -450,12 +454,13 @@ Nutrients_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
   summarise(mean.N = mean(Nitrogen, na.rm = TRUE),
             min.N = min(Nitrogen, na.rm = TRUE),
             max.N = max(Nitrogen, na.rm = TRUE),
-            Standard.dev.N = sd(Nitrogen, na.rm = TRUE),
+            St.dev.N = sd(Nitrogen, na.rm = TRUE),
             mean.P = mean(Phosphorus, na.rm = TRUE),
             min.P = min(Phosphorus, na.rm = TRUE),
             max.P = max(Phosphorus, na.rm = TRUE),
-            Standard.dev.P = sd(Phosphorus, na.rm = TRUE))
+            St.P = sd(Phosphorus, na.rm = TRUE))
 
+  
 kable(Nutrients_Location_summary, caption = "Summary of Nitrogen and Phosphorus conentrations by Location")
 ```
 
@@ -473,7 +478,7 @@ P.twosample.wilcox
 
 ## Question 4: Is there a significant difference between discharge at the upstream and downstream gages? 
 
-Average discharge from 2008-2020 is significantly higher downstream near where Ellerbe Creek enters Falls Lake than it is upstream (Wilcoxon, - < 0.0001).
+Average discharge from 2008-2020 is significantly higher downstream near where Ellerbe Creek enters Falls Lake than it is upstream (Wilcoxon, p-value < 0.0001). There are multiple factures that could lead to greater discharge upstream than downstream including the catchment area. One hypothesis is there is more runoff between the two locations which increases flow downstream.  
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 Flow_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
@@ -484,6 +489,7 @@ Flow_Location_summary <- Club.Gorman_Flow.Nutrients_Wide %>%
             Standard.dev.Flow = sd(Discharge, na.rm = TRUE))
 
 kable(Flow_Location_summary, caption = "Summary of Discharge by Location")
+
 ```
 
 
@@ -495,7 +501,7 @@ Flow.twosample.wilcox
 
 ## Question 5: Is time of year, specifically month a predictor for flow or nutrient levels?
 
-Because there is a significant relationship between flow and Phosphorus levels, it is interesting to examine if there are seasonal trends in that relationship. Month is a significant predictor of flow, which makes sense because precipitation and runoff change between seasons (Kruskal-Wallis, df = 10, p-value = 0.04803). Month is not a significant predictor of Phosphorus (Kruskal-Wallis, df = 11, p-value = 0.4522) or Nitrogen (Kruskal-Wallis, df = 11, p-value = 0.935) (Fig. 9). 
+Because there is a significant relationship between flow and phosphorus levels, it is interesting to examine if there are seasonal trends in that relationship. Month is a significant predictor of flow, which makes sense because precipitation and runoff change between seasons (Kruskal-Wallis, df = 10, p-value = 0.04803). Month is not a significant predictor of Phosphorus (Kruskal-Wallis, df = 11, p-value = 0.4522) or Nitrogen (Kruskal-Wallis, df = 11, p-value = 0.935) (Fig. 9). 
 
 ```{r,include=FALSE, warning=FALSE, message=FALSE}
 Flow.kw <- kruskal.test(Club.Gorman_Flow.Nutrients_Wide$Discharge  ~ Club.Gorman_Flow.Nutrients_Wide$month)
@@ -556,7 +562,7 @@ plot_grid(plot_row1, plot_row2, ncol = 1,rel_heights = c(1, 0.5))
 
 # Summary and Conclusions
 
-It is clear from the results that Ellerbe Creek has high levels of both phosphorus and nitrogen. While average nitrogen levels are not above EPA recommendations, the range in nitrogen concentration demonstrates that at many times throughout the last 30 years, nitrogen concentrations have been above recommended levels. It was suprising to discover that flow is a significant predictor of phosphorus but no nitrogran. Furthermore, it is rare to find a positive relationship between phosphorus and flow and negative (although not significant) relationship between nitrogen and flow. Moatar et al. (2017), analyzed concentration density plots, similar to those presented her and highlighed the interplay of biological and hydrological dynamics. They outlines that positive relationship between flow and concentration during low flow events shows biogeochemical retnetion removal and during a high flow it shows hydrological export. A negative correlation between concentration and dischage at both low and high flow levels shows hydrological dilution.  Similar to the pattern observed in Ellerbe Creek, they found higher levels of NO3^-^ during low flows in 71% of the catchments they studied in France. Their findings also show that efforts to reduce nutrient loading decreased phosphorus concentration, altering the concentration discharge curve for phosphorus, while nitrate continued to increase (Moatar et al., 2017). Since Ellerbe Creek and Falls Lake were listed on the states impaired water bodies, there have been efforts throughout the city of Durham and the entire watershed to prevent nutrient runoff. Throughout the study period land along the creek has been restored to increase buffering and prevent nutrient runoff and creek smart installations have reduced runoff from people's yards. These efforts could influence the relationship between nutrients and discharge. 
+It is clear from the results that Ellerbe Creek has high levels of both phosphorus and nitrogen. While average nitrogen levels are not above EPA recommendations, the range in nitrogen concentration demonstrates that at many times throughout the last 30 years, nitrogen concentrations have been above recommended levels. It was suprising to discover that flow is a significant predictor of phosphorus but no nitrogran. Furthermore, it is rare to find a positive relationship between phosphorus and flow and negative (although not significant) relationship between nitrogen and flow. Moatar et al. (2017), analyzed concentration versus flow plots, similar to those presented here and highlighed the interplay of biological and hydrological dynamics. They outline that a positive relationship between flow and concentration during low flow events shows biogeochemical retnetion removal and during a high flow it shows hydrological export. A negative correlation between concentration and dischage at both low and high flow levels shows hydrological dilution. Similar to the pattern observed in Ellerbe Creek, they found higher levels of NO3^-^ during low flows in 71% of the catchments they studied in France. Their findings also show that efforts to reduce nutrient loading decreased phosphorus concentration, altering the concentration discharge curve for phosphorus, while nitrate continued to increase (Moatar et al., 2017). Since Ellerbe Creek and Falls Lake were listed on the state's impaired water bodies, there have been efforts throughout the city of Durham and the entire watershed to prevent nutrient runoff. Throughout the study period land along the creek has been restored to increase buffering and prevent nutrient runoff and creek smart installations have reduced runoff from people's yards. These efforts could influence the relationship between nutrients and discharge. 
 
 The statistical analyses performed show there is a significant difference between nitrogen at downstream locations and upstream locations. This is valauble information because Ellerbe Creek discharges into Falls Lake and therefore higher nitrogen concentrations downstream can have implications for the water quality in Falls Lake. Ellerbe Creek runs through an extremely populated area with many potential sources of nitrogen including agricultural runoff and domestic wastewater. Additionally, analysis showed a significant difference between discharge at each location, which could indicate that water is entering the creek through runoff. Further studies should be done to assess land use and land cover between upstream and downstream locations to determine the sources of nitrogen and phosphorus. Additionally, while month is not a predictor for nitrogen or phosphorus levels, other factors such as precipitation, temperature, and other contaminents should be examined to determine all the potential predictors of nutrient levels. 
 
@@ -564,9 +570,17 @@ The statistical analyses performed show there is a significant difference betwee
 
 # References
 
-https://durhamnc.gov/716/Falls-Lake
+City of Durham (2018), Ellerbe Creek Watershed. [link](https://durhamnc.gov/711/Ellerbe-Creek-Watershed)
 
-North Carolina Department of Environmental Quality (2009), Neuse River Basinwide Water Quality Plan. [link](deq.nc.gov/about/divisions/water-resources/planning/basin-planning/water-resource-plans/neuse-2009)
+City of Durham (2020), Falls Lake. [link](https://durhamnc.gov/716/Falls-Lake)
+
+Environmental Protection Agency (2013), Total Nitrogen [link](www.epa.gov/sites/production/files/2015-09/documents/totalnitrogen.pdf) 
+
+Environmental Protection Agency (2013), Total Phosphorus [link](https://www.epa.gov/sites/production/files/2015-09/documents/totalphosphorus.pdf
+)
+
+North Carolina Department of Environmental Quality (2009), Neuse River Basinwide Water Quality Plan. 
+[link](https://deq.nc.gov/about/divisions/water-resources/planning/basin-planning/water-resource-plans/neuse-2009)
 
 Moatar, F., B. W. Abbott, C. Minaudo,F. Curie, and G. Pinay (2017), Elementalproperties, hydrology, and biologyinteract to shape concentration-discharge curves for carbon, nutrients,sediment, and major ions, WaterResour. Res., 53, 1270–1287,doi:10.1002/2016WR019635
 

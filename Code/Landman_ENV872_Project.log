@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 18:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.8)  24 APR 2020 21:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -717,209 +717,200 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 \tf@lof=\write6
 \openout6 = `Landman_ENV872_Project.lof'.
 
-[4]
-Underfull \hbox (badness 1509) in paragraph at lines 107--126
-\T1/lmr/m/n/12 (+20) im-per-vi-ous sur-face (SOURCE: []$https : / / ^^\les . nc
- . gov / ncdeq / Water % 20Quality / Planning /
- []
-
-
-Underfull \hbox (badness 2213) in paragraph at lines 107--126
-\T1/lmr/m/n/12 (+20) BPU / BPU / Neuse / Neuse % 20Plans / 2009 % 20Plan / Chap
-ter % 201 . pdf$[]). It is im-pacted
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--126
-[]$\T1/lmr/m/n/12 (+20) https : / / durhamnc . gov / 711 / Ellerbe-[]Creek-[]Wa
-tershed$[], []$https : / / www . usgs . gov / centers /
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 107--126
-\T1/lmr/m/n/12 (+20) sa-[]water / science / groundwatersurface-[]water-[]intera
-ction-[]near-[]ellerbe-[]creek-[]durham-[]nc ?
- []
-
-[5] [6]
+[4] [5] [6]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1-1".
-pdf, id=178, 596.2275pt x 578.16pt>
+pdf, id=172, 650.43pt x 578.16pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 1-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 1
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 1-1".pdf  used on input line 230.
-(pdftex.def)             Requested size: 469.75908pt x 455.52396pt.
+ry Analysis Figure 1-1".pdf  used on input line 259.
+(pdftex.def)             Requested size: 469.76817pt x 417.57172pt.
 [7] [8pdfTeX warning (ext4): destination with the same identifier (name{figure.
 1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.235 \newpage
+l.264 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysi
 s Figure 1-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2-1".
-pdf, id=198, 505.89pt x 505.89pt>
+pdf, id=193, 505.89pt x 505.89pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 2-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 2
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 2-1".pdf  used on input line 252.
+ry Analysis Figure 2-1".pdf  used on input line 281.
 (pdftex.def)             Requested size: 469.76265pt x 469.76265pt.
 [9] [10pdfTeX warning (ext4): destination with the same identifier (name{figure
 .2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.258 \newpage
+l.287 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysi
 s Figure 2-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3-1".
-pdf, id=214, 469.755pt x 325.215pt>
+pdf, id=209, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 3-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 3
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 3-1".pdf  used on input line 265.
+ry Analysis Figure 3-1".pdf  used on input line 294.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [11pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.270 \newpage
+l.299 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysi
-s Figure 3-1.pdf>] [12]
+s Figure 3-1.pdf>]
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4-1".
-pdf, id=230, 469.755pt x 325.215pt>
+pdf, id=220, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 4-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 4
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 4-1".pdf  used on input line 279.
+ry Analysis Figure 4-1".pdf  used on input line 313.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <"Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5-1".
-pdf, id=231, 469.755pt x 325.215pt>
+pdf, id=221, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 
 5-1".pdf Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Exploratory Analysis Figure 5
 -1".pdf>
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Explorato
-ry Analysis Figure 5-1".pdf  used on input line 286.
+ry Analysis Figure 5-1".pdf  used on input line 325.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[13pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
+[12pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.322 
-       <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure
- 4-1.pdf>] [14pdfTeX warning (ext4): destination with the same identifier (name
-{figure.5}) has been already used, duplicate ignored
+l.330 \newpage
+               <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysi
+s Figure 4-1.pdf>] [13pdfTeX warning (ext4): destination with the same identifi
+er (name{figure.5}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.322 
-       <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysis Figure
- 5-1.pdf>] [15]
+l.330 \newpage
+               <./Landman_ENV872_Project_files/figure-latex/Exploratory Analysi
+s Figure 5-1.pdf>] [14]
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf, id
-=257, 469.755pt x 325.215pt>
+=248, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 6-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 6-1".pdf  used on input line 345.
+ysis Figure 6-1".pdf  used on input line 382.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf, id
-=258, 469.755pt x 325.215pt>
+=249, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 7-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 7-1".pdf  used on input line 371.
+ysis Figure 7-1".pdf  used on input line 406.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf, id
-=259, 469.755pt x 325.215pt>
+=250, 469.755pt x 325.215pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 8-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 8-1".pdf  used on input line 378.
+ysis Figure 8-1".pdf  used on input line 413.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
+[15pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 \newpage
+l.418 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figur
-e 6-1.pdf>] [17pdfTeX warning (ext4): destination with the same identifier (nam
+e 6-1.pdf>] [16pdfTeX warning (ext4): destination with the same identifier (nam
 e{figure.7}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 \newpage
+l.418 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figur
-e 7-1.pdf>] [18pdfTeX warning (ext4): destination with the same identifier (nam
+e 7-1.pdf>] [17pdfTeX warning (ext4): destination with the same identifier (nam
 e{figure.8}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 \newpage
+l.418 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figur
 e 8-1.pdf>]
+Overfull \hbox (15.19006pt too wide) in alignment at lines 434--441
+ [] [] [] [] [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (15.19006pt too wide) in alignment at lines 441--446
+ [] [] [] [] [] [] [] [] [] 
+ []
+
+
+Overfull \hbox (15.19006pt too wide) in alignment at lines 446--452
+ [] [] [] [] [] [] [] [] [] 
+ []
+
 <"Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf, id
-=297, 596.2275pt x 578.16pt>
+=288, 596.2275pt x 578.16pt>
 File: "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pd
 f Graphic file (type pdf)
 <use "Landman_ENV872_Project_files/figure-latex/""Data Analysis Figure 9-1".pdf
 >
 Package pdftex.def Info: "Landman_ENV872_Project_files/figure-latex/""Data Anal
-ysis Figure 9-1".pdf  used on input line 453.
+ysis Figure 9-1".pdf  used on input line 498.
 (pdftex.def)             Requested size: 469.75908pt x 455.52396pt.
-[19] [20pdfTeX warning (ext4): destination with the same identifier (name{figur
+[18] [19pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.9}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.462 \newpage
+l.507 \newpage
                <./Landman_ENV872_Project_files/figure-latex/Data Analysis Figur
-e 9-1.pdf>] [21]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 476.
-[22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 476.
+e 9-1.pdf>] [20]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 584.
+[21]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 584.
 (./Landman_ENV872_Project.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 476.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 476.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 584.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 584.
 Package rerunfilecheck Info: File `Landman_ENV872_Project.out' has not changed.
 
-(rerunfilecheck)             Checksum: 65DD444FE96C418434B88E8347077ABC;4621.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 476.
+(rerunfilecheck)             Checksum: 3317B5843BBED9BA13DFCF338B282E7C;4621.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 584.
  ) 
 Here is how much of TeX's memory you used:
- 13032 strings out of 493610
- 193191 string characters out of 6159294
- 297565 words of memory out of 5000000
- 16858 multiletter control sequences out of 15000+600000
- 62499 words of font info for 98 fonts, out of 8000000 for 9000
+ 13050 strings out of 493610
+ 193377 string characters out of 6159294
+ 298640 words of memory out of 5000000
+ 16859 multiletter control sequences out of 15000+600000
+ 66151 words of font info for 105 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 34i,6n,42p,985b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,7n,42p,985b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019basic/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/l
 ocal/texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/
 texlive/2019basic/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texliv
 e/2019basic/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2019
-basic/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
-Output written on Landman_ENV872_Project.pdf (22 pages, 388706 bytes).
+basic/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2019basic/t
+exmf-dist/fonts/type1/public/lm/lmri12.pfb>
+Output written on Landman_ENV872_Project.pdf (21 pages, 424157 bytes).
 PDF statistics:
  363 PDF objects out of 1000 (max. 8388607)
- 313 compressed objects within 4 object streams
- 74 named destinations out of 1000 (max. 500000)
+ 312 compressed objects within 4 object streams
+ 78 named destinations out of 1000 (max. 500000)
  14518 words of extra memory for PDF output out of 17280 (max. 10000000)
 
